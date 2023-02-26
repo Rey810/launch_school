@@ -1,0 +1,10 @@
+{
+  "welcome": "Welcome to ROCK PAPER SCISSORS SPOCK LIZARD: \nThe new and improved take on the classic rock, paper, scissors\n",
+  "error": "That's not a valid choice... Try again:",
+  "userWon": "Congrats! You win!\n",
+  "computerWon": "You lost... One step closer to the computers taking over...\n",
+  "tie": "It's a tie. I guess humans and computers really are the same.\n",
+  "computerWonOverall": "The computer is the winner and will soon take over the world...",
+  "userWonOverall": "You are the GRAND WINNER!!!",
+  "rules": "RULES: Spock and Lizard are new additions to the game.\nSpock beats Rock and Scissors while \nLizard beats Spock and Paper. Try it out!\n"
+}

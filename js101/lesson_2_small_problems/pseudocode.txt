@@ -1,0 +1,186 @@
+1. A function that returns the sum of two numbers
+
+CASUAL 
+
+Given two numbers
+Add the two numbers together
+Return the result
+
+
+FORMAL 
+
+START
+
+Given two numbers
+
+SET result = value from adding two numbers together
+
+PRINT result
+
+END
+
+
+
+
+2. A function that takes a collection of strings and 
+returns a string that is all those strings concatenated together
+ 
+CASUAL
+
+Given a collection of strings
+
+Iterate through the collection one by one
+- Save the first string in the collection as the starting string
+- for every iteration, add the string at the current position to the starting string
+
+Once the loop is complete, return the result string
+
+
+FORMAL
+
+START
+
+Given a collection of strings
+
+SET returnValue = value of the first string in the collection
+SET iterator = 1
+
+WHILE iterator <= length of collection
+  SET currentString = value at position "iterator" in collection
+  returnValue = returnValue + currentString
+
+PRINT returnValue
+
+END
+
+
+
+
+3. A method that takes a collection of integers, and returns a new collection
+with every other element from the original collection, 
+starting with the first element.
+
+CASUAL
+
+Given a collection of integers
+
+Iterate through the collection one by one 
+- save the first integer as the first value in a oddPositioncollection
+- for each iteration, check if the integer collection position is divisible by 2, 
+- if the position is not divisible by 2
+  - add the integer at current position to the oddPositioncollection
+- else continue to the next iteration
+
+After iterating through all the integers in the original collection, 
+return oddPositioncollection
+
+FORMAL
+
+START
+
+Given a collection of integers
+
+SET iterator = 1
+SET oddPositionCollection = empty collection to contain numbers from odd positions
+
+WHILE iterator <= length of integers collection
+  SET currentInteger = integer at position "iterator" in starting collection
+  IF position of currentInteger % 2 = 0
+    add currentInteger to oddPositionCollection
+  ELSE
+    skip to next iteration
+
+  iterator = iterator + 1
+
+PRINT oddPositionCollection
+
+END
+
+
+
+
+4. A function that determines the index of the 3rd occurrence of 
+a given character in a string. For instance, if 
+the given character is 'x' and the string is 'axbxcdxex', 
+the function should return 6 (the index of the 3rd 'x'). 
+If the given character does not occur at least 3 times, return null.
+
+CASUAL
+
+Given a string and a character
+
+Iterate through the string
+- For each character, compare it to the given character
+- If they are the same, 
+  - Increment a "charCount" value by 1
+  - If charCount = 3, save index to "result"
+- If they are not the same,
+  - continue to next iteration
+
+After iterating through all characters, return result
+
+
+FORMAL
+
+START
+
+Given a character and a string
+
+SET targetChar = given character
+SET charCount = 0
+SET result = null
+SET collection = string split into individual characters
+SET iterator = 1
+
+WHILE iterator <= length of collection
+  SET currentCharacter = character at position "iterator"
+  IF currentCharacter = targetChar
+    charCount = charCount + 1
+    IF charCount = 3
+      result = current position in collection
+  ELSE 
+    continue to next iteration
+
+PRINT result
+
+END
+
+
+
+
+5. A function that takes two arrays of numbers and 
+returns the result of merging the arrays. The elements of 
+the first array should become the elements at the even 
+indexes of the returned array, while the elements of the 
+second array should become the elements at the odd indexes. 
+
+CASUAL
+
+Given two arrays
+
+Iterate through the first array
+- For each iteration,
+  - Add the value at current position to an array called mergedArray
+  - Then add the value at the current position in the second array to mergedArray
+
+
+FORMAL
+
+START
+
+Given two arrays
+
+SET array1 = the first of two arrays
+SET array2 = the second of two arrays
+SET iterator = 0
+SET mergedArray = an empty array
+
+WHILE iterator < length of first array
+  SET currentValueArr1 = value at position 'iterator' in array1
+  SET currentValueArr2 = value at position 'iterator' in array2
+  mergedArray = mergedArray + currentValueArr1
+  mergedArray = mergedArray + currentValueArr2
+
+PRINT mergedArray
+
+END
