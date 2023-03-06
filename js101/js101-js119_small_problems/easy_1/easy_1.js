@@ -358,3 +358,45 @@
 // } else {
 //   console.log("Invalid operation")
 // }
+
+
+
+// Write a function that takes two strings as arguments, 
+// determines the length of the two strings, 
+// and then returns the result of concatenating the shorter string, 
+// the longer string, and the shorter string once again. 
+// You may assume that the strings are of different lengths.
+
+// P
+// input 2 strings as arguments
+// output is one string which is the result of concatentating the short string then the long string then the short string
+// strings are of different lengths
+// function should also determine the lengths of the two strings
+
+// E
+// input: 
+// 'abc', 'def'
+// output: 
+// 'abcdefabc'
+
+// D + A
+// declare and initialie a variable called "firstString"
+// declare and initialize a variable called "secondString"
+// set firstString to the value of the 1st arg
+// set secondString to the value of the 2nd arg
+// determine the length of each string and save value to new variables ("firstStringLength" and "secondStringLength")
+// declare and initialize a variable called concatedString and set it to the sum of the short string, the long string and the short string
+// return concatedString
+
+// C
+function shortLongShort(str1, str2) {
+    if (str1.length < str2.length) {
+        return str1 + str2 + str1;
+    } else {
+        return str2 + str1 + str2;
+    }
+}
+
+console.log(shortLongShort('abc', 'defgh'));    // "abcdefghabc"
+console.log(shortLongShort('abcde', 'fgh'));    // "fghabcdefgh"
+console.log(shortLongShort('', 'xyz'));         // "xyz"
