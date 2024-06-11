@@ -1,18 +1,20 @@
 let readline = require('readline-sync');
 
+// utility functions
 function prompt(question) {
   console.log(`=> ${question}`);
 }
 
-function upperCased(word) {
-  let upperCased = word.slice(0, 1).toUpperCase() + word.slice(1);
-  return upperCased;
+function clearConsole() {
+  console.clear();
 }
 
-function greeting() {
-  prompt("Welcome! You are 'X' and the computer is 'O'. Let's begin!");
+function capitalised(word) {
+  let capitalised = word.slice(0, 1).toUpperCase() + word.slice(1);
+  return capitalised;
 }
 
+// game constants
 const INITIAL_MARKER = ' ';
 const HUMAN_MARKER = 'X';
 const COMPUTER_MARKER = 'O'
@@ -22,15 +24,17 @@ const WINNING_LINES = [
   [1, 4, 7], [2, 5, 8], [3, 6, 9],
   [1, 5, 9], [3, 5, 7]
 ];
+// can be hardcoded to "player" or "computer" if one does not want to give user the choice
 const WHO_STARTS = 'choose';
+// used when evaluating user input to continue playing 
 const YES_OR_NO = ['y','n'];
 
-// rework this possibly
+// used to control game and match loop continuation
 let gamesOver = false;
 let matchOver = false;
 
-function clearConsole() {
-  console.clear();
+function greeting() {
+  prompt("Welcome to Tic-Tac-Toe! You are 'X' and the computer is 'O'. Let's begin!");
 }
 
 function displayBoard(board) {  
@@ -157,7 +161,9 @@ function joinOr(array, delimiter = ', ', joiningWord = 'or'){
   let result = '';
 
   if (array.length === 0) return result;
+
   if (array.length === 1) return `${array[0]}`;
+
   if (array.length < 3) return result = `${array[0]} ${joiningWord} ${array[1]}`
 
   if (array.length > 2) {
@@ -170,10 +176,10 @@ function updateScore(winner, gamesWon, board) {
   gamesWon[winner] += 1;
   
   if (gamesWon[winner] === GAMES_TO_WIN_MATCH) {
-    prompt(`${upperCased(winner)} won the match with ${gamesWon[winner]} wins!`);
+    prompt(`${capitalised(winner)} won the match with ${gamesWon[winner]} wins!`);
     matchOver = true;
   } else {
-    prompt(`${upperCased(detectWinner(board))} won!`)
+    prompt(`${capitalised(detectWinner(board))} won!`)
   }
 }
 
@@ -185,8 +191,6 @@ function determineWhoStarts(who) {
     while (!starter) {
       prompt('Who starts? Enter "p" for player and "c" for computer');
       let starterInput = readline.question()[0]
-
-      console.log(starterInput)
 
       if (starterInput === 'p') {
         starter = 'player';
@@ -211,7 +215,7 @@ function alternatePlayer(currentPlayer) {
   return currentPlayer === 'player' ? 'computer' : 'player'; 
 }
 
-// a match continues until the user quits mid-match or the player/computer get 5 game wins.
+// a match continues until the user quits mid-match or the player/computer gets 5 game wins
 while (matchOver === false) {
   greeting();
 
@@ -282,6 +286,5 @@ while (matchOver === false) {
     }
   };
 
-// code for when player wants to quit
   prompt('Thanks for playing Tic Tac Toe! Bye!');
 }
