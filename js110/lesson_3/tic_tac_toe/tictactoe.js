@@ -97,22 +97,25 @@ function findAtRiskSquare(line, board, marker) {
   return null;
 }
 
+function getDefenseOrOffenseSquare(board, marker) {
+  let square;
+  // defend or attack depending on whether there is a threat from the HUMAN_MARKER or an opportunity to attack and finish the game
+  for(let index = 0; index < WINNING_LINES.length; index++) {
+    let line = WINNING_LINES[index];
+    square = findAtRiskSquare(line, board, marker);
+    if (square) break;
+  }
+
+  return square;
+}
+
 function computerChoosesSquare(board){
   let square;
 
   // offense
-  for(let index = 0; index < WINNING_LINES.length; index++) {
-    let line = WINNING_LINES[index];
-    square = findAtRiskSquare(line, board, COMPUTER_MARKER);
-    if (square) break;
-  }
-
+  square = getDefenseOrOffenseSquare(board, COMPUTER_MARKER);
   // defense
-  for(let index = 0; index < WINNING_LINES.length; index++) {
-    let line = WINNING_LINES[index];
-    square = findAtRiskSquare(line, board, HUMAN_MARKER);
-    if (square) break;
-  }
+  square = getDefenseOrOffenseSquare(board, HUMAN_MARKER);
 
   // pick square #5 (if available) 
   if (board['5'] === INITIAL_MARKER) {
