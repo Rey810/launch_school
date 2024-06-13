@@ -1,10 +1,9 @@
-let readline = require('readline-sync');
+const fs = require('fs');
+const messages = JSON.parse(fs.readFileSync('./messages.json'));
+
+const readline = require('readline-sync');
 
 // utility functions
-function prompt(question) {
-  console.log(`=> ${question}`);
-}
-
 function clearConsole() {
   console.clear();
 }
@@ -33,8 +32,8 @@ const YES_OR_NO = ['y','n'];
 let gamesOver = false;
 let matchOver = false;
 
-function greeting() {
-  prompt("Welcome to Tic-Tac-Toe! You are 'X' and the computer is 'O'. Let's begin!");
+function printMessage(message) {  
+  console.log(message);
 }
 
 function displayBoard(board) {  
@@ -72,12 +71,12 @@ function playerChoosesSquare(board) {
 
 
   while(true) {
-    prompt(`Choose a square: ${joinOr(emptySquares(board))}`);
+    printMessage(`Choose a square: ${joinOr(emptySquares(board))}`);
     square = readline.question().trim();
 
     if (emptySquares(board).includes(square)) break;
     
-    prompt('Sorry, that\'s not a valid square. Try again...');
+    printMessage(messages.notValidSquare);
 
   }
 
@@ -106,6 +105,7 @@ function getDefenseOrOffenseSquare(board, marker) {
     if (square) break;
   }
 
+  // returns undefined if there is no need to defend or opportunity to attack
   return square;
 }
 
@@ -114,6 +114,7 @@ function computerChoosesSquare(board){
 
   // offense
   square = getDefenseOrOffenseSquare(board, COMPUTER_MARKER);
+
   // defense
   square = getDefenseOrOffenseSquare(board, HUMAN_MARKER);
 
@@ -179,10 +180,10 @@ function updateScore(winner, gamesWon, board) {
   gamesWon[winner] += 1;
   
   if (gamesWon[winner] === GAMES_TO_WIN_MATCH) {
-    prompt(`${capitalised(winner)} won the match with ${gamesWon[winner]} wins!`);
+    printMessage(`${capitalised(winner)} won the match with ${gamesWon[winner]} wins!`);
     matchOver = true;
   } else {
-    prompt(`${capitalised(detectWinner(board))} won!`)
+    printMessage(`${capitalised(detectWinner(board))} won!`)
   }
 }
 
@@ -192,7 +193,7 @@ function determineWhoStarts(who) {
   if (who === 'choose') {
 
     while (!starter) {
-      prompt('Who starts? Enter "p" for player and "c" for computer');
+      printMessage(messages.whoStarts);
       let starterInput = readline.question()[0]
 
       if (starterInput === 'p') {
@@ -220,7 +221,7 @@ function alternatePlayer(currentPlayer) {
 
 // a match continues until the user quits mid-match or the player/computer gets 5 game wins
 while (matchOver === false) {
-  greeting();
+  printMessage(messages.welcome);
 
   // reset each match
   const gamesWon = {
@@ -248,18 +249,18 @@ while (matchOver === false) {
     if (someoneWon(board)) {
       updateScore(detectWinner(board), gamesWon, board);
     } else {
-      prompt("It\'s a tie!")
+      printMessage(messages.gameResult.tie)
     }
 
     displayBoard(board);
-    prompt(`The current score is: Player: ${gamesWon.player}, Computer: ${gamesWon.computer}`)
-    prompt('Play again?');
+    printMessage(`The current score is: Player: ${gamesWon.player}, Computer: ${gamesWon.computer}`)
+    printMessage(messages.newGame);
 
     // check if player wants to play another game
     let userGameAnswer = "";
   
     while (!YES_OR_NO.includes(userGameAnswer)) {
-      prompt('Please answer with y or n:');
+      printMessage(messages.YesOrNo)
       userGameAnswer = readline.question().toLowerCase();
       
       if (YES_OR_NO[1] === userGameAnswer) {
@@ -270,16 +271,16 @@ while (matchOver === false) {
   }
 
   if (gamesOver) {
-    prompt('Thanks for playing Tic Tac Toe! Bye!');
+    printMessage(messages.bye);
     break;
   }
 
-  prompt('Play another match?');
+  printMessage(messages.newMatch);
 
   let userMatchAnswer = "";
   
   while (!YES_OR_NO.includes(userMatchAnswer)) {
-    prompt('Please answer with y or n:');
+    printMessage(messages.YesOrNo)
     userMatchAnswer = readline.question().toLowerCase();
     
     if (YES_OR_NO[1] === userMatchAnswer) {
@@ -289,5 +290,5 @@ while (matchOver === false) {
     }
   };
 
-  prompt('Thanks for playing Tic Tac Toe! Bye!');
+  printMessage(messages.bye);
 }

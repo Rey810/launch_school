@@ -1,0 +1,13 @@
+{
+  "welcome": "Welcome to Tic-Tac-Toe! You are 'X' and the computer is 'O'. Let's begin!",
+  "whoStarts": "Who starts? Enter 'p' for player and 'c' for computer",
+  "notValidSquare": "Sorry, that's not a valid square. Try again...",
+  "gameResult": {
+    "tie": "It's a tie!"
+  },
+  "newGame": "Do you want to play again?",
+  "newMatch": "Do you want to play another match?",
+  "yesOrNo": "Enter 'y' for yes or 'n' for no",
+  "bye": "Thanks for playing Tic Tac Toe! Bye!"
+}
+
