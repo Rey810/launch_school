@@ -1,5 +1,6 @@
 {
-  "welcome": "Welcome to Tic-Tac-Toe! You are 'X' and the computer is 'O'. Let's begin!",
+  "welcome": "Welcome to Tic-Tac-Toe!",
+  "details":  "You are 'X' and the computer is 'O'. Let's begin!",
   "whoStarts": "Who starts? Enter 'p' for player and 'c' for computer",
   "notValidSquare": "Sorry, that's not a valid square. Try again...",
   "gameResult": {
