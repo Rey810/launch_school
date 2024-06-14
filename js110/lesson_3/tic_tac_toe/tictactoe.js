@@ -13,10 +13,25 @@ function capitalised(word) {
   return capitalised;
 }
 
+function joinOr(array, delimiter = ', ', joiningWord = 'or'){
+  let result = '';
+
+  if (array.length === 0) return result;
+
+  if (array.length === 1) return `${array[0]}`;
+
+  if (array.length < 3) return result = `${array[0]} ${joiningWord} ${array[1]}`
+
+  if (array.length > 2) {
+    return result = array.slice(0, array.length - 1)
+                         .join(delimiter) + `${delimiter}${joiningWord} ${array[array.length - 1]}`;
+  }
+}
+
 // game constants
 const INITIAL_MARKER = ' ';
 const HUMAN_MARKER = 'X';
-const COMPUTER_MARKER = 'O'
+const COMPUTER_MARKER = 'O';
 const GAMES_TO_WIN_MATCH = 5;
 const WINNING_LINES = [
   [1, 2, 3], [4, 5, 6], [7, 8, 9],
@@ -28,9 +43,16 @@ const WHO_STARTS = 'choose';
 // used when evaluating user input to continue playing 
 const YES_OR_NO = ['y','n'];
 
-// used to control game and match loop continuation
-let gamesOver = false;
-let matchOver = false;
+// used to control game and match loop continuation. Reset each match
+const GAME_STATE = {
+  gamesWon: {
+    player: 0,
+    computer: 0
+  },
+  gamesOver: false,
+  matchOver: false,
+  exitProgram: false,
+}
 
 function printMessage(message) {  
   console.log(message);
@@ -102,21 +124,17 @@ function getDefenseOrOffenseSquare(board, marker) {
   for(let index = 0; index < WINNING_LINES.length; index++) {
     let line = WINNING_LINES[index];
     square = findAtRiskSquare(line, board, marker);
-    if (square) break;
+    if (square) return square;
   }
-
-  // returns undefined if there is no need to defend or opportunity to attack
-  return square;
+  
+  return null;
 }
 
 function computerChoosesSquare(board){
   let square;
 
-  // offense
-  square = getDefenseOrOffenseSquare(board, COMPUTER_MARKER);
-
-  // defense
-  square = getDefenseOrOffenseSquare(board, HUMAN_MARKER);
+  // offense or defense (check for offense first)
+  square = getDefenseOrOffenseSquare(board, COMPUTER_MARKER) || getDefenseOrOffenseSquare(board, HUMAN_MARKER);
 
   // pick square #5 (if available) 
   if (board['5'] === INITIAL_MARKER) {
@@ -150,39 +168,26 @@ function detectWinner(board){
         board[sq1] === HUMAN_MARKER &&
         board[sq2] === HUMAN_MARKER &&
         board[sq3] === HUMAN_MARKER
-      ) return 'player'
+      ) return 'player';
       else if (
         board[sq1] === COMPUTER_MARKER &&
         board[sq2] === COMPUTER_MARKER &&
         board[sq3] === COMPUTER_MARKER        
-    ) return 'computer'
+    ) return 'computer';
   }
 
   return null;
 }
 
-function joinOr(array, delimiter = ', ', joiningWord = 'or'){
-  let result = '';
+function updateScore(winner, board) {
+  GAME_STATE.gamesWon[winner] += 1;
 
-  if (array.length === 0) return result;
-
-  if (array.length === 1) return `${array[0]}`;
-
-  if (array.length < 3) return result = `${array[0]} ${joiningWord} ${array[1]}`
-
-  if (array.length > 2) {
-    return result = array.slice(0, array.length - 1)
-                         .join(delimiter) + `${delimiter}${joiningWord} ${array[array.length - 1]}`;
-  }
-}
-
-function updateScore(winner, gamesWon, board) {
-  gamesWon[winner] += 1;
-  
-  if (gamesWon[winner] === GAMES_TO_WIN_MATCH) {
-    printMessage(`${capitalised(winner)} won the match with ${gamesWon[winner]} wins!`);
-    matchOver = true;
+  // check if the match is over
+  if (GAME_STATE.gamesWon[winner] === GAMES_TO_WIN_MATCH) {
+    printMessage(`${capitalised(winner)} won the match with ${GAME_STATE.gamesWon[winner]} wins!`);
+    GAME_STATE.matchOver = true;
   } else {
+    // print winner of this game
     printMessage(`${capitalised(detectWinner(board))} won!`)
   }
 }
@@ -219,76 +224,86 @@ function alternatePlayer(currentPlayer) {
   return currentPlayer === 'player' ? 'computer' : 'player'; 
 }
 
-// a match continues until the user quits mid-match or the player/computer gets 5 game wins
-while (matchOver === false) {
-  printMessage(messages.welcome);
+function endMatchCheck() {
+  return !!GAME_STATE.matchOver;
+}
 
-  // reset each match
-  const gamesWon = {
-    player: 0,
-    computer: 0
-  }
-
-  // continues until games are done being played 
-  while(gamesOver === false) {
-    let board = initializeBoard();
-    let starter = determineWhoStarts(WHO_STARTS);
-    let currentPlayer = starter;
-
-    // continues until there is a winner or the board is full
-    while (true) {
-      clearConsole();
-      displayBoard(board);
-      
-      chooseSquare(board, currentPlayer)
-      currentPlayer = alternatePlayer(currentPlayer)
-      if (someoneWon(board) || boardFull(board)) break; 
-    }
-  
-  
-    if (someoneWon(board)) {
-      updateScore(detectWinner(board), gamesWon, board);
-    } else {
-      printMessage(messages.gameResult.tie)
-    }
-
-    displayBoard(board);
-    printMessage(`The current score is: Player: ${gamesWon.player}, Computer: ${gamesWon.computer}`)
-    printMessage(messages.newGame);
-
-    // check if player wants to play another game
-    let userGameAnswer = "";
-  
-    while (!YES_OR_NO.includes(userGameAnswer)) {
-      printMessage(messages.YesOrNo)
-      userGameAnswer = readline.question().toLowerCase();
-      
-      if (YES_OR_NO[1] === userGameAnswer) {
-        gamesOver = true;
-      }
-    };
-
-  }
-
-  if (gamesOver) {
-    printMessage(messages.bye);
-    break;
-  }
-
+function playAnotherMatchCheck() {
+  // ask user if they want to play a new match
   printMessage(messages.newMatch);
-
+  
   let userMatchAnswer = "";
   
   while (!YES_OR_NO.includes(userMatchAnswer)) {
-    printMessage(messages.YesOrNo)
+    printMessage(messages.yesOrNo)
     userMatchAnswer = readline.question().toLowerCase();
     
-    if (YES_OR_NO[1] === userMatchAnswer) {
-      gamesWon.player = 0;
-      gamesWon.computer = 0;
-      matchOver = false;
+    if (YES_OR_NO[0] === userMatchAnswer) {
+      GAME_STATE.gamesWon.player = 0;
+      GAME_STATE.gamesWon.computer = 0;
+      GAME_STATE.matchOver = false;
+      playMatch();
+    } else {
+      GAME_STATE.exitProgram = true;
+      printMessage(messages.bye);
     }
-  };
-
-  printMessage(messages.bye);
+  }
 }
+
+function playMatch() {
+  // a match continues until the user quits mid-match or the player/computer gets 5 game wins
+  while (GAME_STATE.matchOver === false) {
+    printMessage(messages.details);
+
+    // continues until games are done being played 
+    while(GAME_STATE.gamesOver === false) {
+      let board = initializeBoard();
+      let starter = determineWhoStarts(WHO_STARTS);
+      let currentPlayer = starter;
+
+      // continues until there is a winner or the board is full
+      while (true) {
+        clearConsole();
+        displayBoard(board);
+        
+        chooseSquare(board, currentPlayer)
+        currentPlayer = alternatePlayer(currentPlayer)
+        if (someoneWon(board) || boardFull(board)) break; 
+      }
+    
+      if (someoneWon(board)) {
+        clearConsole();
+        updateScore(detectWinner(board), board);
+        if (endMatchCheck()) break;
+      } else {
+        printMessage(messages.gameResult.tie)
+      }
+
+      displayBoard(board);
+      printMessage(`The current score is: Player: ${GAME_STATE.gamesWon.player}, Computer: ${GAME_STATE.gamesWon.computer}`)
+      printMessage(messages.newGame);
+
+      // check if player wants to play another game
+      let userGameAnswer = "";
+    
+      while (!YES_OR_NO.includes(userGameAnswer)) {
+        printMessage(messages.yesOrNo)
+        userGameAnswer = readline.question().toLowerCase();
+        
+        if (YES_OR_NO[1] === userGameAnswer) {
+          GAME_STATE.gamesOver = true;
+        }
+      };
+
+    }
+  }
+}
+
+// welcomes user to tictactoe
+printMessage(messages.welcome);
+
+// controls program flow
+while (GAME_STATE.exitProgram === false) {
+  playMatch();
+  playAnotherMatchCheck();
+};
