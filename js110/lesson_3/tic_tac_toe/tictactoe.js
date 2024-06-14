@@ -98,8 +98,9 @@ function playerChoosesSquare(board) {
 
     if (emptySquares(board).includes(square)) break;
     
+    clearConsole();
+    displayBoard(board);
     printMessage(messages.notValidSquare);
-
   }
 
   board[square] = HUMAN_MARKER;
@@ -241,6 +242,7 @@ function playAnotherMatchCheck() {
     if (YES_OR_NO[0] === userMatchAnswer) {
       GAME_STATE.gamesWon.player = 0;
       GAME_STATE.gamesWon.computer = 0;
+      GAME_STATE.gamesOver = false;
       GAME_STATE.matchOver = false;
       playMatch();
     } else {
@@ -253,10 +255,10 @@ function playAnotherMatchCheck() {
 function playMatch() {
   // a match continues until the user quits mid-match or the player/computer gets 5 game wins
   while (GAME_STATE.matchOver === false) {
-    printMessage(messages.details);
-
+    
     // continues until games are done being played 
     while(GAME_STATE.gamesOver === false) {
+      printMessage(messages.details);
       let board = initializeBoard();
       let starter = determineWhoStarts(WHO_STARTS);
       let currentPlayer = starter;
@@ -281,22 +283,26 @@ function playMatch() {
 
       displayBoard(board);
       printMessage(`The current score is: Player: ${GAME_STATE.gamesWon.player}, Computer: ${GAME_STATE.gamesWon.computer}`)
-      printMessage(messages.newGame);
 
       // check if player wants to play another game
       let userGameAnswer = "";
     
       while (!YES_OR_NO.includes(userGameAnswer)) {
+        clearConsole();
+        printMessage(messages.newGame);
         printMessage(messages.yesOrNo)
         userGameAnswer = readline.question().toLowerCase();
         
         if (YES_OR_NO[1] === userGameAnswer) {
           GAME_STATE.gamesOver = true;
-        }
+          GAME_STATE.matchOver = true;
+        } 
       };
 
     }
   }
+
+
 }
 
 // welcomes user to tictactoe
