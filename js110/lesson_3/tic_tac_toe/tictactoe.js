@@ -239,6 +239,7 @@ function playAnotherMatchCheck() {
     printMessage(messages.yesOrNo)
     userMatchAnswer = readline.question().toLowerCase();
     
+    // resets all match related variables if user wants to play another match
     if (YES_OR_NO[0] === userMatchAnswer) {
       GAME_STATE.gamesWon.player = 0;
       GAME_STATE.gamesWon.computer = 0;
@@ -293,6 +294,7 @@ function playMatch() {
         printMessage(messages.yesOrNo)
         userGameAnswer = readline.question().toLowerCase();
         
+        // stops the current match if user chooses to not play any more games
         if (YES_OR_NO[1] === userGameAnswer) {
           GAME_STATE.gamesOver = true;
           GAME_STATE.matchOver = true;
@@ -309,7 +311,9 @@ function playMatch() {
 printMessage(messages.welcome);
 
 // controls program flow
+// exitProgram set to true within playAnotherMatchCheck if user does not want to play another match
 while (GAME_STATE.exitProgram === false) {
   playMatch();
+  // invoked when a user quits mid-match or a match is over due to a score reaching GAMES_TO_WIN_MATCH
   playAnotherMatchCheck();
 };
