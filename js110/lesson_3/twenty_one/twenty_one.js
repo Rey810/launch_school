@@ -3,6 +3,14 @@ const messages = JSON.parse(fs.readFileSync('./messages.json'));
 
 const readline = require('readline-sync');
 
+const SUITES = ['C', 'S', 'H', 'D'];
+const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const HIGH_ACE_VALUE = 11;
+const LOW_ACE_VALUE = 1;
+const FACE_VALUE = 10;
+const GOAL_SUM = 21;
+const DEALER_MIN_SUM = 17;
+
 // utility functions
 function printMessage(msg) {
   console.log(`=> ${msg}`);
@@ -36,16 +44,13 @@ const GAME_STATE = {
 function initialiseDeck() {
   let sortedDeck = [];
 
-  const suites = ['C', 'S', 'H', 'D'];
-  const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-  
   // create card deck
-  for (let index = 0; index <= cards.length - 1; index++) {
+  for (let index = 0; index <= VALUES.length - 1; index++) {
     // create set of cards for 4 suites: clubs, spades, hearts, diamonds
 
     // add suite/card subarrays to array
-    suites.forEach(suite => {
-      sortedDeck.push([suite, cards[index]])
+    SUITES.forEach(suite => {
+      sortedDeck.push([suite, VALUES[index]])
     })
   }
 
@@ -75,14 +80,12 @@ function initialiseCardHands(player, dealer) {
 
 
 function playerTurn(player){
-  console.log(player);
   printMessage(`Your current hand is as follows: ${JSON.stringify(player.hand)}`);
 
   while (!player.stay && !player.bust) {
     let { hand } = player
 
     let hitOrStayResult = hitOrStay();
-    console.log('hitOrStay', hitOrStayResult === 'stay')
 
     if (hitOrStayResult === 'hit') {
       // give another card
@@ -98,7 +101,6 @@ function playerTurn(player){
     };
 
     if (hitOrStayResult === 'stay') {
-      console.log("inside hitOrStay === stay", player)
       player.stay = true;
       // if stays, dealerturn unless dealer has stayed (in which case compare cards)
       GAME_STATE.players.dealer.stay = false ? dealerTurn(GAME_STATE.players.dealer) : compareCards(GAME_STATE.players.player, GAME_STATE.players.dealer);
@@ -111,7 +113,7 @@ function dealerTurn(dealer) {
   dealer.score = sumCards(dealer.hand);
 
   while(!dealer.stay && !dealer.bust) {
-    if ((dealer.score > 17) && (dealer.score <= 21)) {
+    if ((dealer.score > DEALER_MIN_SUM) && (dealer.score <= GOAL_SUM)) {
       dealer.stay = true;
       compareCards(GAME_STATE.players.player, GAME_STATE.players.dealer);
     } else {
@@ -130,8 +132,6 @@ function dealerTurn(dealer) {
 function compareCards(player, dealer) {
   player.score = sumCards(player.hand);
   dealer.score = sumCards(dealer.hand);
-
-  console.log('scores', `Player Score: ${player.score}, Dealer Score: ${dealer.score}`);
 
   if (player.score > dealer.score) {
     // dealer is the loser
@@ -166,14 +166,12 @@ function dealCard(hand) {
 
 function sumCards(hand) {
   let sum = 0;
-
-  console.log('hand', hand)
   
   hand.forEach(card => {
     if (['J', 'Q', 'K'].includes(card[1])) {
-      sum += 10;
+      sum += FACE_VALUE;
     } else if (card[1] === 'A') {
-      sum + 11 > 21 ? sum += 1 : sum += 11;
+      sum + HIGH_ACE_VALUE > 21 ? sum += LOW_ACE_VALUE : sum += HIGH_ACE_VALUE;
     } else {
       sum += Number(card[1]);
     }
@@ -183,7 +181,7 @@ function sumCards(hand) {
 }
 
 function isBust(hand) {
-  return sumCards(hand) > 21
+  return sumCards(hand) > GOAL_SUM;
 }
 
 function setGameResult(loserName) {
