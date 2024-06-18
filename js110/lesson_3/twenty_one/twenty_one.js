@@ -81,7 +81,7 @@ function initialiseCardHands(player, dealer, shuffledDeck) {
 
 function playerTurn(player, shuffledDeck) {
   printMessage(`${JSON.stringify(player.hand)}`);
-  printMessage(`This gives your hand a score of ${sumCards(player.hand)}`);
+  printMessage(`This gives your hand a score of ${player.score}`);
 
   while (!player.stay && !player.bust) {
     let { hand } = player;
@@ -92,7 +92,7 @@ function playerTurn(player, shuffledDeck) {
       dealCard(hand, shuffledDeck, player.name);
 
       // check for bust
-      if (isBust(hand)) {
+      if (isBust(player)) {
         player.bust = true;
         setGameResult(player.name);
         displayResult();
@@ -108,7 +108,6 @@ function playerTurn(player, shuffledDeck) {
 
 function dealerTurn(dealer, shuffledDeck) {
   let { hand } = dealer;
-  dealer.score = sumCards(dealer.hand);
 
   while (!dealer.stay && !dealer.bust) {
     if ((dealer.score >= DEALER_MIN_SUM) && (dealer.score <= GOAL_SUM)) {
@@ -116,10 +115,9 @@ function dealerTurn(dealer, shuffledDeck) {
       compareCards(GAME_STATE.players.player, GAME_STATE.players.dealer);
     } else {
       dealCard(hand, shuffledDeck, dealer.name);
-      dealer.score = sumCards(dealer.hand);
 
       // check for bust
-      if (isBust(hand)) {
+      if (isBust(dealer)) {
         dealer.bust = true;
         setGameResult(dealer.name);
         displayResult();
@@ -129,9 +127,6 @@ function dealerTurn(dealer, shuffledDeck) {
 }
 
 function compareCards(player, dealer) {
-  player.score = sumCards(player.hand);
-  dealer.score = sumCards(dealer.hand);
-
   if (player.score > dealer.score) {
     // dealer is the loser
     setGameResult(dealer.name);
@@ -164,8 +159,10 @@ function dealCard(hand, shuffledDeck, player) {
 
   hand.push(shuffledDeck.pop());
 
+  GAME_STATE.players[player].score = sumCards(hand);
+
   if (player === 'player') {
-    printMessage(`This gives ${player} a score of ${sumCards(hand)}`);
+    printMessage(`This gives ${player} a score of ${GAME_STATE.players[player].score}`);
   }
 
   return hand;
@@ -197,8 +194,8 @@ function sumCards(hand) {
   return sum;
 }
 
-function isBust(hand) {
-  return sumCards(hand) > GOAL_SUM;
+function isBust(player) {
+  return  player.score > GOAL_SUM;
 }
 
 function setGameResult(loserName) {
@@ -236,7 +233,7 @@ function winnerOrTie(winner) {
   let message = '';
 
   if (winner) {
-    let score = sumCards(GAME_STATE.players[winner].hand);
+    let score = GAME_STATE.players[winner].score;
     message = `${capitalized(winner)} is the winner with a score of ${score}`;
   } else {
     message = 'It is a tie!';
@@ -283,6 +280,10 @@ while (true) {
   let sortedDeck = initialiseDeck();
   let shuffledDeck = shuffle(sortedDeck);
   initialiseCardHands(playerHand, dealerHand, shuffledDeck);
+
+  GAME_STATE.players.player.score = sumCards(playerHand);
+  GAME_STATE.players.player.score = sumCards(dealerHand);
+
   playerTurn(GAME_STATE.players.player, shuffledDeck);
 
   if (!playAgain()) break;
