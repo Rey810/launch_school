@@ -27,7 +27,8 @@ const GAME_STATE = {
       hand: [],
       stay: false,
       bust: false,
-      score: 0
+      score: 0,
+      wins: 0
     },
     dealer: {
       name: 'dealer',
@@ -35,9 +36,10 @@ const GAME_STATE = {
       stay: false,
       bust: false,
       score: 0,
+      wins: 0
     }
   },
-  winner: null
+  winner: null,
 };
 
 // initialise and shuffle card deck
@@ -107,14 +109,12 @@ function playerTurn(player, shuffledDeck) {
 }
 
 function dealerTurn(dealer, shuffledDeck) {
-  let { hand } = dealer;
-
   while (!dealer.stay && !dealer.bust) {
     if ((dealer.score >= DEALER_MIN_SUM) && (dealer.score <= GOAL_SUM)) {
       dealer.stay = true;
       compareCards(GAME_STATE.players.player, GAME_STATE.players.dealer);
     } else {
-      dealCard(hand, shuffledDeck, dealer.name);
+      dealCard(dealer.hand, shuffledDeck, dealer.name);
 
       // check for bust
       if (isBust(dealer)) {
@@ -206,6 +206,9 @@ function setGameResult(loserName) {
   }
 
   GAME_STATE.winner = winner;
+  winner.wins += 1;
+
+  console.log(winner);
 }
 
 function displayResult() {
@@ -226,7 +229,14 @@ function displayResult() {
 
   // prints the winner or a tie
   printMessage(winnerOrTie(winner));
+}
 
+function numOfWins(winner) {
+  if (GAME_STATE.players[winner].wins === 1) {
+    return "1 win";
+  } else {
+    return `${GAME_STATE.players[winner].wins} wins`;
+  }
 }
 
 function winnerOrTie(winner) {
@@ -234,7 +244,7 @@ function winnerOrTie(winner) {
 
   if (winner) {
     let score = GAME_STATE.players[winner].score;
-    message = `${capitalized(winner)} is the winner with a score of ${score}`;
+    message = `${capitalized(winner)} is the winner with a score of ${score} (${numOfWins(winner)})`;
   } else {
     message = 'It is a tie!';
   }
@@ -266,14 +276,30 @@ function resetGameState() {
   GAME_STATE.winner = null;
 }
 
+function matchWinner() {
+  let matchWinner = false;
+  // find if someone has a score of 3 wins
+  for (let player in GAME_STATE.players) {
+    let numOfWins = GAME_STATE.players[player].wins;
+    if (numOfWins === 3) {
+      printMessage(`${capitalized(player)} is the match winner with ${numOfWins} wins!`);
+      matchWinner = true;
+    }
+  }
+
+  return matchWinner;
+}
+
 // welcomes user to twenty one
 printMessage(messages.welcome);
 
 while (true) {
+
   console.clear();
   resetGameState();
 
   // main game loop
+
   let playerHand = GAME_STATE.players.player.hand;
   let dealerHand = GAME_STATE.players.dealer.hand;
 
@@ -282,10 +308,11 @@ while (true) {
   initialiseCardHands(playerHand, dealerHand, shuffledDeck);
 
   GAME_STATE.players.player.score = sumCards(playerHand);
-  GAME_STATE.players.player.score = sumCards(dealerHand);
+  GAME_STATE.players.dealer.score = sumCards(dealerHand);
 
   playerTurn(GAME_STATE.players.player, shuffledDeck);
 
+  if (matchWinner()) break;
   if (!playAgain()) break;
 }
 
