@@ -19,6 +19,23 @@ function capitalized(word) {
   return word[0].toUpperCase() + word.slice(1);
 }
 
+function joinOr(array, delimiter = ', ', joiningWord = 'or') {
+  let result;
+
+
+  if (array.length === 1) {
+    result = `${array[0]}`;
+  } else if (array.length < 3) {
+    result = `${array[0]} ${joiningWord} ${array[1]}`;
+  } else {
+    result = array.slice(0, array.length - 1)
+      .join(delimiter) + `${delimiter}${joiningWord} ${array[array.length - 1]}`;
+  }
+
+  return result;
+}
+
+// game-specific
 const GAME_STATE = {
   players: {
     player: {
@@ -95,7 +112,7 @@ function playerTurn(player, shuffledDeck) {
       if (isBust(player)) {
         player.bust = true;
         setGameResult(player.name);
-        displayResult();
+        displayResult(player);
       }
     }
 
@@ -193,6 +210,18 @@ function isBust(player) {
   return  player.score > GOAL_SUM;
 }
 
+function showFullHand(player) {
+  let fullHandArray = [];
+
+  for (let card of player.hand) {
+    fullHandArray.push(`${card.value} of ${card.suite}`);
+  }
+
+  let fullHandDetails = `${player.name === 'player' ? 'Your': 'The Dealer\'s'} full hand is: ${joinOr(fullHandArray, undefined, 'and')}`;
+
+  return fullHandDetails;
+}
+
 function setGameResult(loserName) {
   let winner;
 
@@ -223,6 +252,8 @@ function displayResult() {
 
   // prints the winner or a tie
   printMessage(winnerOrTie(winner));
+  printMessage(showFullHand(GAME_STATE.players.player));
+  printMessage(showFullHand(GAME_STATE.players.dealer));
 }
 
 function numOfWins(winner) {
