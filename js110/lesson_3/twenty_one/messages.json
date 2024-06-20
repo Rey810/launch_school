@@ -1,7 +1,8 @@
 {
-  "hitOrStay": "Hit or stay?",
-  "notValidInput": "That is not valid. Try again...",
-  "newGame": "Play again? Enter 'y' for 'yes' or 'n' for 'no'",
+  "hitOrStay": "Hit (h) or stay (s): ",
+  "notValidInput": "That is not valid. Try again: ",
+  "newGame": "Play again? Enter 'y' for 'yes' or 'n' for 'no': ",
   "bye": "Thanks for playing Twenty-One. See you next time!",
-  "welcome": "Welcome to Twenty-One. You are dealt two cards. Have a look at your hand: "
+  "welcome": "Welcome to Twenty-One. \n=> You are dealt two cards. Have a look at your hand: ",
+  "welcomeToNewGame": "Time for the next round. \n=> You are dealt two cards. Here is your new hand:"
 }

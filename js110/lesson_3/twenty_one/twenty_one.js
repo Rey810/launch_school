@@ -3,8 +3,8 @@ const messages = JSON.parse(fs.readFileSync('./messages.json'));
 
 const readline = require('readline-sync');
 
-const SUITES = ['C', 'S', 'H', 'D'];
-const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const SUITES = ['Clubs', 'Spades', 'Hearts', 'Diamonds'];
+const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
 const HIGH_ACE_VALUE = 11;
 const LOW_ACE_VALUE = 1;
 const FACE_VALUE = 10;
@@ -48,14 +48,12 @@ function initialiseDeck() {
   let sortedDeck = [];
 
   // create card deck
-  for (let index = 0; index <= VALUES.length - 1; index++) {
-    // create set of cards for 4 suites: clubs, spades, hearts, diamonds
-
-    // add suite/card subarrays to array
-    SUITES.forEach(suite => {
-      sortedDeck.push([suite, VALUES[index]]);
-    });
-  }
+  // add suite/card subarrays to array
+  SUITES.forEach(suite => {
+    for (let index = 0; index <= VALUES.length - 1; index++) {
+      sortedDeck.push({ suite: suite, value: VALUES[index]});
+    }
+  });
 
   return sortedDeck;
 }
@@ -79,11 +77,14 @@ function initialiseCardHands(player, dealer, shuffledDeck) {
     player.push(shuffledDeck.pop());
     dealer.push(shuffledDeck.pop());
   }
+
+  console.log(GAME_STATE.players.player.hand);
+  console.log(GAME_STATE.players.dealer.hand);
 }
 
 
 function playerTurn(player, shuffledDeck) {
-  printMessage(`${JSON.stringify(player.hand)}`);
+  printMessage(`You have a ${player.hand[0].value} of ${player.hand[0].suite} and a ${player.hand[1].value} of ${player.hand[1].suite}`);
   printMessage(`This gives your hand a score of ${player.score}`);
 
   while (!player.stay && !player.bust) {
@@ -142,14 +143,12 @@ function compareCards(player, dealer) {
 }
 
 function hitOrStay() {
-  printMessage(messages.hitOrStay);
   // get user input
-  let userChoice = readline.question().slice(0, 1).toLowerCase();
+  let userChoice = readline.question(messages.hitOrStay);
 
   // check input on a loop until input is correct
-  if (!['s', 'h'].includes(userChoice)) {
-    printMessage(messages.notValidInput);
-    userChoice = readline.question().slice(0, 1).toLowerCase();
+  if (!['s', 'h'].includes(userChoice.toLowerCase())) {
+    userChoice = readline.question(messages.notValidInput);
   }
 
   return userChoice === 'h' ? 'hit' : 'stay';
@@ -163,6 +162,8 @@ function dealCard(hand, shuffledDeck, player) {
   GAME_STATE.players[player].score = sumCards(hand);
 
   if (player === 'player') {
+    let { value, suite } = GAME_STATE.players[player].hand[hand.length - 1];
+    printMessage(`...a ${value} of ${suite}`);
     printMessage(`This gives ${player} a score of ${GAME_STATE.players[player].score}`);
   }
 
@@ -183,12 +184,12 @@ function sumCards(hand) {
   let sum = 0;
 
   hand.forEach(card => {
-    if (['J', 'Q', 'K'].includes(card[1])) {
+    if (['Jack', 'Queen', 'King'].includes(card.value)) {
       sum += FACE_VALUE;
-    } else if (card[1] === 'A') {
+    } else if (card.value === 'Ace') {
       sum = correctAceValue(sum);
     } else {
-      sum += Number(card[1]);
+      sum += Number(card.value);
     }
   });
 
@@ -255,11 +256,10 @@ function winnerOrTie(winner) {
 
 
 function playAgain() {
-  let answer = "";
+  let answer = readline.question(messages.newGame);
 
-  while (!['y', 'n'].includes(answer)) {
-    printMessage(messages.newGame);
-    answer = readline.question().slice(0, 1).toLowerCase();
+  while (!['y', 'n'].includes(answer.toLowerCase())) {
+    answer = readline.question(messages.newGame);
   }
 
   return answer === 'y';
