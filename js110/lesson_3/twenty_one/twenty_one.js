@@ -40,6 +40,7 @@ const GAME_STATE = {
     }
   },
   winner: null,
+  firstGame: true,
 };
 
 // initialise and shuffle card deck
@@ -290,12 +291,16 @@ function matchWinner() {
   return matchWinner;
 }
 
-// welcomes user to twenty one
-printMessage(messages.welcome);
 
 while (true) {
 
   console.clear();
+
+  // welcomes user to twenty one
+  if (GAME_STATE.firstGame) printMessage(messages.welcome);
+  // welcomes user to twenty one
+  else printMessage(messages.welcomeToNewGame);
+
   resetGameState();
 
   // main game loop
@@ -314,6 +319,9 @@ while (true) {
 
   if (matchWinner()) break;
   if (!playAgain()) break;
+
+  // at this point, the first game is completed
+  GAME_STATE.firstGame = false;
 }
 
 printMessage(messages.bye);
