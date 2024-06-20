@@ -5,8 +5,7 @@ const readline = require('readline-sync');
 
 const SUITES = ['Clubs', 'Spades', 'Hearts', 'Diamonds'];
 const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
-const HIGH_ACE_VALUE = 11;
-const LOW_ACE_VALUE = 1;
+const ACE_VALUE = 11;
 const FACE_VALUE = 10;
 const GOAL_SUM = 21;
 const DEALER_MIN_SUM = 17;
@@ -77,9 +76,6 @@ function initialiseCardHands(player, dealer, shuffledDeck) {
     player.push(shuffledDeck.pop());
     dealer.push(shuffledDeck.pop());
   }
-
-  console.log(GAME_STATE.players.player.hand);
-  console.log(GAME_STATE.players.dealer.hand);
 }
 
 
@@ -147,7 +143,7 @@ function hitOrStay() {
   let userChoice = readline.question(messages.hitOrStay);
 
   // check input on a loop until input is correct
-  if (!['s', 'h'].includes(userChoice.toLowerCase())) {
+  while (!['s', 'h'].includes(userChoice.toLowerCase())) {
     userChoice = readline.question(messages.notValidInput);
   }
 
@@ -163,21 +159,11 @@ function dealCard(hand, shuffledDeck, player) {
 
   if (player === 'player') {
     let { value, suite } = GAME_STATE.players[player].hand[hand.length - 1];
-    printMessage(`...a ${value} of ${suite}`);
+    printMessage(`... ${value} of ${suite}`);
     printMessage(`This gives ${player} a score of ${GAME_STATE.players[player].score}`);
   }
 
   return hand;
-}
-
-function correctAceValue(sum) {
-  if (sum + HIGH_ACE_VALUE > 21) {
-    sum += LOW_ACE_VALUE;
-  } else {
-    sum += HIGH_ACE_VALUE;
-  }
-
-  return sum;
 }
 
 function sumCards(hand) {
@@ -187,9 +173,16 @@ function sumCards(hand) {
     if (['Jack', 'Queen', 'King'].includes(card.value)) {
       sum += FACE_VALUE;
     } else if (card.value === 'Ace') {
-      sum = correctAceValue(sum);
+      sum += ACE_VALUE;
     } else {
       sum += Number(card.value);
+    }
+  });
+
+  // correct for aces by subtracting 10 for each ace (if score is over GOAL_SUM)
+  hand.filter(card => card.value === 'Ace').forEach(_ => {
+    if (sum > GOAL_SUM) {
+      sum -= 10;
     }
   });
 
@@ -210,7 +203,6 @@ function setGameResult(loserName) {
   GAME_STATE.winner = winner;
   winner.wins += 1;
 
-  console.log(winner);
 }
 
 function displayResult() {
