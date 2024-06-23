@@ -90,27 +90,23 @@ Low Level:
 - return "lengthCountObject"
 */
 
-function wordSizes(str) {
-  if (!str) return "";
+// function wordSizes(str) {
+//   if (!str) return "";
 
-  let wordsArray = str.split(" ");
-  let lengthCountObject = {};
+//   let wordsArray = str.split(" ");
+//   let lengthCountObject = {};
 
-  wordsArray.forEach(word => {
-    lengthCountObject[word.length] = lengthCountObject[word.length] + 1 || 1;
-  });
+//   wordsArray.forEach(word => {
+//     lengthCountObject[word.length] = lengthCountObject[word.length] + 1 || 1;
+//   });
 
-  return lengthCountObject;
-}
+//   return lengthCountObject;
+// }
 
-console.log(wordSizes('Four score and seven.'));                       // { "3": 1, "4": 1, "5": 1, "6": 1 }
-console.log(wordSizes('Hey diddle diddle, the cat and the fiddle!'));  // { "3": 5, "6": 1, "7": 2 }
-console.log(wordSizes("What's up doc?"));                              // { "2": 1, "4": 1, "6": 1 }
-console.log(wordSizes(''));
-
-// Words consist of any sequence of non-space characters.
-
-
+// console.log(wordSizes('Four score and seven.'));                       // { "3": 1, "4": 1, "5": 1, "6": 1 }
+// console.log(wordSizes('Hey diddle diddle, the cat and the fiddle!'));  // { "3": 5, "6": 1, "7": 2 }
+// console.log(wordSizes("What's up doc?"));                              // { "2": 1, "4": 1, "6": 1 }
+// console.log(wordSizes(''));
 
 
 
@@ -125,6 +121,45 @@ console.log(wordSizes(''));
 // wordSizes("What's up doc?");                              // { "2": 1, "3": 1, "5": 1 }
 // wordSizes('');
 
+/* 
+Low Level:
+- Set a variable "wordsArray" to the string split on every space character
+- Set a variable "lengthCountObject" to an empty object
+- If "wordsArray" length is 0, return an empty string
+- Loop over "wordsArray"
+  - for every word in the array do the following:
+    - count letters in the word 
+      - if the number of letters exsits as a key in "lengthCountObject", increment that key's value by 1
+      - else, create that length as a key in "lengthCountObject" and set it's initial value to 1
+- return "lengthCountObject"
+
+*/
+
+
+function wordSizesV2(str) {
+  const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+  if (!str) return "";
+
+  let wordsArray = str.split(" ");
+  let lengthCountObject = {};
+
+  wordsArray.forEach(word => {
+    let count = 0;
+
+    word.split('').forEach(letter => {
+      if (alphabet.includes(letter.toLowerCase())) count += 1;
+    });
+    lengthCountObject[count] = lengthCountObject[count] + 1 || 1;
+  });
+
+  return lengthCountObject;
+}
+
+console.log(wordSizesV2('Four score a"nd seven.'));                       // { "3": 1, "4": 1, "5": 2 }
+console.log(wordSizesV2('Hey diddle diddle, the cat and the fiddle!'));  // { "3": 5, "6": 3 }
+console.log(wordSizesV2("What's up doc?"));                              // { "2": 1, "3": 1, "5": 1 }
+console.log(wordSizesV2(''));
 
 
 
