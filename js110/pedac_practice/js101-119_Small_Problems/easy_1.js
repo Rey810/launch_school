@@ -807,3 +807,144 @@ isLeapYear(400);       // true
 // console.log(isLeapYear(1));         // false
 // console.log(isLeapYear(100));       // true
 // console.log(isLeapYear(400));       // true
+
+
+
+
+////////////////////////////
+/// Multiples of 3 and 5 ///
+//////////////////////////
+
+/* P 
+- input
+-- number
+-- number (sum of other numbers)
+
+- requirements
+-- sum all numbers betweeen 1 and the given number (inclusive) that are multiples of 3 or 5
+-- multiples: can be divided evenly by
+-- if number is a multiple of 3 and 5, only include it once
+
+- assumptions
+-- number passed is an integer greater than 1
+-- default return value is 0
+
+- own words
+-- given a number, return the sum of all the numbers (that are multiples of 3 and 5) between 1 and the given number.
+*/
+
+
+/* E 
+multisum(3);       // 3
+multisum(5);       // 8
+multisum(10);      // 33
+multisum(1000);    // 234168
+*/
+
+/* D */
+
+/* A
+1. set 'currentNumber' to 1
+2. set 'endNumber' to input
+3. set 'sum' to 0
+4. if number is divisible by 3 or 5,
+    -- add it to 'sum'
+5. increment 'currentNumber'
+6. Repeat #4 and #5 until 'currentNumber' is equal to 'endNumber'
+*/
+
+/* C */
+// function multisum(num) {
+//   let currentNumber = 1;
+//   let endNumber = num;
+//   let sum = 0;
+
+//   while (currentNumber <= endNumber) {
+//     if (currentNumber % 3 === 0 || currentNumber % 5 === 0) {
+//       sum += currentNumber;
+//     }
+//     currentNumber += 1;
+//   }
+
+//   return sum;
+// }
+
+// console.log(multisum(1));       // 0
+// console.log(multisum(3));       // 3
+// console.log(multisum(5));       // 8
+// console.log(multisum(10));      // 33
+// console.log(multisum(1000));    // 234168
+
+
+
+////////////////////////////
+/// UTF-16 String Value ///
+//////////////////////////
+
+/* P
+- input
+-- string
+- output
+-- number (sum of UTF-16 values)
+
+- requirements
+-- UTF-16 value is obtained using String.prototype.charCodeAt()
+-- the returned number is the sum of all the UTF-16 values of every character
+
+- assumption
+-- a string is always provided, even if it's empty
+
+- own words
+-- given a string, return the sum of it's characters UTF-16 values
+
+*/
+
+
+/* E
+utf16Value('Four score');         // 984
+utf16Value('Launch School');      // 1251
+utf16Value('a');                  // 97
+utf16Value('');                   // 0
+
+// The next three lines demonstrate that the code
+// works with non-ASCII characters from the UTF-16
+// character set.
+const OMEGA = "\u03A9";             // UTF-16 character 'Ω' (omega)
+utf16Value(OMEGA);                  // 937
+utf16Value(OMEGA + OMEGA + OMEGA);  // 2811
+*/
+
+/* D */
+
+/* A
+1. set 'string' to input
+2. set 'sum' to 0
+3. loop over each character,
+  -- determine it's UTF-value
+  -- add UTF-value to 'sum'
+4. return 'sum;
+*/
+
+/* C */
+function utf16Value(str) {
+  let string = str;
+  let sum = 0;
+
+  for (let i = 0; i < string.length; i += 1) {
+    sum += string.charCodeAt(i);
+  }
+
+  return sum;
+}
+
+console.log(utf16Value('Four score'));         // 984
+console.log(utf16Value('Launch School'));      // 1251
+console.log(utf16Value('a'));                  // 97
+console.log(utf16Value(''));                   // 0
+
+// The next three lines demonstrate that the code
+// works with non-ASCII characters from the UTF-16
+// character set.
+const OMEGA = "\u03A9";             // UTF-16 character 'Ω' (omega)
+console.log(utf16Value(OMEGA));                  // 937
+console.log(utf16Value(OMEGA + OMEGA + OMEGA));  // 2811
