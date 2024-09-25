@@ -466,60 +466,344 @@ C: Code
 - Create any test cases needed
 */
 
-let readline = require('readline-sync');
+// let readline = require('readline-sync');
 
-const getInteger = () => {
-  let input;
+// const getInteger = () => {
+//   let input;
 
-  while (!(input > 0)) {
-    input = Number(readline.question("Please enter an integer greater than 0: "));
-  }
+//   while (!(input > 0)) {
+//     input = Number(readline.question("Please enter an integer greater than 0: "));
+//   }
 
-  return input;
-};
+//   return input;
+// };
 
-const getOperationType = () => {
-  let input;
+// const getOperationType = () => {
+//   let input;
 
-  while (input !== "s" && input !== "p") {
-    input = readline.question('Enter "s" to compute the sum, or "p" to compute the product. ');
-  }
+//   while (input !== "s" && input !== "p") {
+//     input = readline.question('Enter "s" to compute the sum, or "p" to compute the product. ');
+//   }
 
-  return input;
-};
+//   return input;
+// };
 
-const sumIntegers = (lastInteger) => {
-  let sum = 0;
+// const sumIntegers = (lastInteger) => {
+//   let sum = 0;
 
-  for (let i = 1; i <= lastInteger; i++) {
-    sum += i;
-  }
+//   for (let i = 1; i <= lastInteger; i++) {
+//     sum += i;
+//   }
 
-  return sum;
-};
+//   return sum;
+// };
 
-const multiplyIntegers = (lastInteger) => {
-  let product = 1;
-  for (let i = 1; i <= lastInteger; i++) {
-    product *= i;
-  }
+// const multiplyIntegers = (lastInteger) => {
+//   let product = 1;
+//   for (let i = 1; i <= lastInteger; i++) {
+//     product *= i;
+//   }
 
-  return product;
-};
+//   return product;
+// };
 
-function sumOrProductOfConsecutiveIntegers() {
-  let integer = getInteger();
-  let operationType = getOperationType();
+// function sumOrProductOfConsecutiveIntegers() {
+//   let integer = getInteger();
+//   let operationType = getOperationType();
 
-  let result;
+//   let result;
 
-  if (operationType === 's') {
-    result = sumIntegers(integer);
-  } else if (operationType === 'p') {
-    result = multiplyIntegers(integer);
-  }
+//   if (operationType === 's') {
+//     result = sumIntegers(integer);
+//   } else if (operationType === 'p') {
+//     result = multiplyIntegers(integer);
+//   }
 
-  return result;
-}
+//   return result;
+// }
 
-console.log(sumOrProductOfConsecutiveIntegers());
+// console.log(sumOrProductOfConsecutiveIntegers());
+
+
+
+//////////////////////
+// Short Long Short ///
+/////////////////////
+
+/*
+P: Understanding the Problem
+
+- Establish rules and define the boundaries of the problem
+- Restate the problem in your own words
+- Identify problem requirements
+  - Explicit
+  - Implicit
+- Identify inputs and outputs (!!!)
+- Ask questions and identify unclear information
+- Don't rush this step
+
+- Input
+-- 2 strings
+- Output
+-- 1 string
+
+- Requirements
+-- determine length of the strings
+-- concatenate the shorter string with a longer string then the shorter string
+-- strings will be different lengths
+-- empty string is valid
+-- assuming that only strings are passed as arguments
+
+- Own words
+-- given two strings, return one string that is the result of concatenating the short with the long with the short
+
+*/
+
+
+/*
+E: Examples and Test Cases
+
+- Confirm or refute assumptions from "P" step
+- Answer questions and provide implicit requirements
+- Test cases are written in code and can be run to test your solution
+- Codify the rules and boundaries of the problem
+
+shortLongShort('abc', 'defgh');    // "abcdefghabc"
+shortLongShort('abcde', 'fgh');    // "fghabcdefgh"
+shortLongShort('', 'xyz');         // "xyz"
+*/
+
+
+/*
+D: Date Structure
+
+- Helps reason with data logically
+- Helps interact with data at the implementation stage
+- Data structures are closely linked to the algorithm used in the solution
+*/
+
+
+/*
+A: Algorithm
+
+- Logical sequence of steps for accomplishing a task
+- Closely related to data structures
+- At first, keep algorithm abstract and high level
+- Revisit during implementation step to update it or make notes
+- Ignore efficiency at this stage
+
+// 1. determine length of string inputs
+// 2. set shorter string to "shortString"
+// 3. set longer string to "longString"
+// 4. concatenate "shortString", "longString", "shortString"
+// 5. return concatenated string
+*/
+
+
+/*
+C: Code
+- Translate algorithm into code
+- Code with intent in context of programming language
+  - Features and constraints oflanguage
+  - Characteristics of data structures
+  - Built inmethods or functions
+  - Syntax/ general patterns
+- Write implementation notes as necessary
+- Create any test cases needed
+*/
+
+// function shortLongShort(str1, str2) {
+//   return str1.length < str2.length ? str1 + str2 + str1 : str2 + str1 + str2;
+// }
+
+// console.log(shortLongShort('abc', 'defgh'));    // "abcdefghabc"
+// console.log(shortLongShort('abcde', 'fgh'));    // "fghabcdefgh"
+// console.log(shortLongShort('', 'xyz'));         // "xyz"
+// console.log(shortLongShort('abc', 'xyz'));         // "xyzabcxyz"
+
+
+
+////////////////////////////
+/// Leap Years (Part 1) ///
+//////////////////////////
+
+/*
+P: Understanding the Problem
+
+- Establish rules and define the boundaries of the problem
+- Restate the problem in your own words
+- Identify problem requirements
+  - Explicit
+  - Implicit
+- Identify inputs and outputs (!!!)
+- Ask questions and identify unclear information
+- Don't rush this step
+
+- Input
+-- year (number)
+- Output
+-- Boolean
+
+- Requirements
+-- a leap year is when:
+--- a year is divisible by 4 (UNLESS the year is also divisble by 100)
+--- a year is divisible by 100 AND 400
+
+- Own words
+-- a leap year is when a year is divisible by 4 only or by 100 AND 400. Return true if the input is a leap year
+
+- Assumptions
+-- input will be a year greater than 0
+
+*/
+
+
+/*
+E: Examples and Test Cases
+
+- Confirm or refute assumptions from "P" step
+- Answer questions and provide implicit requirements
+- Test cases are written in code and can be run to test your solution
+- Codify the rules and boundaries of the problem
+
+isLeapYear(2016);      // true
+isLeapYear(2015);      // false
+isLeapYear(2100);      // false
+isLeapYear(2400);      // true
+isLeapYear(240000);    // true
+isLeapYear(240001);    // false
+isLeapYear(2000);      // true
+isLeapYear(1900);      // false
+isLeapYear(1752);      // true
+isLeapYear(1700);      // false
+isLeapYear(1);         // false
+isLeapYear(100);       // false
+isLeapYear(400);       // true
+
+*/
+
+
+/*
+D: Date Structure
+
+- Helps reason with data logically
+- Helps interact with data at the implementation stage
+- Data structures are closely linked to the algorithm used in the solution
+*/
+
+
+/*
+A: Algorithm
+
+- Logical sequence of steps for accomplishing a task
+- Closely related to data structures
+- At first, keep algorithm abstract and high level
+- Revisit during implementation step to update it or make notes
+- Ignore efficiency at this stage
+
+// 1. set input to "year"
+// 2. if "year" is divisible by 4 but not 100, return true
+// 3. if "year" is divisible by 100 and 400, return true
+
+*/
+
+
+/*
+C: Code
+- Translate algorithm into code
+- Code with intent in context of programming language
+  - Features and constraints oflanguage
+  - Characteristics of data structures
+  - Built inmethods or functions
+  - Syntax/ general patterns
+- Write implementation notes as necessary
+- Create any test cases needed
+*/
+
+// const isLeapYear = year => {
+//   if ((year % 4 === 0) && (year % 100 !== 0)) return true;
+//   if ((year % 100 === 0) && (year % 400 === 0)) return true;
+
+//   else return false;
+// };
+
+// const isLeapYear = year => (year % 4 === 0) && (year % 100 !== 0) || (year % 100 === 0) && (year % 400 === 0);
+
+// console.log(isLeapYear(2016));      // true
+// console.log(isLeapYear(2015));      // false
+// console.log(isLeapYear(2100));      // false
+// console.log(isLeapYear(2400));      // true
+// console.log(isLeapYear(240000));    // true
+// console.log(isLeapYear(240001));    // false
+// console.log(isLeapYear(2000));      // true
+// console.log(isLeapYear(1900));      // false
+// console.log(isLeapYear(1752));      // true
+// console.log(isLeapYear(1700));      // false
+// console.log(isLeapYear(1));         // false
+// console.log(isLeapYear(100));       // false
+// console.log(isLeapYear(400));       // true
+
+
+
+////////////////////////////
+/// Leap Years (Part 1) ///
+//////////////////////////
+
+/* P
+- input
+-- year (number)
+- output 
+-- Boolean
+
+- Requirements
+-- if year is less than 1752, a leap year is every 4 years
+-- if a year is 1752 or more, the previous leap year rules apply
+*/
+
+/* E
+isLeapYear(2016);      // true
+isLeapYear(2015);      // false
+isLeapYear(2100);      // false
+isLeapYear(2400);      // true
+isLeapYear(240000);    // true
+isLeapYear(240001);    // false
+isLeapYear(2000);      // true
+isLeapYear(1900);      // false
+isLeapYear(1752);      // true
+isLeapYear(1700);      // true
+isLeapYear(1);         // false
+isLeapYear(100);       // true
+isLeapYear(400);       // true
+*/
+
+
+// D
+
+/* A
+// 1. Set input to "year"
+// 2. if "year" is less than 1752, apply first leap year rule
+// 3. if "year" is 1752 or more, apply second leap year rule
+*/
+
+// C
+// const isLeapYear = year => {
+//   if (year >= 1752) {
+//     return (year % 400 === 0) || ((year % 4 === 0) && year % 100 !== 0);
+//   } else {
+//     return year % 4 === 0;
+//   }
+// };
+
+// console.log(isLeapYear(2016));      // true
+// console.log(isLeapYear(2015));      // false
+// console.log(isLeapYear(2100));      // false
+// console.log(isLeapYear(2400));      // true
+// console.log(isLeapYear(240000));    // true
+// console.log(isLeapYear(240001));    // false
+// console.log(isLeapYear(2000));      // true
+// console.log(isLeapYear(1900));      // false
+// console.log(isLeapYear(1752));      // true
+// console.log(isLeapYear(1700));      // true
+// console.log(isLeapYear(1));         // false
+// console.log(isLeapYear(100));       // true
+// console.log(isLeapYear(400));       // true
