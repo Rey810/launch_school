@@ -552,3 +552,129 @@ console.log(stringToInteger("570") === 570); // logs true
 
 // console.log(stringToInteger("4321") === 4321); // logs true
 // console.log(stringToInteger("570") === 570); // logs true
+
+
+
+//////////////////////////////////////////
+// Convert a String to a Signed Number //
+////////////////////////////////////////
+
+
+/* P
+- input
+-- string (number with or without a sign)
+- output
+-- number
+
+- requirements
+-- if string has a leading + sign, return a positive number
+-- if string has a leading - sign, return a negative number
+-- if string has no sign, return a positive number
+*/
+
+/* E
+console.log(stringToSignedInteger("4321") === 4321); // logs true
+console.log(stringToSignedInteger("-570") === -570); // logs true
+console.log(stringToSignedInteger("+100") === 100); // logs true
+*/
+
+/* D */
+
+/* A
+1. check the sign of the first character
+  -- if it is +, then use the value returned from stringToInteger (excluding the first char)
+  -- if it is -, then use the value returned from stringToInteger (excluding the first char) and append a - sign
+  -- else use the value returned from stringToInteger (excluding the first char)
+*/
+
+/* C */
+
+// function stringToSignedInteger(string) {
+//   switch (string[0]) {
+//     case "-":
+//       return -stringToInteger(string.slice(1, string.length));
+//     case "+":
+//       return stringToInteger(string.slice(1, string.length));
+//     default:
+//       return stringToInteger(string);
+//   }
+// }
+
+// console.log(stringToSignedInteger("4321") === 4321); // logs true
+// console.log(stringToSignedInteger("-570") === -570); // logs true
+// console.log(stringToSignedInteger("+100") === 100); // logs true
+
+
+
+//////////////////////////////////////////
+// Convert a Number to a String /////////
+////////////////////////////////////////
+
+/* P 
+- input
+-- number
+- output
+-- string
+
+- rules/requirements
+-- non-negative number must be converted to string
+-- standard conversions may not be used
+-- '' + number may not be used
+*/
+
+/* E 
+integerToString(4321);        // "4321"
+integerToString(0);           // "0"
+integerToString(5000);        // "5000"
+integerToString(1234567890);  // "1234567890"
+*/
+
+/* D
+- an array that holds individual numbers of the number argument
+*/
+
+/* A
+*/
+
+/* C */
+
+const integerToString = (number) => {
+  let arr = [];
+  let num = number;
+
+  if (number === 0) return "0";
+
+  while (num > 0) {
+    arr.push(num % 10);
+    num = Math.floor(num / 10);
+  }
+
+  return arr.reverse().join('');
+};
+
+// console.log(integerToString(4321));        // "4321"
+// console.log(integerToString(0));           // "0"
+// console.log(integerToString(5000));        // "5000"
+// console.log(integerToString(1234567890));  // "1234567890"
+
+
+
+//////////////////////////////////////////
+// Convert a Signed Number to a String //
+////////////////////////////////////////
+
+function signedIntegerToString(number) {
+  switch (Math.sign(number)) {
+    case -1:
+      return `-${integerToString(-number)}`;
+    case 1:
+      return `+${integerToString(number)}`;
+    default:
+      return integerToString(number);
+  }
+}
+
+console.log(signedIntegerToString(4321) === "+4321");
+console.log(signedIntegerToString(-123) === "-123");
+console.log(signedIntegerToString(0) === "0");
+console.log(signedIntegerToString(-0) === "-0");
