@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* 
 UPPERCASE CHECK
 */
@@ -130,7 +131,7 @@ CAPITALIZE WORDS
 -> each word should have it's fisrt word capitalized
 -> any non-whitespace characters is considered a word
 
----- 
+----
 Algorithm:
 - Capitalize every word in a string
 
@@ -160,3 +161,190 @@ function capitalizeWord(str) {
 // console.log(wordCap('four score and seven'));       // "Four Score And Seven"
 // console.log(wordCap('the javaScript language'));    // "The Javascript Language"
 // console.log(wordCap('this is a "quoted" word'));    // 'This Is A "quoted" Word'
+
+
+
+
+/*
+SWAP CASE
+*/
+
+function swapCase(string) {
+  return string.split('').map(char => char.toUpperCase() === char ? char.toLowerCase() : char.toUpperCase()).join('');
+}
+
+// console.log(swapCase('CamelCase'));              // "cAMELcASE"
+// console.log(swapCase('Tonight on XYZ-TV'));      // "tONIGHT ON xyz-tv"
+
+
+
+
+
+/* STAGGERED CAPS (PART ONE)
+
+- input
+-> string
+- output
+-> string (every second character capitalised, if it's alphabetic)
+
+- rules
+-> capitalise first character in string
+-> every second character after that is capitalised (if it's alphabetic)
+-> every other character must be lowercased
+-> don't change non-alphabetic characters 
+-> capitalise/lowercase depending on position of character in string
+
+----
+Algorithm
+- Determine index of character
+  -- if even, change to lowercase
+  -- if odd, change to uppercase
+
+Main function
+staggeredCase(string)
+1. Split "string" into array
+2. Loop over array (transformation method)
+  - if character is not alphabetic, continue to next iteration
+  - if character is odd, change to lowercase
+  - if character is even, change to uppercase
+3. Join array elements
+4. Return as string
+*/
+
+// function staggeredCase(string) {
+//   return string.split("").map((el, index) => {
+//     if (index % 2 === 0) {
+//       return el.toUpperCase();
+//     } else {
+//       return el.toLowerCase();
+//     }
+//   }).join('')
+// }
+
+// console.log(staggeredCase('I Love Launch School!'));        // "I LoVe lAuNcH ScHoOl!"
+// console.log(staggeredCase('ALL_CAPS'));                     // "AlL_CaPs"
+// console.log(staggeredCase('ignore 77 the 4444 numbers'));   // "IgNoRe 77 ThE 4444 nUmBeRs"
+
+
+
+
+
+/*
+STAGGERED CAPS (PART 2)
+*/
+
+function staggeredCase(string) {
+  let needUpper = true;
+
+  return string.split("").map(el => {
+    el = el.toLowerCase();
+
+    if (el >= 'a' && el <= 'z') {
+      if (needUpper) {
+        needUpper = false;
+        return el.toUpperCase();
+      } else {
+        needUpper = true;
+        return el.toLowerCase();
+      }
+    } else {
+      return el;
+    }
+  }).join('');
+}
+
+// console.log(staggeredCase("I Love Launch School!") === "I lOvE lAuNcH sChOoL!");
+// console.log(staggeredCase("ALL CAPS") === "AlL cApS");
+// console.log(
+//   staggeredCase("ignore 77 the 444 numbers") === "IgNoRe 77 ThE 444 nUmBeRs"
+// );
+
+
+
+
+/*
+HOW LONG ARE YOU?
+*/
+
+function wordLengths(str) {
+  return str ? str.split(" ").map(word => `${word} ${word.length}`) : [];
+}
+
+// wordLengths('cow sheep chicken');
+// // ["cow 3", "sheep 5", "chicken 7"]
+
+// wordLengths('baseball hot dogs and apple pie');
+// // ["baseball 8", "hot 3", "dogs 4", "and 3", "apple 5", "pie 3"]
+
+// wordLengths("It ain't easy, is it?");
+// // ["It 2", "ain't 5", "easy, 5", "is 2", "it? 3"]
+
+// wordLengths('Supercalifragilisticexpialidocious');
+// // ["Supercalifragilisticexpialidocious 34"]
+
+// wordLengths('');      // []
+// wordLengths();        // []
+
+
+
+
+/*
+SEARCH WORD (PART 1)
+
+- input
+-> 2 strings (word, text of many words)
+- output
+-> number (# of times word appears in text of many words)
+
+- rules
+-> search should be case-insensitive
+
+----
+Algorithm
+- Change both strings to lowercase
+- Find occurrences of first string in second string
+
+Main function
+searchWord(targetWord, stringOfWords)
+1. create 'count' variable and set to 0
+2. split stringOfWords on " " into array
+3. Iterate over each word in array
+  - loop over each letter of targetWord arg
+    - find index of first letter of targetWord in current word
+      - if found, compare targetWord with current word at each index position
+4. Return count
+*/
+
+function searchWord(word, stringOfWords) {
+  let count = 0;
+  let targetWord = word.toLowerCase();
+  let string = stringOfWords.toLowerCase();
+
+  string.split(" ").forEach(currentWord => {
+    let firstIndex = currentWord.indexOf(targetWord[0]);
+    let targetWordFound = false;
+    let targetWordIndex = 0;
+
+    if (firstIndex >= 0) {
+      // iterates over every letter
+      for (let idx = firstIndex; idx < (firstIndex + targetWord.length); idx++) {
+        if (targetWord[targetWordIndex] !== currentWord[idx]) {
+          targetWordIndex += 1;
+          targetWordFound = false;
+          continue;
+        }
+
+        targetWordIndex += 1;
+        targetWordFound = true;
+      }
+    }
+
+    if (targetWordFound) count += 1;
+  });
+
+  return count;
+}
+
+// const text = 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?';
+
+// console.log(searchWord('sed', text));      // 3
