@@ -176,8 +176,77 @@ function isIsosceles(A, B, C) {
 }
 
 
-console.log(triangle(3, 3, 3));        // "equilateral"
-console.log(triangle(3, 3, 1.5));      // "isosceles"
-console.log(triangle(3, 4, 5));        // "scalene"
-console.log(triangle(0, 3, 3));        // "invalid"
-console.log(triangle(3, 1, 1));        // "invalid"
+// console.log(triangle(3, 3, 3));        // "equilateral"
+// console.log(triangle(3, 3, 1.5));      // "isosceles"
+// console.log(triangle(3, 4, 5));        // "scalene"
+// console.log(triangle(0, 3, 3));        // "invalid"
+// console.log(triangle(3, 1, 1));        // "invalid"
+
+
+
+
+/*
+Tri-Angles
+
+- input
+-> 3 numbers (angles of a triangle)
+- output
+-> string (triangle type)
+
+- rules
+-> triangle types:
+--> Right: One angle is a right angle (exactly 90 degrees).
+--> Acute: All three angles are less than 90 degrees.
+--> Obtuse: One angle is greater than 90 degrees.
+
+-> triangle validity
+--> sum of angles must be 180
+--> every angle > 0
+
+----
+Algorithm
+- Determine if input makes a valid triangle
+- Determine the triangle type
+
+Main function:
+- checkValidity(A, B, C)
+-- if input is not valid, return "invalid"
+- return checkTriangleType(A, B, C)
+
+Helper Function
+checkValidity(A, B, C)
+- if sum of A, B, C is not equal to 180, return false
+- else if any angle is 0, return false
+- else return true
+
+Helper Function
+checkTriangleType(A, B, C)
+- if A, B, or C is equal to 90
+-- return "right"
+- else if A, B, or C is less than 90
+-- return "obtuse"
+- else return "acute"
+*/
+
+function checkValidity(A, B, C) {
+  if ((A + B + C) !== 180) return false;
+  else if (A <= 0 || B <= 0 || C <= 0) return false;
+  else return true;
+}
+
+function checkTriangleType(A, B, C) {
+  if (A === 90 || B === 90 || C === 90) return "right";
+  else if (A > 90 || B > 90 || C > 90) return "obtuse";
+  else return "acute";
+}
+
+function triangle(A, B, C) {
+  if (!checkValidity(A, B, C)) return "invalid";
+  return checkTriangleType(A, B, C);
+}
+
+console.log(triangle(60, 70, 50));       // "acute"
+console.log(triangle(30, 90, 60));       // "right"
+console.log(triangle(120, 50, 10));      // "obtuse"
+console.log(triangle(0, 90, 90));        // "invalid"
+console.log(triangle(50, 50, 50));       // "invalid"
