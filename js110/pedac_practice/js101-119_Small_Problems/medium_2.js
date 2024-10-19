@@ -228,10 +228,8 @@ checkTriangleType(A, B, C)
 - else return "acute"
 */
 
-function checkValidity(A, B, C) {
-  if ((A + B + C) !== 180) return false;
-  else if (A <= 0 || B <= 0 || C <= 0) return false;
-  else return true;
+function checkInvalidity(A, B, C) {
+  return (A + B + C !== 180) || (A * B * C === 0);
 }
 
 function checkTriangleType(A, B, C) {
@@ -241,12 +239,36 @@ function checkTriangleType(A, B, C) {
 }
 
 function triangle(A, B, C) {
-  if (!checkValidity(A, B, C)) return "invalid";
+  if (checkInvalidity(A, B, C)) return "invalid";
   return checkTriangleType(A, B, C);
 }
 
-console.log(triangle(60, 70, 50));       // "acute"
-console.log(triangle(30, 90, 60));       // "right"
-console.log(triangle(120, 50, 10));      // "obtuse"
-console.log(triangle(0, 90, 90));        // "invalid"
-console.log(triangle(50, 50, 50));       // "invalid"
+// console.log(triangle(60, 70, 50));       // "acute"
+// console.log(triangle(30, 90, 60));       // "right"
+// console.log(triangle(120, 50, 10));      // "obtuse"
+// console.log(triangle(0, 90, 90));        // "invalid"
+// console.log(triangle(50, 50, 50));       // "invalid"
+
+
+
+
+
+/* 
+UNLUCKY DAYS
+*/
+
+function fridayThe13ths(year) {
+  let thirteenths = [];
+
+  for (let month = 0; month <= 11; month++) {
+    thirteenths.push(new Date(year, month, 13))
+  }
+
+  return thirteenths.filter(date => date.getDay() === 5).length
+}
+
+console.log(fridayThe13ths(1986));      // 1
+console.log(fridayThe13ths(2015));      // 3
+console.log(fridayThe13ths(2017));      // 2
+
+console.log(new Date(2021, 11, 4).getFullYear())
