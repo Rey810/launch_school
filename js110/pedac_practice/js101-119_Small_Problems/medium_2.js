@@ -267,8 +267,159 @@ function fridayThe13ths(year) {
   return thirteenths.filter(date => date.getDay() === 5).length
 }
 
-console.log(fridayThe13ths(1986));      // 1
-console.log(fridayThe13ths(2015));      // 3
-console.log(fridayThe13ths(2017));      // 2
+// console.log(fridayThe13ths(1986));      // 1
+// console.log(fridayThe13ths(2015));      // 3
+// console.log(fridayThe13ths(2017));      // 2
 
-console.log(new Date(2021, 11, 4).getFullYear())
+// console.log(new Date(2021, 11, 4).getFullYear())
+
+
+
+
+/* 
+Next Featured Number Higher than a Given Value
+
+- input
+-> number 
+- output
+-> number (featured number)
+
+- rules
+-> featured number:
+--> odd number
+--> multiple of 7
+--> all digits occur once
+-> return string if there is no next featured number (when number > 9876543201)
+
+----
+ALGORITHM
+- Given a number, determine the next "featured number"
+- Return "featured number"
+
+Main function 
+featured(num)
+- initialize for-loop with initializer "currNum" set to getOddMultipleOf7(num)
+-- if onlySingleDigits 
+--- return "currNum"
+- return "There is no possible number that fulfills those requirements."
+
+Helper function 
+getOddMultipleOf7(num) 
+- while 'num' is even or 'num' is not a multiple of 7
+-- increment 'num'
+- return 'num'
+
+Helper function
+onlySingleDigits(num)
+- coerce num to string
+- split string into array
+- iterate over array
+-- if every element's index is equal to the last index of that element
+--- return true
+-- else return false
+
+*/
+
+function onlySingleDigits(num) {
+  return [...String(num)].every(((el, idx, arr) => idx === arr.lastIndexOf(el)));
+}
+
+function getOddMultipleOf7(num) {
+  do {
+    num += 1
+  } while (num % 2 === 0 || num % 7 !== 0);
+
+  return num;
+}
+
+function featured(num) {
+  const LARGEST_FEATURED_NUM = 9876543201;
+
+  let oddMultipleOf7 = getOddMultipleOf7(num)
+
+  for (let currNum = oddMultipleOf7; currNum <= LARGEST_FEATURED_NUM; currNum += 14) {
+    if (onlySingleDigits(currNum)) return currNum;
+  }
+
+  return "There is no possible number that fulfills those requirements."
+}
+
+// console.log(featured(12));           // 21
+// console.log(featured(20));           // 21
+// console.log(featured(21));           // 35
+// console.log(featured(997));          // 1029
+// console.log(featured(1029));         // 1043
+// console.log(featured(999999));       // 1023547
+// console.log(featured(999999987));    // 1023456987
+// console.log(featured(9876543186));   // 9876543201
+// console.log(featured(9876543200));   // 9876543201
+// console.log(featured(9876543201));   // "There is no possible number that fulfills those requirements."
+
+
+
+
+/*
+SUM SQUARE - SQUARE NUM
+
+- input
+-> number
+- output
+-> number 
+
+- rules
+-> equation
+--> (square of the sum of the first "arg" pos. ints) - (sum of squares of first 'arg' pos. ints)
+
+----
+ALGORITHM
+- Given a number, calculate the square of sums minus the sum of squares
+
+Main function
+sumSquareDifference(num)
+- getSquareOfTheSum
+- getSumOfSquares
+- return getSquareOfTheSum minus getSumOfSquares
+
+Helper function
+getSquareOfTheNum(num)
+- intialize 'sum' to 0
+- intialize for-loop, continue until initializer 'currNum' is equal to "num"
+-- increment 'sum' by 'currNum'
+- return 'sum' squared
+
+Helper function
+getSumOfSquares(num)
+- initialize 'sumOfSquares'
+- initialize for-loop, continue until initializer 'currNum' is equal to 'num'
+-- increment 'sumOfSquares' by 'currNum' squared
+- return 'sumOfSquares'
+*/
+
+function getSquareOfTheNum(num) {
+  let sum = 0;
+
+  for (let currNum = 0; currNum <= num; currNum++) {
+    sum += currNum;
+  }
+
+  return sum ** 2;
+}
+
+function getSumOfSquares(num) {
+  let sumOfSquares = 0;
+
+  for (let currNum = 0; currNum <= num; currNum++) {
+    sumOfSquares += currNum ** 2;
+  }
+
+  return sumOfSquares;
+}
+
+function sumSquareDifference(num) {
+  return getSquareOfTheNum(num) - getSumOfSquares(num);
+}
+
+// console.log(sumSquareDifference(3));      // 22 --> (1 + 2 + 3)**2 - (1**2 + 2**2 + 3**2)
+// console.log(sumSquareDifference(10));     // 2640
+// console.log(sumSquareDifference(1));      // 0
+// console.log(sumSquareDifference(100));    // 25164150
