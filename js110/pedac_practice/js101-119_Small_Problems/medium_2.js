@@ -423,3 +423,122 @@ function sumSquareDifference(num) {
 // console.log(sumSquareDifference(10));     // 2640
 // console.log(sumSquareDifference(1));      // 0
 // console.log(sumSquareDifference(100));    // 25164150
+
+
+
+
+/*
+BUBBLE SORT
+
+- input
+-> array (numbers/strings)
+- output
+-> mutated array (sorted numbers/strings)
+
+- rules
+-> use bubble sort algorithm
+--> sort numbers smallest to biggest
+-> array will contain at least 2 elements
+
+----
+Algorithm
+- Iterate over elements and sort them in place multiple times until they can't be sorted more
+
+Main function:
+bubbleSort(arr)
+- initialize 'notSwapped' to false
+- while 'swapped' is false
+  -- set'notSwapped' to true 
+  -- initialize for-loop, continues until initializer 'idx' is <= arr.length
+    --- if element at 'idx' is > than the next element
+    ---- swap elements
+    ---- 'notSwapped' is now false
+- return arr
+*/
+
+function bubbleSort(arr) {
+  while (true) {
+    let swapped = false;
+
+    for (let idx = 0; idx < arr.length; idx++) {
+      if (arr[idx] > arr[idx + 1]) {
+        [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+        swapped = true;
+      }
+    }
+    if (swapped === false) break;
+  } 
+
+  return arr
+}
+
+// let array1 = [5, 3];
+// bubbleSort(array1);
+// console.log(array1);    // [3, 5]
+
+// let array2 = [6, 2, 7, 1, 4];
+// bubbleSort(array2);
+// console.log(array2);    // [1, 2, 4, 6, 7]
+
+// let array3 = ['Sue', 'Pete', 'Alice', 'Tyler', 'Rachel', 'Kim', 'Bonnie'];
+// bubbleSort(array3);
+// console.log(array3);    // ["Alice", "Bonnie", "Kim", "Pete", "Rachel", "Sue", "Tyler"]
+
+
+
+
+/*
+IS IT PRIME?
+
+- input
+-> number
+- output
+-> boolean (true or false)
+
+- rules
+-> prime number:
+--> not 1
+--> divisible by itself and 1
+
+----
+Algorithm
+- Given a number, return true if it's a prime number, false if its not
+
+Main function:
+is_prime(num)
+- if num is 1, return false;
+- initialize 'isPrime' and set to 'true'
+- initialize for-loop, starting at 2 and ending at less than 'num'
+-- if number is divisible by current index
+--- set 'isPrime' to false and break
+- return 'isPrime'
+*/
+
+function is_prime(num) {
+  if (num === 1) return false;
+
+  for (let i = 2; i < num; i++) {
+    if (num % i === 0) {
+      return false
+    }
+  }
+
+  return true;
+}
+
+console.log(is_prime(1) === false)            // true
+console.log(is_prime(2) === true)             // true
+console.log(is_prime(3) === true)             // true
+console.log(is_prime(4) === false)            // true
+console.log(is_prime(5) === true)             // true
+console.log(is_prime(6) === false)            // true
+console.log(is_prime(7) === true)             // true
+console.log(is_prime(8) === false)            // true
+console.log(is_prime(9) === false)            // true
+console.log(is_prime(10) === false)           // true
+console.log(is_prime(23) === true)            // true
+console.log(is_prime(24) === false)           // true
+console.log(is_prime(997) === true)           // true
+console.log(is_prime(99435676578) === false)          // true
+console.log(is_prime(3_297_061) === true)     // true
+console.log(is_prime(23_297_061) === false)   // true
