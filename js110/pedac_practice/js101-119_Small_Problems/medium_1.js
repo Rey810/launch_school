@@ -361,5 +361,65 @@ function wordToDigit(str) {
 }
 
 
-console.log(wordToDigit('Please call me at five five five one two three four. Thanks.'));
-// "Please call me at 5 5 5 1 2 3 4. Thanks."
+// console.log(wordToDigit('Please call me at five five five one two three four. Thanks.'));
+// // "Please call me at 5 5 5 1 2 3 4. Thanks."
+
+
+
+
+
+/*
+Fibonacci Number Location By Length
+
+- input
+-> number (# of digits)
+- output
+-> number (index of fib with that # of digits)
+
+- rules
+-> argument is the number of digits of the fib num whose index is returned
+-> 1st fib number has index of 1
+-> arg will always be >= 2 (# of digits)
+
+
+---- 
+Algorithm
+- Create fib numbers 
+- Continue until digit count of fib number is equal to arg
+- Return index of that fib number
+
+Main function
+findFibonacciIndexByLength(num)
+-- init 'fibsArr' to [1, 1, 2]
+-- while true
+  --- sum number at previous index with num at previous previous index
+  --- add to 'fibsArr'
+  --- check if digits of fib match arg
+    ---- if they do, return the length of the 'fibsArr'
+*/
+
+function findFibonacciIndexByLength(num) {
+  const fibsArr = [1n, 1n, 2n];
+  let fibIndex;
+
+  while (true) {
+    let currFib = fibsArr[fibsArr.length - 1] + fibsArr[fibsArr.length - 2];
+    fibsArr.push(currFib);
+    if (BigInt([...String(currFib)].length) === num) {
+      fibIndex = BigInt(fibsArr.length);
+      break;
+    }
+  }
+
+  return fibIndex;
+}
+
+// console.log(findFibonacciIndexByLength(2n) === 7n);    // 1 1 2 3 5 8 13
+// console.log(findFibonacciIndexByLength(3n) === 12n);   // 1 1 2 3 5 8 13 21 34 55 89 144
+// console.log(findFibonacciIndexByLength(10n) === 45n);
+// console.log(findFibonacciIndexByLength(16n) === 74n);
+// console.log(findFibonacciIndexByLength(100n) === 476n);
+// console.log(findFibonacciIndexByLength(1000n) === 4782n);
+// console.log(findFibonacciIndexByLength(10000n) === 47847n);
+
+// The last example may take a minute or so to run.
