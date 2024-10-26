@@ -636,3 +636,228 @@ function countSubstrings(source, target) {
 // p(countSubstrings('bbbaabbbbaab', 'baab') === 2);
 // p(countSubstrings('bbbaabbbbaab', 'bbaab') === 2);
 // p(countSubstrings('bbbaabbbbaabb', 'bbbaabb') === 1);
+
+
+
+
+/*
+Problem 10
+Create a function that takes a string of digits as an argument and returns the number of even-numbered substrings that can be formed. For example, in the case of '1432', the even-numbered substrings are '14', '1432', '4', '432', '32', and '2', for a total of 6 substrings.
+
+If a substring occurs more than once, you should count each occurrence as a separate substring.
+
+In: string (contains digits)
+Out: number
+Rules:
+  - Even-numbered substring has an even number 
+  - Return 0 if there are none
+
+----
+Algorithm
+- Find all substrings
+- Count the substrings that contain an even number
+
+1. Create 'subs' and set to empty array
+2. Iterate over the substring
+  - Create all even numbered substrings
+  - Add results to 'subs'
+3. Return the length of 'subs' array 
+
+Helper function
+allEvenSubStrings(currIndex, string)
+1. create 'allEvenSubs' and set it to empty array
+2. Iterate over the string
+  - Create substrings from currIndex to current position in the substring
+  - If substring is even
+    -- Add substring to 'allEvenSubs'
+3. Return 'allEvenSubs'
+*/
+
+function evenNumSubStrings(index, string) {
+  const allEvenSubs = [];
+
+  for (let i = index; i < string.length; i++) {
+    let sub = string.slice(index, i + 1);
+    if (sub % 2 === 0 && sub) allEvenSubs.push(sub);
+  }
+  return allEvenSubs;
+}
+
+function evenSubstrings(string) {
+  let subs = [];
+  for (let i = 0; i < string.length; i++) {
+    subs = subs.concat(evenNumSubStrings(i, string));
+  }
+
+  return subs.length;
+}
+
+// p(evenSubstrings('1432') === 6); 
+// p(evenSubstrings('3145926') === 16);
+// p(evenSubstrings('2718281') === 16);
+// p(evenSubstrings('13579') === 0);
+// p(evenSubstrings('143232') === 12);
+
+
+
+
+/*
+Problem 11
+Create a function that takes a nonempty string as an argument and returns an array consisting of a string and an integer. If we call the string argument s, the string component of the returned array t, and the integer component of the returned array k, then s, t, and k must be related to each other such that s === t * k. The values of t and k should be the shortest possible substring and the largest possible repeat count that satisfies this equation.
+
+You may assume that the string argument consists entirely of lowercase alphabetic letters.
+
+In: string ('s')
+Out: array (string: 't', number: 'k')
+Rules
+  -  s === t * k
+  - 't' should be the shortest possible substring
+  - 'k' should be the largest possible repeat count
+
+----
+Algorithm
+- Find the values of 't' and 'k' where they equal 's' when multiplied
+
+1. Iterate over string
+  - create substring and set to 't' (bigger substrings each time)
+  - create repeat and set to 'k' (smaller repeats each time)
+  - If 'k' is an integer and 't' * 'k' is equal to 's'
+    - Return ['t', 'k']
+2. Return ['s', 1]
+*/
+
+function repeatedSubstring(string) {
+  for (let i = 1; i <= string.length; i++) {
+    let t = string.slice(0, i);
+    let k = string.length / i;
+
+    if (Number.isInteger(k) && t.repeat(k) === string) return [t, k];
+  }
+  return [string, 1];
+}
+
+// p(eq(repeatedSubstring('xyzxyzxyz'), ['xyz', 3]));
+// p(eq(repeatedSubstring('xyxy'), ['xy', 2]));
+// p(eq(repeatedSubstring('xyz'), ['xyz', 1]));
+// p(eq(repeatedSubstring('aaaaaaaa'), ['a', 8]));
+// p(eq(repeatedSubstring('superduper'), ['superduper', 1]));
+
+
+/*
+Problem 12
+Create a function that takes a string as an argument and returns true if the string is a pangram, false if it is not.
+
+Pangrams are sentences that contain every letter of the alphabet at least once. For example, the sentence "Five quacking zephyrs jolt my wax bed." is a pangram since it uses every letter at least once. Note that case is irrelevant.
+
+In: string
+Out: boolean
+Rules:
+  - pangram contains a-z at least once
+  - case-insensitive ('a' === 'A')
+
+----
+Algorithm
+- Create an alphabet list
+- Check if all letters in alphabet list are found
+- Return true if they are
+
+1. Create 'alphabetList' (helper)
+2. Iterate over string
+  - If 'alphabetList' is not empty AND 'alphabetList' contains current lowercase letter
+    -- Remove that letter from 'alphabetList'
+  - Otherwise if list is empty
+    - Return true
+3. Return false
+
+Helper function
+createAlphabet()
+- create 'letters' and set to []
+- Iterate from a-z
+  -- Add letter to list
+- Return 'letters'
+*/
+
+function isPangram(string) {
+  const alphabetList = createAlphabet();
+  
+  for (char of string) {
+    char = char.toLowerCase();
+
+    if (alphabetList.length !== 0 && alphabetList.includes(char)) {
+     let charIndex = alphabetList.indexOf(char);
+     alphabetList.splice(charIndex, 1);
+    } else if (alphabetList.length === 0) return true;
+
+  }
+
+  return false;
+}
+
+function createAlphabet() {
+  const letters = [];
+
+  for (let code = 'a'.charCodeAt(); code <= 'z'.charCodeAt(); code++) {
+    letters.push(String.fromCharCode(code));
+  }
+
+  return letters;
+}
+
+
+// p(isPangram('The quick, brown fox jumps over the lazy dog!') === true);
+// p(isPangram('The slow, brown fox jumps over the lazy dog!') === false);
+// p(isPangram("A wizard’s job is to vex chumps quickly in fog.") === true);
+// p(isPangram("A wizard’s task is to vex chumps quickly in fog.") === false);
+// p(isPangram("A wizard’s job is to vex chumps quickly in golf.") === true);
+
+// let myStr = 'Sixty zippers were quickly picked from the woven jute bag.';
+// p(isPangram(myStr) === true);
+
+
+
+
+/*
+Problem 13
+Create a function that takes two strings as arguments and returns true if some portion of the characters in the first string can be rearranged to match the characters in the second. Otherwise, the function should return false.
+
+You may assume that both string arguments only contain lowercase alphabetic characters. Neither string will be empty.
+
+In: string, string
+Out: boolean
+Rules:
+  - second string is the target
+  - first string can be manipulated
+
+-----
+Algorithm
+- Use characters in first string to build second string
+- Return true if it's possible
+
+1. create 'lib' and set to first string characters
+2. create 'builtString' and set to empty string
+3. Iterate over second string
+  - If  'lib' contains current char
+    -- add current char to 'builtString'
+    -- remove current char from 'lib'
+  - Otherwise return false
+4. Return true if 'builtString' equals second string
+*/
+
+function unscramble(str1, str2) {
+  const lib = str1.split("");
+  let builtString = "";
+
+  for (char of str2) {
+    if (lib.includes(char)) {
+      builtString += char;
+      lib.splice(lib.indexOf(char), 1);
+    } else return false
+  } 
+
+  return builtString === str2;
+}
+
+// p(unscramble('ansucchlohlo', 'launchschool') === true);
+// p(unscramble('phyarunstole', 'pythonrules') === true);
+// p(unscramble('phyarunstola', 'pythonrules') === false);
+// p(unscramble('boldface', 'coal') === true);
