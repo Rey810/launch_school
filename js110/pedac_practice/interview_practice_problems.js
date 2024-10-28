@@ -861,3 +861,325 @@ function unscramble(str1, str2) {
 // p(unscramble('phyarunstole', 'pythonrules') === true);
 // p(unscramble('phyarunstola', 'pythonrules') === false);
 // p(unscramble('boldface', 'coal') === true);
+
+
+
+/*
+Problem 14
+Create a function that takes a single integer argument and returns the sum of all the multiples of 7 or 11 that are less than the argument. If a number is a multiple of both 7 and 11, count it just once.
+
+For example, the multiples of 7 and 11 that are below 25 are 7, 11, 14, 21, and 22. The sum of these multiples is 75.
+
+If the argument is negative, return 0.
+
+In: number
+Out: number
+Rules:  
+  - sum multiples of 7 and 11 (< argument number)
+  - multiples of 7 and 11 counted once
+  - Return 0 if argument is negative 
+
+----
+Algorithm
+- Find multiples of 7 and 11
+- Sum the multiples
+- Return the sum (Return 0 if arg is negative)
+
+1. Create 'sum' and set set to 0
+2. If the argument is negative
+  - Return 'sum'
+2. Iterate over number argument
+  - If current number is a multiple of 7 OR a mutliple of 11
+    - Increment 'sum' by current number
+3. Return 'sum'
+*/
+
+function sevenEleven(num) {
+  let sum = 0;
+  if (num < 0) return sum;
+
+  for (let currNum = 7; currNum < num; currNum++) {
+    if (currNum % 7 === 0 || currNum % 11 === 0) sum += currNum;
+  }
+
+  return sum;
+}
+
+// 7 -> 7
+// 7 , 11 -> 18
+// 7, 11, 14, 21, 22 -> 75
+// p(sevenEleven(10) === 7);
+// p(sevenEleven(11) === 7);
+// p(sevenEleven(12) === 18);
+// p(sevenEleven(25) === 75);
+// p(sevenEleven(100) === 1153);
+// p(sevenEleven(0) === 0);
+// p(sevenEleven(-100) === 0);
+
+
+
+
+/*
+Problem 15
+Create a function that takes a string argument that consists entirely of numeric digits and computes the greatest product of four consecutive digits in the string. The argument will always have more than 4 digits.
+
+In: string (of numbers)
+Out: number (product of)
+Rules:
+  - four consecutive digits used for product
+  - Alwyas more than 4 digits
+
+----
+Algorithm
+- Find 4 consecitive digits that give biggest product
+- Return product
+
+1. create 'largestProduct' and set to 0
+2. Iterate over the string
+  - Get the first 4 characters
+    -- multiply them
+    -- If product is greater than 0
+      --- set 'largestProduct' to current product
+3. Return 'largestProduct'
+*/
+
+function greatestProduct(numString) {
+  let largestProduct = 0;
+
+  for (let i = 0; i <= numString.length - 4; i++) {
+    let currProduct = numString.slice(i, i + 4).split("").reduce((acc, curr) => {
+      return acc * Number(curr);
+    }, 1);
+
+    if (currProduct > largestProduct) largestProduct = currProduct;
+  }
+
+  return largestProduct;
+}
+
+// p(greatestProduct('23456') === 360);      // 3 * 4 * 5 * 6
+// p(greatestProduct('3145926') === 540);    // 5 * 9 * 2 * 6
+// p(greatestProduct('1828172') === 128);    // 1 * 8 * 2 * 8
+// p(greatestProduct('123987654') === 3024); // 9 * 8 * 7 * 6
+
+
+
+/*
+Problem 16
+Create a function that returns the count of distinct case-insensitive alphabetic characters and numeric digits that occur more than once in the input string. You may assume that the input string contains only alphanumeric characters.
+
+In: string
+Out: number
+Rules: 
+  - count distinct numbers and letters that occur MORE THAN ONCE
+  - case insensitive
+
+----
+Algorithm
+- Count occurrences of characters
+- Count those that occur more than once
+- Return that count
+
+0. create 'count' and set to 0
+1. create 'countsObj' and set to empty object
+2. Iterate over string
+  - If char is in 'countsObj'
+    -- Increment char in 'countsObj' by 1
+  - Otherwise
+    -- add char to 'countsObj' and set value to 1
+3. Iterate over 'countsObj'
+  - If a key has a value more than one
+    -- Increment 'count' by 1
+4. Return 'count'
+*/
+
+function distinctMultiples(string) {
+  let count = 0;
+  const countsObj = {};
+
+  for (char of string) {
+    char = char.toLowerCase();
+    countsObj[char] = countsObj[char] + 1 || 1;
+  }
+
+  for (key in countsObj) {
+    if (countsObj[key] > 1) count += 1;
+  }
+
+  return count;
+}
+
+// p(distinctMultiples('xyz') === 0);              // (none)
+// p(distinctMultiples('xxyypzzr') === 3);         // x, y, z
+// p(distinctMultiples('xXyYpzZr') === 3);         // x, y, z
+// p(distinctMultiples('unununium') === 2);        // u, n
+// p(distinctMultiples('multiplicity') === 3);     // l, t, i
+// p(distinctMultiples('7657') === 1);             // 7
+// p(distinctMultiples('3141592653589793') === 4); // 3, 1, 5, 9
+// p(distinctMultiples('2718281828459045') === 5); // 2, 1, 8, 4, 5
+
+
+
+
+/*
+Problem 17
+
+Create a function that takes an array of integers as an argument. The function should determine the minimum integer value that can be appended to the array so the sum of all the elements equal the closest prime number that is greater than the current sum of the numbers. For example, the numbers in [1, 2, 3] sum to 6. The nearest prime number greater than 6 is 7. Thus, we can add 1 to the array to sum to 7.
+
+Notes:
+
+The array will always contain at least 2 integers.
+All values in the array must be positive (> 0).
+There may be multiple occurrences of the various numbers in the array.
+
+In: array (numbers)
+Out: number
+Rules:
+  - always at least 2 integers
+  - values in array must be positive
+  - multiple of same numbers in array are allowed
+  - prime number: can only be divided by one and itself 
+
+----
+Algorithm
+- Find the sum of the array
+- Determine prime number closest to sum
+- Find the difference between prime and sum
+- Return that difference
+
+1. Iterate over the array to find sum of all values and set to 'sum' 
+2. create 'smallestPrime' and set to 0
+3. Iterate upwards from 'sum'
+  - If number is prime (see isPrime helper)
+    -- set 'smallestPrime' to current number
+    -- stop iterating
+4. Subtract 'sum' from 'smallestPrime' and return that value
+
+Helper function 
+isPrime(num)
+1. Iterate up to num., starting at 2 and ending at num - 1
+  - If num is divisible by current number 
+    --- Return false
+  - Otherwise return true
+*/
+
+function nearestPrimeSum(arr) {
+  const sum = arr.reduce((sum, curr) => sum + curr);
+  let smallestPrime = 0;
+
+  for (let currNum = sum + 1; true; currNum++) {
+    if (isPrime(currNum)) {
+      smallestPrime = currNum;
+      break;
+    }
+  }
+
+  return smallestPrime - sum;
+}
+
+function isPrime(num) {
+  for (let i = 2; i <= num - 1; i++) {
+    if (num % i === 0) return false
+  }
+
+  return true;
+}
+
+// p(nearestPrimeSum([1, 2, 3]) === 1);        // Nearest prime to 6 is 7
+// p(nearestPrimeSum([5, 2]) === 4);           // Nearest prime to 7 is 11
+// p(nearestPrimeSum([1, 1, 1]) === 2);        // Nearest prime to 3 is 5
+// p(nearestPrimeSum([2, 12, 8, 4, 6]) === 5); // Nearest prime to 32 is 37
+
+// // Nearest prime to 163 is 167
+// p(nearestPrimeSum([50, 39, 49, 6, 17, 2]) === 4);
+
+
+
+
+/*
+Problem 19
+Create a function that takes an array of integers as an argument and returns the integer that appears an odd number of times. There will always be exactly one such integer in the input array.
+
+In: array (integers)
+Out: integer 
+Rules:
+  - only one integer that is odd in input array
+
+----
+Algorithm
+- Count occurrences of a number in an array
+- Find the number that occurs an odd number of times
+- Return that number
+
+1. create 'countsObj' and set to return of getNumCounts (helper)
+2. Iterate over 'countsObj'
+  - If key has a value divisible by an odd number
+    -- Return that key
+3. Return null
+
+Helper function
+getNumCounts(arr)
+0. Create 'countsobj' and set to empty object
+1. Iterate over the array, starting at 0 and ending at last element
+  -- If num exists in obj
+    --- Increment num by 1
+  -- Otherwise
+    --- Add num to obj and set to 1
+2. Return countsObj
+*/
+
+function oddFellow(arr) {
+  const countsObj = getNumCounts(arr);
+
+  for (key in countsObj) {
+    if (countsObj[key] % 2 === 1) return Number(key);
+  }
+}
+
+function getNumCounts(arr) {
+  return arr.reduce((acc, curr) => {
+    acc[curr] = acc[curr] + 1 || 1;
+    return acc;
+  }, {})
+}
+
+// p(oddFellow([4]) === 4);
+// p(oddFellow([7, 99, 7, 51, 99]) === 51);
+// p(oddFellow([7, 99, 7, 51, 99, 7, 51]) === 7);
+// p(oddFellow([25, 10, -6, 10, 25, 10, -6, 10, -6]) === -6);
+// p(oddFellow([0, 0, 0]) === 0);
+
+
+
+
+/*
+Problem 20
+Create a function that takes an array of numbers, all of which are the same except one. Find and return the number in the array that differs from all the rest.
+
+The array will always contain at least 3 numbers, and there will always be exactly one number that is different.
+
+In: array (numbers)
+Out: number
+Rules:
+  - only 1 number is different
+  - arr contains >= 3 numbers
+
+----
+Algorithm
+- Find the number with only one index
+- Return that number
+
+1. Iterate over the array
+  - Find element that has the same first and last index
+2. Return first element in the array
+*/
+
+function whatIsDifferent(arr) {
+  return arr.find(el => arr.indexOf(el) === arr.lastIndexOf(el));
+}
+
+// p(whatIsDifferent([0, 1, 0]) === 1);
+// p(whatIsDifferent([7, 7, 7, 7.7, 7]) === 7.7);
+// p(whatIsDifferent([1, 1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1]) === 11);
+// p(whatIsDifferent([3, 4, 4, 4]) === 3);
+// p(whatIsDifferent([4, 4, 4, 3]) === 3);
