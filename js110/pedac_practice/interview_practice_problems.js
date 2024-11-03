@@ -1183,3 +1183,141 @@ function whatIsDifferent(arr) {
 // p(whatIsDifferent([1, 1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1]) === 11);
 // p(whatIsDifferent([3, 4, 4, 4]) === 3);
 // p(whatIsDifferent([4, 4, 4, 3]) === 3);
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// SAME QUESTIONS, SECOND ROUND ////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/*
+Difference of Two
+The objective is to return all pairs of numbers from a given array of numbers that have a difference of 2.
+The result array should be sorted in ascending order of values.
+Assume there are no duplicate numbers in the array.
+The order of the numbers in the input array should not matter.
+
+In: array (numbers)
+Out: array (subarrays: numbers)
+Rules:
+  - subarrays: numbers that have a diff of 2
+  - array: sorted in ascending order
+  - no duplicates in input
+  - Default return: []
+
+[D]
+0. Sort the input in ascending order
+1. Compare each number with every other number
+2. If there is a diff of 2, save that pair
+3. Return all saved pairs
+
+- Sort the input array
+- Create `pairs` array
+- Iterate over sorted array
+  -- Iterate over sorted array 
+    --- If outer number compared with inner number has a diff of two
+      ---- Add those two numbers to `pairs`
+- Return `pairs`
+
+[A]
+SORT `arr` input
+CREATE `pairs` variable and ASSIGN to empty array
+
+ITERATE over `arr`, starting at 0, ending at second last element
+  ITERATE over `arr`, starting at outer index, ending at last element
+    IF inner current number minus outer current number equals 2
+      APPEND [outer current number, inner current number] to `pairs`
+
+RETURN pairs
+*/
+
+function differenceOfTwo(arr) {
+  arr.sort((a, b) => a - b);
+  let pairs = [];
+
+  for (let outerNum = 0; outerNum < arr.length - 1; outerNum++) {
+    for (let innerNum = outerNum; innerNum < arr.length; innerNum++) {
+      if (arr[innerNum] - arr[outerNum] === 2) pairs.push([arr[outerNum], arr[innerNum]]);
+    }
+  }
+
+  return pairs;
+}
+
+
+// console.log(differenceOfTwo([5, 2, 7, 9, 10, 3, 11])); // [[3, 5], [5, 7], [9, 11]]
+// console.log(differenceOfTwo([21, 5, 13, 19, 23, 15])); // [[13, 15], [19, 21], [21, 23]]
+// console.log(differenceOfTwo([5, 2, 6, 12])); // []
+
+
+
+
+/*
+Write a function that takes a string as an argument and returns an array that contains every
+word from the string, with each word followed by a space and the word's length.
+If the argument is an empty string or if no argument is passed, the function should return an empty array.
+You may assume that every pair of words in the string will be separated by a single space.
+
+In: string (multiple words)
+Out: array (word: letter count)
+Rules:
+  - string: word and the words length
+  - words separated by whitespace character
+  - Defualt return: empty array []
+
+[D]
+1. Count the word lengths
+2. Add each word and its length to an array as one string
+3. Return that array
+
+- Create `wordCounts` array
+- Separate string of words into array of words
+- Iterate over each word
+  -- Add the word and it's count to `wordCounts` 
+- Return `wordCounts`
+
+[A]
+IF `string` has length of 0 or is undefined
+  RETURN an empty array
+CREATE `wordCounts` and ASSIGN to an empty array
+SPLIT `string` arg into array
+
+ITERATE over array
+  ADD current word and current word length to `wordCounts
+
+RETURN `wordCounts`
+*/
+
+function wordLengths(string) {
+  let wordCounts = []; 
+
+  if (string === undefined || string.length === 0) return [];
+
+  for (let word of string.split(" ")) {
+    wordCounts.push(`${word} ${word.length}`);
+  }
+
+  return wordCounts;
+  // return string.split(" ").map(word => `${word} ${word.length}`);
+}
+
+
+// console.log(wordLengths('cow sheep chicken'));
+// // ["cow 3", "sheep 5", "chicken 7"]
+
+// console.log(wordLengths('baseball hot dogs and apple pie'));
+// // ["baseball 8", "hot 3", "dogs 4", "and 3", "apple 5", "pie 3"]
+
+// console.log(wordLengths("It ain't easy, is it?"));
+// // ["It 2", "ain't 5", "easy, 5", "is 2", "it? 3"]
+
+// console.log(wordLengths('Supercalifragilisticexpialidocious'));
+// // ["Supercalifragilisticexpialidocious 34"]
+
+// console.log(wordLengths(''));      // []
+// console.log(wordLengths());        // []
