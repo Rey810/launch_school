@@ -214,6 +214,7 @@ function toWeirdCase(string) {
 
 
 
+
 /*
 Problem 4
 Create a function that takes an array of integers as an argument and returns an array of two numbers that are closest together in value. If there are multiple pairs that are equally close, return the pair that occurs first in the array.
@@ -269,7 +270,6 @@ return closestPair;
 // p(eq(closestNumbers([5, 25, 15, 11, 20]), [15, 11]));     // true
 // p(eq(closestNumbers([19, 25, 32, 4, 27, 16]), [25, 27])); // true
 // p(eq(closestNumbers([12, 22, 7, 17]), [12, 7]));          // true
-
 
 
 
@@ -415,35 +415,35 @@ Algorithm
 3. Return letterCounts
 */
 
-function countLetters(string) {
-  const letterCounts = {};
+// function countLetters(string) {
+//   const letterCounts = {};
 
-  [...string].forEach(char => {
-    if (letterCounts[char]) letterCounts[char] += 1;
-    else if (char >= 'a' && char <= 'z') letterCounts[char]  = 1;
-  })
+//   [...string].forEach(char => {
+//     if (letterCounts[char]) letterCounts[char] += 1;
+//     else if (char >= 'a' && char <= 'z') letterCounts[char]  = 1;
+//   })
 
-  return letterCounts;
-}
+//   return letterCounts;
+// }
 
-const objeq = function(obj1, obj2) {
-  let keys1 = Object.keys(obj1);
-  let keys2 = Object.keys(obj2);
+// const objeq = function(obj1, obj2) {
+//   let keys1 = Object.keys(obj1);
+//   let keys2 = Object.keys(obj2);
 
-  if (keys1.length !== keys2.length) {
-    return false;
-  }
+//   if (keys1.length !== keys2.length) {
+//     return false;
+//   }
 
-  for (let key of keys1) {
-    if (! keys2.includes(key)) {
-      return false;
-    } else if (obj1[key] !== obj2[key]) {
-      return false;
-    }
-  }
+//   for (let key of keys1) {
+//     if (! keys2.includes(key)) {
+//       return false;
+//     } else if (obj1[key] !== obj2[key]) {
+//       return false;
+//     }
+//   }
 
-  return true;
-}
+//   return true;
+// }
 
 // let expected = {'w': 1, 'o': 2, 'e': 3, 'b': 1, 'g': 1, 'n': 1};
 // p(objeq(countLetters('woebegone'), expected));
@@ -1184,6 +1184,13 @@ function whatIsDifferent(arr) {
 // p(whatIsDifferent([3, 4, 4, 4]) === 3);
 // p(whatIsDifferent([4, 4, 4, 3]) === 3);
 
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1191,6 +1198,8 @@ function whatIsDifferent(arr) {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 
@@ -1321,3 +1330,285 @@ function wordLengths(string) {
 
 // console.log(wordLengths(''));      // []
 // console.log(wordLengths());        // []
+
+
+
+/*
+Problem 3
+Create a function that takes a string argument and returns a copy of the string with every second character in every third word converted to uppercase. Other characters should remain the same.
+
+In: string (sentence with words)
+Out: string (sentence with words)
+Rules:
+  - every 3rd word, uppercase every 2nd character
+  - other characters remain the same
+
+[D]
+1. Given a string
+2. Change every 2nd char, in every 3rd word
+3. Return the changed string
+
+- iterate over the sentence
+  -- if a word is a 3rd word
+    --- iterate over 3rd word
+      ---- if char is a 2nd char, change it to uppercase
+- join words into a new sentence
+- return new sentence
+
+CREATE `toWeirdCase` function that takes `str` argument
+CREATE `weirdCaseSentence` and ASSIGN to `str` split into words array
+ITERATE over `weirdCaseSentence` (map)
+  IF current word index + 1 modulus 3 is zero (then it's a 3rd word)
+    SPLIT current word into characters array
+    ITERATE over characters array (map)
+      IF current character + 1 modulus 2 is zero (then it's a 2nd character)
+        UPPERCASE current character
+        RETURN current character
+      ELSE 
+        RETURN current character
+    JOIN characters array 
+    RETURN characters array
+  ELSE 
+    RETURN current word
+JOIN `weirdCaseSentence` array
+RETURN `weirdCaseSentence`
+*/
+
+function toWeirdCase(str) {
+  let weirdCaseSentence = str.split(" ");
+  return weirdCaseSentence.map((word, index) => {
+    if ((index + 1) % 3 === 0){
+      return word.split("").map((char, index) => {
+        if ((index + 1) % 2 === 0) {
+          return char.toUpperCase();
+        } else return char;
+      }).join("");
+    } else return word;
+  }).join(" ");
+}
+
+// let original = 'Lorem Ipsum is simply dummy text of the printing world';
+// let expected = 'Lorem Ipsum iS simply dummy tExT of the pRiNtInG world';
+// p(toWeirdCase(original) === expected);
+// original = 'It is a long established fact that a reader will be distracted';
+// expected = 'It is a long established fAcT that a rEaDeR will be dIsTrAcTeD';
+// p(toWeirdCase(original) === expected);
+
+// p(toWeirdCase('aaA bB c') === 'aaA bB c');
+
+// original = "Mary Poppins' favorite word is " +
+//            "supercalifragilisticexpialidocious";
+// expected = "Mary Poppins' fAvOrItE word is " +
+//            "sUpErCaLiFrAgIlIsTiCeXpIaLiDoCiOuS"
+// p(toWeirdCase(original) === expected);
+
+
+
+
+/*
+Problem 4
+Create a function that takes an array of integers as an argument and returns an array of two numbers that are closest together in value. If there are multiple pairs that are equally close, return the pair that occurs first in the array. 
+
+In: array (integers)
+Out: array (2 integers)
+Rules: 
+  - return closest 2 numbers that appear first
+  - integers do not repeat
+
+[D]
+1. Sum each number with every other number
+2. Find the 2 numbers that are the closest
+3. Return the 2 numbers that occur first
+
+- create 'smallestDiff' variable
+- create 'pair' variable
+- iterate over array
+  -- compare current number with every other number (helper)
+    --- if diff of two numbers is smaller than 'smallestDiff', 
+      ---- reassign 'smallestDiff' and assign 'pair' to array of 2 numbers
+- return 'pair'
+
+CREATE `closestNumbers` function that takes `integersArr` as argument
+CREATE `smallestDiff` variable and ASSIGN to zero
+CREATE `pair` variable
+ITERATE over `integersArr`
+  ITERATE over `integersArr` starting at current number, ending at `integersArr`.length - 2
+    IF `smallestDiff` is 0 OR `diffOfTwo` (helper) is less than `smallestDiff`
+      ASSIGN `smallestDiff` to return value of `diffOfTwo`
+      ASSIGN `pair` to [outer number, inner number]
+RETURN `pair`
+
+(helper)
+CREATE `diffOfTwo` that takes arguments `outerNum` and `innerNum`
+CREATE `diff`
+IF `outerNum` is greater than `innerNum`
+  ASSIGN `diff` to `outerNum` minus `innerNum`
+ELSE
+  ASSIGN `diff` to `innerNum` - `outerNum`
+RETURN `diff`
+*/
+
+function closestNumbers(integersArr) {
+  let smallestDiff = 0;
+  let pair;
+
+  for (let outer = 0; outer <= integersArr.length - 2; outer++) {
+    for (let inner = outer + 1; inner <= integersArr.length - 1; inner++) {
+      let outerNum = integersArr[outer]
+      let innerNum = integersArr[inner];
+      let diff = diffOfTwo(outerNum, innerNum);
+
+      if (smallestDiff === 0 || diff < smallestDiff) {
+        smallestDiff = diff;
+        pair = [outerNum, innerNum];
+      }
+    }
+  }
+
+  return pair;
+}
+
+function diffOfTwo(outerNum, innerNum) {
+  return outerNum > innerNum ? outerNum - innerNum : innerNum - outerNum;
+}
+
+p(eq(closestNumbers([5, 25, 15, 11, 20]), [15, 11]));     // true
+p(eq(closestNumbers([19, 25, 32, 4, 27, 16]), [25, 27])); // true
+p(eq(closestNumbers([12, 22, 7, 17]), [12, 7]));          // true
+
+
+
+
+/*
+Problem 5
+Create a function that takes a string argument and returns the character that occurs most often in the string. If there are multiple characters with the same greatest frequency, return the one that appears first in the string. When counting characters, consider uppercase and lowercase versions to be the same.
+
+In: string (word(s))
+Out: string (letter)
+Rules:
+  - case insensitive (eg. 'l' === 'L')
+  - return letter that appears the most and first
+
+[D]
+1. Find unique characters
+2. Count them
+3. Return first character with the highest count
+
+- create 'lettersObj' variable
+- iterate over string
+  -- add unique characters to `lettersObj` or increment if it exists
+- create 'highestCountChar' and set to first character in `lettersObj`
+- iterate over `lettersObj`
+  -- if the current letter has a count bigger than `highestCountChar`
+    --- Reassign `highestCountChar` to current letter
+- Return `highestCountChar`
+
+CREATE `mostCommonChar` function that takes `str` as an argument
+CREATE `lettersObj` variable and ASSIGN to return of `createLetterCounts`
+CREATE `highestCountChar` and ASSIGN to first character in `lettersObj`
+ITERATE over `lettersObj` 
+  IF current letter has a count bigger than `highestCountChar` 
+    REASSIGN `highestCountChar` to current letter
+RETURN `highestCountChar`
+
+[helper]
+CREATE `createLetterCounts` function that takes `str` argument
+CREATE `lettersObj` variable and ASSIGN to {}
+ITERATE over `str`
+  IF current letter exists in `lettersObj`
+    INCREMENT letter count 
+  ELSE add letter with a count of 1 to `lettersObj`
+RETURN `lettersObj`
+*/
+
+function createLetterCounts(str) {
+  let lettersObj = {};
+
+  str.toLowerCase().split("").forEach(letter => {
+    if (lettersObj[letter]) lettersObj[letter] += 1;
+    else lettersObj[letter] = 1;
+  })
+
+  return lettersObj;
+}
+
+function mostCommonChar(str) {
+  let lettersObj = createLetterCounts(str);
+
+  let highestCountChar = Object.keys(lettersObj)[0];
+  for (char in lettersObj) {
+    if (lettersObj[char] > lettersObj[highestCountChar]) highestCountChar = char;
+  }
+
+  return highestCountChar;
+}
+
+
+p(mostCommonChar('Hello World') === 'l');
+// p(mostCommonChar('Mississippi') === 'i');
+// p(mostCommonChar('Happy birthday!') === 'h');
+// p(mostCommonChar('aaaaaAAAA') === 'a');
+
+// let myStr = 'Peter Piper picked a peck of pickled peppers.';
+// p(mostCommonChar(myStr) === 'p');
+
+// myStr = 'Peter Piper repicked a peck of repickled peppers. He did!';
+// p(mostCommonChar(myStr) === 'e');
+
+
+/*
+Problem 6
+Create a function that takes a string argument and returns a hash in which the keys represent the lowercase letters in the string, and the values represent how often the corresponding letter occurs in the string.
+
+In: string
+Out: object
+Rules:
+  - object: 
+      key -> lowercase letter
+      value -> count
+  - ONLY lowercase letters included
+
+[D]
+1. Find lowercase letters
+2. Count them
+3. Return object with letters and their counts
+
+- create `hash` variable
+- iterate over the string
+  -- if char is a lowercase letter, add/increment to `hash`
+- return the `hash`
+
+CREATE `countLetters` function that takes `str` as an argument
+CREATE `hash` variable and ASSIGN to {}
+ITERATE over `str`
+  IF character is a letter AND it's lowercase
+    ADD letter to `hash` OR increment it if it exists in `hash`
+RETURN `hash`
+*/
+
+function countLetters(str) {
+  let hash = {};
+  
+  str.split("").forEach(char => {
+    if ((char >= 'a' && char <= 'z') && char.toLowerCase() === char) {
+      hash[char] = hash[char] + 1 || 1;
+    }
+  })
+
+  return hash;
+}
+
+
+let expected = {'w': 1, 'o': 2, 'e': 3, 'b': 1, 'g': 1, 'n': 1};
+p(eq(countLetters('woebegone'), expected));
+
+// expected = {'l': 1, 'o': 1, 'w': 1, 'e': 4, 'r': 2,
+//             'c': 2, 'a': 2, 's': 2, 'u': 1, 'p': 2};
+// p(eq(countLetters('lowercase/uppercase'), expected));
+
+// expected = {'u': 1, 'o': 1, 'i': 1, 's': 1};
+// p(eq(countLetters('W. E. B. Du Bois'), expected));
+
+// p(eq(countLetters('x'), {'x': 1}));
+// p(eq(countLetters(''), {}));
+// p(eq(countLetters('!!!'), {}));
