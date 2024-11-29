@@ -462,6 +462,7 @@ Algorithm
 
 
 
+
 /*
 Problem 7
 Create a function that takes an array of integers as an argument and returns the number of identical pairs of integers in that array. For instance, the number of identical pairs in [1, 2, 3, 2, 1] is 2: there are two occurrences each of both 2 and 1.
@@ -469,7 +470,6 @@ Create a function that takes an array of integers as an argument and returns the
 If the array is empty or contains exactly one value, return 0.
 
 If a certain number occurs more than twice, count each complete pair once. For instance, for [1, 1, 1, 1] and [2, 2, 2, 2, 2], the function should return 2. The first array contains two complete pairs while the second has an extra 2 that isn't part of the other two pairs.
-
 In: array (numbers)
 Out: number
 Rules:
@@ -735,6 +735,7 @@ function repeatedSubstring(string) {
   }
   return [string, 1];
 }
+
 
 // p(eq(repeatedSubstring('xyzxyzxyz'), ['xyz', 3]));
 // p(eq(repeatedSubstring('xyxy'), ['xy', 2]));
@@ -1472,9 +1473,9 @@ function diffOfTwo(outerNum, innerNum) {
   return outerNum > innerNum ? outerNum - innerNum : innerNum - outerNum;
 }
 
-p(eq(closestNumbers([5, 25, 15, 11, 20]), [15, 11]));     // true
-p(eq(closestNumbers([19, 25, 32, 4, 27, 16]), [25, 27])); // true
-p(eq(closestNumbers([12, 22, 7, 17]), [12, 7]));          // true
+// p(eq(closestNumbers([5, 25, 15, 11, 20]), [15, 11]));     // true
+// p(eq(closestNumbers([19, 25, 32, 4, 27, 16]), [25, 27])); // true
+// p(eq(closestNumbers([12, 22, 7, 17]), [12, 7]));          // true
 
 
 
@@ -1544,7 +1545,7 @@ function mostCommonChar(str) {
 }
 
 
-p(mostCommonChar('Hello World') === 'l');
+// p(mostCommonChar('Hello World') === 'l');
 // p(mostCommonChar('Mississippi') === 'i');
 // p(mostCommonChar('Happy birthday!') === 'h');
 // p(mostCommonChar('aaaaaAAAA') === 'a');
@@ -1599,8 +1600,8 @@ function countLetters(str) {
 }
 
 
-let expected = {'w': 1, 'o': 2, 'e': 3, 'b': 1, 'g': 1, 'n': 1};
-p(eq(countLetters('woebegone'), expected));
+// let expected = {'w': 1, 'o': 2, 'e': 3, 'b': 1, 'g': 1, 'n': 1};
+// p(eq(countLetters('woebegone'), expected));
 
 // expected = {'l': 1, 'o': 1, 'w': 1, 'e': 4, 'r': 2,
 //             'c': 2, 'a': 2, 's': 2, 'u': 1, 'p': 2};
@@ -1612,3 +1613,319 @@ p(eq(countLetters('woebegone'), expected));
 // p(eq(countLetters('x'), {'x': 1}));
 // p(eq(countLetters(''), {}));
 // p(eq(countLetters('!!!'), {}));
+
+
+/*
+Problem 7
+Create a function that takes an array of integers as an argument and returns the number of identical pairs of integers in that array. For instance, the number of identical pairs in [1, 2, 3, 2, 1] is 2: there are two occurrences each of both 2 and 1.
+
+If the array is empty or contains exactly one value, return 0.
+
+If a certain number occurs more than twice, count each complete pair once. For instance, for [1, 1, 1, 1] and [2, 2, 2, 2, 2], the function should return 2. The first array contains two complete pairs while the second has an extra 2 that isn't part of the other two pairs.
+
+In: array (integers)
+Out: integer
+Rules:
+  - count pairs once (eg. 3, 3, 3 -> 1 pair)
+  - default return: 0 (empty arrays; one value arrays)
+
+[D]
+1. Count the occurrences of unique numbers
+2. Divide that by 2 and round it down
+3. Return rounded down value
+
+- create 'checkedNumbers' variable
+- create 'pairsCount' variable
+- iterate over integers, starting from 0-indexed element
+  -- create 'checkingNumber' variable
+  -- create 'numberCount' variable
+  -- if current number is in `checkedNumbers`, continue to next iteration
+  -- else add current number to `checkedNumbers`
+  -- iterate over integers, starting from 0-indexed element
+    --- if current number equals 'checkingNumber', increment 'numberCount'
+  --- divide 'numberCount' by 2, round down and add value to 'pairsCount'
+- return 'pairsCount'
+
+CREATE `pairs` function that takes `arr` argument
+CREATE `checkedNumbers` variable and ASSIGN to []
+CREATE `pairsCount` variable and ASSIGN to 0
+ITERATE over `arr`, starting from 0-indexed element
+  CREATE `checkingNumber` variable and ASSIGN to `arr`[currentIndex]
+  CREATE `numberCount` variable and ASSIGN to 0
+  IF `checkingNumber` is in `checkedNumbers`
+    CONTINUE to next iteration
+  ELSE 
+    APPEND `checkingNumber` to `checkedNumbers`
+  ITERATE over `arr`, starting gtom 0-indexed element
+    IF current number equals `checkingNumber`
+      INCREMENT `numbersCount` by 1
+  DIVIDE `numberCount` by 2 and round down
+  INCREMENT `pairsCount` by `numberCount` 
+RETURN `pairs`
+*/
+
+function pairs(arr) {
+  let checkedNumbers = [];
+  let pairsCount = 0;
+
+  for (let index = 0; index <= arr.length - 1; index++) {
+    let checkingNumber = arr[index];
+    let numberCount = 0;
+
+    if (checkedNumbers.includes(checkingNumber)) continue;
+    else checkedNumbers.push(checkingNumber);
+
+    for (let innerIndex = 0; innerIndex <= arr.length - 1; innerIndex++) {
+      if (arr[innerIndex] === checkingNumber) numberCount += 1;
+    }
+
+    pairsCount += Math.floor(numberCount / 2);
+  }
+  console.log(pairsCount);
+  return pairsCount;
+}
+
+// p(pairs([3, 1, 4, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7]) === 3);
+// p(pairs([2, 7, 1, 8, 2, 8, 1, 8, 2, 8, 4]) === 4);
+// p(pairs([]) === 0);
+// p(pairs([23]) === 0);
+// p(pairs([997, 997]) === 1);
+// p(pairs([32, 32, 32]) === 1);
+// p(pairs([7, 7, 7, 7, 7, 7, 7]) === 3);
+
+
+
+/*
+Problem 8
+
+Create a function that takes a non-empty string as an argument. The string consists entirely of lowercase alphabetic characters. The function should return the length of the longest vowel substring. The vowels of interest are "a", "e", "i", "o", and "u".
+
+In: string (letters) 
+Out: integer (vowel substring length)
+Rules:
+  - vowels: "a", "e", "i", "o", and "u"
+  - default return: 0
+
+[D]
+1. Find vowel substrings
+2. Return length of longest one
+
+- create 'longestSubstringLength' variable
+- iterate over string
+  -- create 'currentVowelSubstringLength' 
+  -- iterate over string 
+    --- if current letter is a vowel, 
+      ---- increment 'currentVowelSubstringLength' 
+      ---- reassign 'longestSubstringLength' to 'currentVowelSubstringLength' if it's longer
+    --- else 
+      ---- reset 'currentVowelSubstringLength' to 0 and continue with outer loop iteration
+- return 'longestSubstringLength'
+
+CREATE `longestVowelSubstring` function that takes one `str` argument
+CREATE `longestSubstringLength` and ASSIGN to 0
+CREATE `currentVowelSubstringLength` and ASSIGN to 0
+ITERATE over string
+  IF current letter is a vowel
+    INCREMENT `currentVowelSubstringLength`
+    IF `currentVowelSubstringLength` > `longestSubstringLength`
+      REASSIGN `longestSubstringLength` to `currentVowelSubstringLength`
+  ELSE 
+    REASSIGN `currentVowelSubstringLength` to 0
+    BREAK out the current loop to continue with the outer loop 
+RETURN `longestSubstringLength`
+*/
+
+function longestVowelSubstring(str) {
+  let longestSubstringLength = 0;
+  let arr = str.split("")
+
+  let currentVowelSubstringLength = 0;
+
+  for (let k = 0; k < arr.length; k++) {
+    if ('aeiou'.includes(arr[k])) {
+      currentVowelSubstringLength += 1;
+      if (currentVowelSubstringLength > longestSubstringLength) {
+        longestSubstringLength = currentVowelSubstringLength;
+      }
+    } else {
+      currentVowelSubstringLength = 0;
+    }
+  
+  }
+  return longestSubstringLength;
+}
+
+
+
+// p(longestVowelSubstring('cwm') === 0);
+// p(longestVowelSubstring('many') === 1);
+// p(longestVowelSubstring('launchschoolstudents') === 2);
+// p(longestVowelSubstring('eau') === 3);
+// p(longestVowelSubstring('beauteous') === 3);
+// p(longestVowelSubstring('sequoia') === 4);
+// p(longestVowelSubstring('miaoued') === 5);
+
+
+
+/*
+Problem 9
+Create a function that takes two string arguments and returns the number of times that the second string occurs in the first string. Note that overlapping strings don't count: 'babab' contains 1 instance of 'bab', not 2.
+
+You may assume that the second argument is never an empty string.
+
+In: 2 strings (source, target)
+Out: integer (count of target in source)
+Rules:
+  - overlapping strings don't count (eg. 'babab' contains 1 'bab')
+  - Default return: 0 (empty sources; no targets found)
+
+[D]
+1. create substrings from source with the length of target
+2. compare substrings to target
+3. count those that are equal
+
+- create 'count' variable
+- if the length of source is 0, return count
+- iterate over source, increment iterator by length of target
+  -- create a substring with the length of target
+  -- if substring equals target
+    --- increment `count`
+- return 'count'
+
+CREATE `countSubstrings` function that takes `source` and `target` arguments
+CREATE `count` variable and ASSIGN to 0
+IF `source` equals 0
+  RETURN `count`
+ITERATE over `source`, increment iterator by 1
+  CREATE `currentSubstring` and ASSIGN to `source` substring with a length of target.length to `substrings`
+  IF `currentSubstring` equals target
+    INCREMENT `count`
+    INCREMENT iterator by target.length
+RETURN `count`
+*/
+
+function countSubstrings(source, target) {
+  let count = 0;
+  if (!source.length) return count;
+
+  for (let i = 0; i <= source.length - target.length; i++) {
+    if (source.slice(i, i + target.length) === target) {
+      count += 1;
+      i += target.length - 1;
+    }
+  }
+
+  return count;
+}
+
+
+// p(countSubstrings('babab', 'bab') === 1);
+// p(countSubstrings('babab', 'ba') === 2);
+// p(countSubstrings('babab', 'b') === 3);
+// p(countSubstrings('babab', 'x') === 0);
+// p(countSubstrings('babab', 'x') === 0);
+// p(countSubstrings('', 'x') === 0);
+// p(countSubstrings('bbbaabbbbaab', 'baab') === 2);
+// p(countSubstrings('bbbaabbbbaab', 'bbaab') === 2);
+// p(countSubstrings('bbbaabbbbaabb', 'bbbaabb') === 1);
+
+
+
+
+/*
+Problem 10
+Create a function that takes a string of digits as an argument and returns the number of even-numbered substrings that can be formed. For example, in the case of '1432', the even-numbered substrings are '14', '1432', '4', '432', '32', and '2', for a total of 6 substrings.
+
+If a substring occurs more than once, you should count each occurrence as a separate substring.
+
+In: string (number)
+Out: integer (even-numbered substring count)
+Rules:
+  - count each even substring even if it occurs >1
+  - return 0 if no even substrings are found
+
+[D]
+1. create number substrings
+2. filter for the ones that are even
+3. count how many are left
+
+- create 'count'
+- iterate over string
+  -- for each iteration, iterate over the string starting from outer iteration position
+    --- create 'substring' from inner iteration position to end of string
+    --- if `substring` is even, increment `count`
+- return 'count'
+
+CREATE `evenSubstrings` function with `str` as an argument
+CREATE `count` variable and ASSIGN to 0
+ITERATE over `str`
+  ITERATE over `str`, starting from current outer index
+    CREATE `susbtring` and ASSIGN to substring from inner index to end of string
+    CONVERT `substring` to number 
+    IF `substring` modulus 2 equals 0
+      INCREMENT `count`
+RETURN `count`
+*/
+
+function evenSubstrings(str) {
+  let count = 0;
+  let arr = str.split("");
+
+  for (let i = 0; i < str.length; i++){
+    for (let k = i; k < str.length; k++) {
+      let substring = Number(arr.slice(i, k + 1).join(''));
+
+      if (substring % 2 === 0) {
+        count += 1;
+      }
+
+    }
+  }
+  
+  return count;
+}
+
+
+// p(evenSubstrings('1432') === 6); 
+// p(evenSubstrings('3145926') === 16);
+// p(evenSubstrings('2718281') === 16);
+// p(evenSubstrings('13579') === 0);
+// p(evenSubstrings('143232') === 12);
+
+
+
+
+/*
+Problem 11
+Create a function that takes a nonempty string as an argument and returns an array consisting of a string and an integer. If we call the string argument s, the string component of the returned array t, and the integer component of the returned array k, then s, t, and k must be related to each other such that s === t * k. The values of t and k should be the shortest possible substring and the largest possible repeat count that satisfies this equation.
+
+You may assume that the string argument consists entirely of lowercase alphabetic letters.
+
+In: string
+Out: array (substring; integer)
+Rules:
+  - s -> string
+  - t -> substring (smallest)
+  - k -> integer (largest)
+
+[D]
+- iterate from largest value of k
+  -- multiple a section of the string by k
+  -- if that is equal to 's', return [substring, k]
+*/
+
+function repeatedSubstring(s) {
+  for (let i = 1; i <= s.length; i++) {
+    let t = s.slice(0, i);
+    let k = s.length / i;
+    
+    
+    if (t.repeat(k) === s) return [t, k];
+  }
+}
+
+p(eq(repeatedSubstring('xyzxyzxyz'), ['xyz', 3]));
+p(eq(repeatedSubstring('xyxy'), ['xy', 2]));
+p(eq(repeatedSubstring('xyz'), ['xyz', 1]));
+p(eq(repeatedSubstring('aaaaaaaa'), ['a', 8]));
+p(eq(repeatedSubstring('superduper'), ['superduper', 1]));
