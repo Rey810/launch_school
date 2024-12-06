@@ -1924,8 +1924,262 @@ function repeatedSubstring(s) {
   }
 }
 
-p(eq(repeatedSubstring('xyzxyzxyz'), ['xyz', 3]));
-p(eq(repeatedSubstring('xyxy'), ['xy', 2]));
-p(eq(repeatedSubstring('xyz'), ['xyz', 1]));
-p(eq(repeatedSubstring('aaaaaaaa'), ['a', 8]));
-p(eq(repeatedSubstring('superduper'), ['superduper', 1]));
+// p(eq(repeatedSubstring('xyzxyzxyz'), ['xyz', 3]));
+// p(eq(repeatedSubstring('xyxy'), ['xy', 2]));
+// p(eq(repeatedSubstring('xyz'), ['xyz', 1]));
+// p(eq(repeatedSubstring('aaaaaaaa'), ['a', 8]));
+// p(eq(repeatedSubstring('superduper'), ['superduper', 1]));
+
+
+
+/*
+Problem 12
+Create a function that takes a string as an argument and returns true if the string is a pangram, false if it is not.
+
+Pangrams are sentences that contain every letter of the alphabet at least once. For example, the sentence "Five quacking zephyrs jolt my wax bed." is a pangram since it uses every letter at least once. Note that case is irrelevant.
+
+In: string (words)
+Out: boolean
+Rules:
+  - pangram: contains every letter (a-z)
+  - case insensitive (eg. 'T' === 't')
+
+[D]
+1. count occurrences of letters
+2. check if a-z has a count >= 1
+3. Return true or false based on that check
+
+(helper)
+- create 'alphabet' object
+(main)
+- iterate over string 
+  --- if current character is a letter
+    ---- increment it in the 'alphabet' object
+  --- else continue to next character
+(helper)
+- if any 'alphabet' values are 0 then there is a letter (a-z) not found in the string 
+  -- return false
+- else return true (all letters are in the string)
+
+----------------------
+(helper)
+CREATE `createAlphabet` function
+CREATE `alphabet` object and ASSIGN to empty object
+ITERATE from 'a'
+  ADD current letter to `alphabet` and ASSIGN value to 0
+RETURN `alphabet`
+
+(main)
+CREATE `isPangram` function that takes `str` as arg
+CREATE `alphabet` and ASSIGN to `createAlphabet` function call
+ITERATE over `str`
+  IF lowercased current character is a letter 
+    INCREMENT it's value in `alphabet`
+RETURN `pangramCheck` funtion call
+
+(helper)
+CREATE `pangramCheck` function that takes `alphaObj` as arg
+ITERATE over `alphaObj`
+  IF current letter has a value of 0
+    RETURN false
+RETURN true
+*/
+
+function createAlphabet() {
+  let alphabet = {};
+
+  for (let charCode = 'a'.charCodeAt(); charCode <= 'z'.charCodeAt(); charCode++) {
+    alphabet[String.fromCharCode(charCode)] = 0;
+  }
+
+  return alphabet;
+}
+
+function isPangram(str) {
+  let alphabet = createAlphabet();
+
+  for (let char of str) {
+    char = char.toLowerCase();
+    if (char >= 'a' && char <= 'z') alphabet[char] += 1;
+  };
+
+  return pangramCheck(alphabet);
+}
+
+function pangramCheck(alphaObj) {
+  for (let letter in alphaObj) {
+    if (alphaObj[letter] === 0) return false;
+  }
+
+  return true;
+}
+
+// p(isPangram('The quick, brown fox jumps over the lazy dog!') === true);
+// p(isPangram('The slow, brown fox jumps over the lazy dog!') === false);
+// p(isPangram("A wizard’s job is to vex chumps quickly in fog.") === true);
+// p(isPangram("A wizard’s task is to vex chumps quickly in fog.") === false);
+// p(isPangram("A wizard’s job is to vex chumps quickly in golf.") === true);
+
+// let myStr = 'Sixty zippers were quickly picked from the woven jute bag.';
+// p(isPangram(myStr) === true);
+
+
+/* Problem 13
+Create a function that takes two strings as arguments and returns true if some portion of the characters in the first string can be rearranged to match the characters in the second. Otherwise, the function should return false.
+
+You may assume that both string arguments only contain lowercase alphabetic characters. Neither string will be empty.
+
+In: 2 strings (lowercase letters)
+Out: boolean
+Rules:
+  - string 1 and string 2 can be diff lengths
+  - no empty strings
+  - defualt return: false
+
+[D]
+1. Find target characters in source
+2. If all the characters are found
+3. Return true
+4. Return false
+
+- iterate over target
+  -- if char is found in source
+    --- remove that character from source
+  -- else return false
+- return true
+
+CREATE `unscramble` function that takes `source` and `target` string args
+ITERATE over `target`
+  IF `source` includes current char
+    REMOVE current char from `source`
+  ELSE RETURN false
+RETURN true
+*/
+
+function unscramble(source, target) {
+  let sourceArr = [...source];
+
+  for (let char of target) {
+    if (sourceArr.includes(char)) sourceArr.splice(sourceArr.indexOf(char), 1);
+    else return false;
+  }
+
+  return true;
+}
+
+// p(unscramble('ansucchlohlo', 'launchschool') === true);
+// p(unscramble('phyarunstole', 'pythonrules') === true);
+// p(unscramble('phyarunstola', 'pythonrules') === false);
+// p(unscramble('boldface', 'coal') === true);
+
+
+/*
+Problem 14
+Create a function that takes a single integer argument and returns the sum of all the multiples of 7 or 11 that are less than the argument. If a number is a multiple of both 7 and 11, count it just once.
+
+For example, the multiples of 7 and 11 that are below 25 are 7, 11, 14, 21, and 22. The sum of these multiples is 75.
+
+If the argument is negative, return 0.
+
+In: integer
+Out: integer (sum)
+Rules:
+  - sum: multiplers of 7 or 11 less than the given integer
+  - count multiples of 7 AND 11 once
+  - Default return: 0 (for args < 1)
+
+[D]
+1. Check that the arg is greater than 7
+2. Find numbers that are multiples of 7 or 11
+3. Sum those numbers
+
+- if arg is 7 or less, return 0
+- create `multiples` variable
+- iterate from 7, stop at arg - 1
+  -- if current number is multiple of 7 or 11
+    --- append number to `multiples`
+- sum `multiples`
+- return sum
+
+CREATE `sevenEleven` function that takes `int` as arg
+IF `int` is less than or equal to 7
+  RETURN 0
+CREATE `multiples` and ASSIGN to []
+ITERATE from 7, stop at `int` - 1
+  IF current number is multiple of 7 OR 11
+    APPEND current number to `multiples`
+RETURN SUM of `multiples`
+*/
+
+function sevenEleven(int) {
+  if (int <= 7) return 0;
+
+  let multiples = [];
+
+  for (let currNum = 7; currNum < int; currNum++) {
+    if (currNum % 7 === 0 || currNum % 11 === 0) multiples.push(currNum);
+  }
+
+  return multiples.reduce((sum, curr) => sum + curr);
+}
+
+
+// p(sevenEleven(10) === 7);
+// p(sevenEleven(11) === 7);
+// p(sevenEleven(12) === 18);
+// p(sevenEleven(25) === 75);
+// p(sevenEleven(100) === 1153);
+// p(sevenEleven(0) === 0);
+// p(sevenEleven(-100) === 0);
+
+
+
+
+/*
+Problem 15
+Create a function that takes a string argument that consists entirely of numeric digits and computes the greatest product of four consecutive digits in the string. The argument will always have more than 4 digits.
+
+In: string (numbers)
+Out: integer (product of 4 nums)
+Rules:  
+  - arg always has >4 digits
+  - highest product -> 4 consec digits in original arg
+
+[D]
+1. Multiply 4 digits at a time
+2. Return largest product of 4 digits 
+
+- create `biggestProduct` and set to 0
+- create `numArr` variable
+- iterate over `numArr` until `numArr`.length - 4
+  -- multiply the nums from current iteration up to current iteration + 3
+  -- if product is bigger than `biggestProduct`, reassign `biggestProduct` to current product
+- return `biggestProduct`
+
+CREATE `numArr` variable and assign to `str` as an array
+CREATE `greatestProduct` function that takes `str` as arg
+ITERATE over `numArr`, continue while iterator is less than or equal to `numArr` length - 4
+  CREATE  `numSlice` and ASSIGN to array of numbers from current iterator to current iterator + 3
+  CREATE `currentProduct` and ASSIGN to MULTIPLY numbers in `numSlice`
+  IF `currentProduct` is bigger than `greatestProduct`
+    REASSIGN `greatestProduct` to `currentProduct`
+RETURN `biggestProduct`
+*/
+
+function greatestProduct(str) {
+  let numArr = [...str];
+  let greatestProduct = 0;
+
+  for (let i = 0; i <= numArr.length - 4; i++) {
+    let currentProduct = numArr.slice(i, i + 4).reduce((product, currNum) => product * currNum);
+    if (currentProduct > greatestProduct) greatestProduct = currentProduct;
+  }
+
+  return greatestProduct;
+}
+
+
+// p(greatestProduct('23456') === 360);      // 3 * 4 * 5 * 6
+// p(greatestProduct('3145926') === 540);    // 5 * 9 * 2 * 6
+// p(greatestProduct('1828172') === 128);    // 1 * 8 * 2 * 8
+// p(greatestProduct('123987654') === 3024); // 9 * 8 * 7 * 6

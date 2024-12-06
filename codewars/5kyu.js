@@ -178,5 +178,93 @@ function maxSequence(arr) {
 
 }
 
-console.log(maxSequence([-2, 1, -3, 4, -1, 2, 1, -5, 4]));
+// console.log(maxSequence([-2, 1, -3, 4, -1, 2, 1, -5, 4]));
 // should be 6: [4, -1, 2, 1]
+
+
+
+/*
+A featured number (something unique to this exercise) is an odd number that is a multiple of 7, with all of its digits occurring exactly once each. For example, 49 is a featured number, but 98 is not (it is not odd), 97 is not (it is not a multiple of 7), and 133 is not (the digit 3 appears twice).
+
+Write a function that takes an integer as an argument and returns the next featured number greater than the integer. Issue an error message if there is no next featured number.
+
+NOTE: The largest possible featured number is 9876543201.
+
+In: integer
+Out: integer ('featured')
+Rules:
+  - featured: odd number & multiple of 7 & digits occur once
+  - Default return: "There is no possible number that fulfills those requirements." 
+    -> when no featured number is found
+
+[D]
+1. Start counting from given number
+2. Continue until the featured number is found or none is found
+3. Return featured number
+
+- Iterate from given number
+  -- check if number is a multiple of 7
+    --- check if number is odd and digits are unique
+      --- return number
+    --- else increment current number by 7
+- Return default value (string)
+
+(helper)
+- given an integer
+- check uniqueness of each digit (obj: counting each digit)
+- return true or false
+
+CREATE `featured` function with `int` as arg
+ITERATE from `int` + 1
+  IF number is multiple of 7
+    IF number is odd AND number has unique digits (helper: hasUniqueDigits)
+      RETURN number
+    ELSE increment iterator by 6
+RETURN "There is no possible number that fulfills those requirements." 
+
+(helper)
+CREATE `hasUniqueDigits` that takes `digit`
+CREATE `obj` and ASSIGN to empty object
+ITERATE over `digit`
+  IF current digit exists in `obj`
+    INCREMENT it's value
+  ELSE add it to `obj` and ASSIGN value of 1
+
+get the values, and check if it includes a number > 1
+  If it does return false
+  Else return true
+*/
+
+function featured(int) {
+  for (let currentNum = int + 1; currentNum <= 9876543201; currentNum++) {
+    if (currentNum % 7 === 0 && currentNum % 2 === 1) {
+      if (hasUniqueDigits) {
+        return currentNum;
+      } else currentNum += 13;
+    }
+  }
+
+  return  "There is no possible number that fulfills those requirements.";
+}
+
+function hasUniqueDigits(digit) {
+  let obj = {};
+
+  String(digit).split('').forEach(num => {
+    obj[num] = obj[num] + 1 || 1;
+  });
+
+  return Object.values(obj).filter(num => num > 1).length === 0;
+}
+
+
+console.log(featured(12));           // 21
+console.log(featured(20));           // 21
+console.log(featured(21));           // 35
+console.log(featured(997));          // 1029
+console.log(featured(1029));         // 1043
+console.log(featured(999999));       // 1023547
+console.log(featured(999999987));    // 1023456987
+console.log(featured(9876543186));   // 9876543201
+console.log(featured(9876543200));   // 9876543201
+console.log(featured(9876543201));   // "There is no possible number that fulfills those requirements."
