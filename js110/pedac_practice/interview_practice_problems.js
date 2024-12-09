@@ -2183,3 +2183,216 @@ function greatestProduct(str) {
 // p(greatestProduct('3145926') === 540);    // 5 * 9 * 2 * 6
 // p(greatestProduct('1828172') === 128);    // 1 * 8 * 2 * 8
 // p(greatestProduct('123987654') === 3024); // 9 * 8 * 7 * 6
+
+
+
+/*
+Problem 16
+Create a function that returns the count of distinct case-insensitive alphabetic characters and numeric digits that occur more than once in the input string. You may assume that the input string contains only alphanumeric characters.
+
+In: string (alphanumeric)
+Out: integer (count)
+Rules:
+  - count: letters or numbers that occur >1 in arg
+  - case-insensitive
+  - default return: 0
+
+[D]
+1. Find the unique letters and numbers
+2. Count their occurrences
+3. Count those that occur more than 1
+4. Return that count
+
+- create `alphaNum` variable
+- iterate over arg
+  -- increment or add to `alphaNum`
+- create `count` variable
+- iterate over `alphaNum`
+  -- if current element has a count of >1
+    --- Increment `count`
+- Return `count`
+
+CREATE `distinctMultiples` function that takes `str` as arg
+CREATE `alphaNum` variable and ASSIGN to empty object
+ITERATE over `str`
+  IF current char exists in `alphaNum`
+    INCREMENT it in `alphaNum`
+  ELSE 
+    ADD it to `alphaNum` and ASSIGN to 1
+CREATE `count` variable and ASSIGN to 0
+ITERATE over `alphaNum`
+  IF current element has count > 1
+    INCREMENT `count`
+RETURN `count`
+*/
+
+function distinctMultiples(str) {
+  let alphaNum = {};
+
+  for (let char of str) {
+    char = char.toLowerCase()
+    alphaNum[char] = alphaNum[char] + 1 || 1;
+  }
+
+  let count = 0;
+
+  for (let prop in alphaNum) {
+    if (alphaNum[prop] > 1) count += 1;
+  }
+
+  return count;
+
+}
+
+// p(distinctMultiples('xyz') === 0);              // (none)
+// p(distinctMultiples('xxyypzzr') === 3);         // x, y, z
+// p(distinctMultiples('xXyYpzZr') === 3);         // x, y, z
+// p(distinctMultiples('unununium') === 2);        // u, n
+// p(distinctMultiples('multiplicity') === 3);     // l, t, i
+// p(distinctMultiples('7657') === 1);             // 7
+// p(distinctMultiples('3141592653589793') === 4); // 3, 1, 5, 9
+// p(distinctMultiples('2718281828459045') === 5); // 2, 1, 8, 4, 5
+
+
+
+/*
+Problem 17
+
+Create a function that takes an array of integers as an argument. The function should determine the minimum integer value that can be appended to the array so the sum of all the elements equal the closest prime number that is greater than the current sum of the numbers. For example, the numbers in [1, 2, 3] sum to 6. The nearest prime number greater than 6 is 7. Thus, we can add 1 to the array to sum to 7.
+
+Notes:
+
+The array will always contain at least 2 integers.
+All values in the array must be positive (> 0).
+There may be multiple occurrences of the various numbers in the array.
+
+In: array (integers)
+Out: integer 
+Rules:
+  - returned integer: what must be added to get to closest prime number
+  - prime number: can ONLY be divided equally by itself or 1
+
+[D]
+1. Sum the array integers
+2. Determine closest prime number greater than sum
+3. Return difference between prime and sum
+
+- create `sum` variable
+- iterate from `sum` + 1
+  -- check if current number is prime (helper)
+    --- return the difference between current number and `sum`
+
+(helper)
+- iterate from 1 and stop before arg value
+  -- if arg modulus current number is 0
+    --- return false
+- return true
+
+--------------------------------
+CREATE `nearestPrimeSum` function that takes `arr` as arg
+CREATE `sum` variable and ASSIGN to sum of `arr`
+ITERATE from `sum` + 1
+  IF current number is prime (helper)
+    RETURN current number - `sum`
+
+(helper)
+CREATE `primeCheck` function that takes `int` as arg
+ITERATE from 2, stop before `int` value
+  IF `int` % current number equals 0
+    RETURN false
+RETURN true
+*/
+
+function primeCheck(int) {
+  for (let i = 2; i < int; i++) {
+    if (int % i === 0) return false
+  }
+
+  return true;
+}
+
+function nearestPrimeSum(arr) {
+  let sum = arr.reduce((sum, curr) => sum + curr);
+
+  for (let i = sum + 1; true; i++) {
+    if (primeCheck(i)) return i - sum;
+  }
+}
+  
+  
+// p(nearestPrimeSum([1, 2, 3]) === 1);        // Nearest prime to 6 is 7
+// p(nearestPrimeSum([5, 2]) === 4);           // Nearest prime to 7 is 11
+// p(nearestPrimeSum([1, 1, 1]) === 2);        // Nearest prime to 3 is 5
+// p(nearestPrimeSum([2, 12, 8, 4, 6]) === 5); // Nearest prime to 32 is 37
+
+// // Nearest prime to 163 is 167
+// p(nearestPrimeSum([50, 39, 49, 6, 17, 2]) === 4);
+
+
+/*
+Problem 19
+Create a function that takes an array of integers as an argument and returns the integer that appears an odd number of times. There will always be exactly one such integer in the input array.
+
+In: array (integers)
+Out: integer
+Rules:  
+  - ONLY 1 integer has ODD occurrences
+  - odd: num % 2 === 1
+
+[D]
+1. Count integer occurrences
+2. Return integer with odd occurrences
+
+- create `obj` variable
+- iterate over array
+  -- add new nums to `obj` or increment existing ones
+- iterate over `obj`
+  -- if a number has an odd value
+    --- return that number
+
+CREATE `oddFellow` function that takes `arr` as arg
+CREATE `obj` variable and ASSIGN to empty object
+ITERATE over `arr`
+  ADD/INREMENT current number in `obj`
+ITERATE over `obj`
+  IF current number has odd value
+    RETURN current number
+*/
+
+function oddFellow(arr){
+  let obj = {};
+
+  arr.forEach(el => obj[el] = obj[el] + 1 || 1);
+
+  for (let prop in obj) {
+    if (obj[prop] % 2 === 1) return Number(prop);
+  }
+  
+}
+
+// p(oddFellow([4]) === 4);
+// p(oddFellow([7, 99, 7, 51, 99]) === 51);
+// p(oddFellow([7, 99, 7, 51, 99, 7, 51]) === 7);
+// p(oddFellow([25, 10, -6, 10, 25, 10, -6, 10, -6]) === -6);
+// p(oddFellow([0, 0, 0]) === 0);
+
+
+
+
+
+/*
+Problem 20
+Create a function that takes an array of numbers, all of which are the same except one. Find and return the number in the array that differs from all the rest.
+
+The array will always contain at least 3 numbers, and there will always be exactly one number that is different.
+*/
+
+function whatIsDifferent(arr) {
+  return arr.filter((el, idx, arr) => arr.indexOf(el) === arr.lastIndexOf(el))[0];
+}
+
+// p(whatIsDifferent([0, 1, 0]) === 1);
+// p(whatIsDifferent([7, 7, 7, 7.7, 7]) === 7.7);
+// p(whatIsDifferent([1, 1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1]) === 11);
+// p(whatIsDifferent([3, 4, 4, 4]) === 3);
+// p(whatIsDifferent([4, 4, 4, 3]) === 3);
