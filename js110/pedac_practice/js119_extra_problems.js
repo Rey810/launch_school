@@ -2,6 +2,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
+const p = console.log;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Given a sentence, write a function that finds the starting index of the rightmost occurrence of any consecutive vowel sequence in the sentence. The function should be case-insensitive and should only consider vowel sequences within individual words (not spanning multiple words). */
@@ -405,4 +406,137 @@ function createAlphabet() {
   return alphabet;
 }
 
-console.log(solve(["abode","ABc","xyzD"])) // [4, 3, 1]
+// console.log(solve(["abode","ABc","xyzD"])) // [4, 3, 1]
+
+
+
+
+
+
+/*
+Create a function that takes a string of digits as an argument and returns the number of even-numbered substrings that can be formed. For example, in the case of '1432', the even-numbered substrings are '14', '1432', '4', '432', '32', and '2', for a total of 6 substrings.
+
+If a substring occurs more than once, you should count each occurrence as a separate substring.
+
+In: string (number)
+Out: integer (even-numbered substrings)
+Rules:
+  - even-numbered substring: 'number' % 2 === 0
+
+[D]
+1. Create all substrings
+2. Count the ones that are even-numbered
+3. Return that count
+
+- create 'count` 
+- Iterate over the string
+  -- Start iterating at current position of outer iteration
+    --- Create a substring from current inner position to end of string
+    --- If substring is even
+      --- increment `count`
+- return `count`
+
+CREATE `evenSubstrings` function that takes `str` as arg
+CREATE `count` variable and ASSIGN to 0
+ITERATE over `str`
+  ITERATE over `str`, starting from outer index
+    CREATE `substr` and ASSIGN to string slice from inner index to end of `str`
+    IF `substr` is even
+      INCREMENT `count`
+RETURN `count`
+*/
+
+function evenSubstrings(str) {
+  let count = 0;
+  str = str.split("");
+
+  for (let i = 0; i <= str.length; i++) {
+    for (let k = i + 1; k <= str.length; k++) {
+      if (Number(str.slice(i, k).join("")) % 2 === 0) count += 1;
+    }
+  }
+
+  return count;
+}
+
+
+// p(evenSubstrings('1432') === 6); // '14', '1432', '4', '432', '32',  '2'
+// p(evenSubstrings('3145926') === 16);
+// p(evenSubstrings('2718281') === 16);
+// p(evenSubstrings('13579') === 0);
+// p(evenSubstrings('143232') === 12);
+
+
+
+
+/* P33
+You probably know the "like" system from Facebook and other pages. People can "like" blog posts,
+pictures or other items. We want to create the text that should be displayed next to such an item.
+
+Implement the function which takes an array containing the names of people that like an item.
+It must return the display text as shown in the examples:
+
+[]                                -->  "no one likes this"
+["Peter"]                         -->  "Peter likes this"
+["Jacob", "Alex"]                 -->  "Jacob and Alex like this"
+["Max", "John", "Mark"]           -->  "Max, John and Mark like this"
+["Alex", "Jacob", "Mark", "Max"]  -->  "Alex, Jacob and 2 others like this"
+
+In: array (strings)
+Out: string
+Rules:
+  - array length of 0 -> "no one likes this"
+  - array length of 1 -> '[first el] likes this'
+  - array length of 2 -> '[first el] and [second el] like this'
+  - array length of 3 -> '[first el],  [second el] and [third el] like this'
+  - array length of > 3 -> '[first el], [second el] and [array length - 2] like this'
+
+[D]
+1. Determine array length
+2. Return appropriate string
+*/
+
+function printLikes(arr) {
+  switch (arr.length) {
+    case 0:
+      console.log("no one likes this");
+      break;
+    case 1:
+      console.log(`${arr[0]} likes this`);
+      break;
+    case 2:
+      console.log(`${arr[0]} and ${arr[1]} like this`);
+      break;
+    case 3:
+      console.log(`${arr[0]}, ${arr[1]}, and ${arr[2]}  like this`);
+      break;
+    default:
+      console.log(`${arr[0]}, ${arr[1]}, and ${arr.length - 2} others like this`);
+      break;
+  }
+}
+
+printLikes([])
+printLikes(["Peter"])
+printLikes(["Jacob", "Alex"])
+printLikes(["Max", "John", "Mark"])
+printLikes(["Alex", "Jacob", "Mark", "Max"])
+
+
+
+
+/*
+Usually when you buy something, you're asked whether your credit card number, phone number or
+answer to your most secret question is still correct. However, since someone could look over your
+shoulder, you don't want that shown on your screen. Instead, we mask it.
+
+Your task is to write a function maskify, which changes all but the last four characters into '#'.
+*/
+
+console.log(maskify("4556364607935616"));                         // "############5616"
+console.log(maskify("64607935616"));                              // "#######5616"
+console.log(maskify("1"));                                        // "1"
+console.log(maskify(""));                                         // ""
+console.log(maskify("Skippy"));                                   // "##ippy"
+console.log(maskify("Nananananananananananananananana Batman!")); // "####################################man!"
+console.log(maskify("cnw"));
