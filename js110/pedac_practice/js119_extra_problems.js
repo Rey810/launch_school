@@ -516,27 +516,364 @@ function printLikes(arr) {
   }
 }
 
-printLikes([])
-printLikes(["Peter"])
-printLikes(["Jacob", "Alex"])
-printLikes(["Max", "John", "Mark"])
-printLikes(["Alex", "Jacob", "Mark", "Max"])
+// printLikes([])
+// printLikes(["Peter"])
+// printLikes(["Jacob", "Alex"])
+// printLikes(["Max", "John", "Mark"])
+// printLikes(["Alex", "Jacob", "Mark", "Max"])
 
 
 
 
 /*
+P34
 Usually when you buy something, you're asked whether your credit card number, phone number or
 answer to your most secret question is still correct. However, since someone could look over your
 shoulder, you don't want that shown on your screen. Instead, we mask it.
 
 Your task is to write a function maskify, which changes all but the last four characters into '#'.
+
+In: string (characters)
+Out: string (characters)
+Rules:
+  - only hide chars if length of arg is greater than 4
+  - default return: string as is
+
+[D]
+1. Determine length of string
+2. Return a masked string dependant on the length
+
+- if the arg length is less than 4, return arg as is
+- otherwise, iterate over arg and replace all chars except last 4 with a hash
+
+CREATE `maskify` function that takes `str` as arg
+IF `str`.length is less than 4
+  RETURN `str`
+ELSE 
+  ITERATE over `str`
+    IF the current index is less than `str`.length - 4
+      REPLACE current char with `#`
+RETURN `str`
 */
 
-console.log(maskify("4556364607935616"));                         // "############5616"
-console.log(maskify("64607935616"));                              // "#######5616"
-console.log(maskify("1"));                                        // "1"
-console.log(maskify(""));                                         // ""
-console.log(maskify("Skippy"));                                   // "##ippy"
-console.log(maskify("Nananananananananananananananana Batman!")); // "####################################man!"
-console.log(maskify("cnw"));
+function maskify(str) {
+  if (str.length <= 4) return str;
+
+  // return [...str].map((el, idx) => {
+  //   if (idx < str.length - 4) return "#";
+  //   else return el;
+  // }).join('');
+
+  return [...str].fill('#', 0, str.length - 4).join('');
+}
+
+// console.log(maskify("4556364607935616"));                         // "############5616"
+// console.log(maskify("64607935616"));                              // "#######5616"
+// console.log(maskify("1"));                                        // "1"
+// console.log(maskify(""));                                         // ""
+// console.log(maskify("Skippy"));                                   // "##ippy"
+// console.log(maskify("Nananananananananananananananana Batman!")); // "####################################man!"
+// console.log(maskify("cnw"));                                      // "cnw"
+
+
+
+
+
+/*
+P35
+You are given an array of strings and an integer k.
+Your task is to return the first longest string consisting of k consecutive strings taken in the array.
+
+Example: 
+longest_consec(["zone", "abigail", "theta", "form", "libe", "zas", "theta", "abigail"], 2)
+result => "abigailtheta"
+
+n being the length of the string array, if n = 0 or k > n or k <= 0 return "".
+
+In: array (strings), integer ('k')
+Out: string (longest 'k' consec strings)
+Rules: 
+  - consecutive string: current string and the next one and the next one etc...
+  - Default return: "" (arr has a length of 0; 'k' > arr length; 'k' <= 0)
+
+[D]
+1. Determine lengths of 'k' consec strings
+2. Return the longest sequence as one string
+
+- create `longestString`
+- iterate over arr up until the index is less than or equal to the array length - k
+  -- create `substring` from current index to current index + k
+  -- if the length of `substring` is greater than `longestSubstring`
+    --- reassign `longestSubstring` to `substring`
+- return `longestSubstring`
+
+CREATE `longestConsec` function that takes `arr` and 'k' as args
+CREATE `longestString` variable and ASSIGN to ""
+ITERATE over `arr`, continue until iterator is <= arr length - k
+  CREATE `substring` variable and ASSIGN to slice of `arr` from current iterator to current iterator + k
+  IF `substring` length > `longestSubstring`
+    REASSIGN `longestSubstring` to `substring`
+RETURN `longestSubstring`
+*/
+
+function longestConsec(arr, k) {
+  let longestSubstring = '';
+
+  if (k > arr.length || k <= 0 || arr.length === 0) return longestSubstring;
+
+  for (let i = 0; i <= arr.length - k; i++) {
+    let substring = arr.slice(i, i + k).join('');
+    if (substring.length > longestSubstring.length) longestSubstring = substring;
+  }
+
+  return longestSubstring;
+}
+
+
+// Test Cases
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas"], 2) === "abigailtheta"); // true
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas", "theta", "abigail"], 2) === "abigailtheta"); // true
+// console.log(longestConsec(["ejjjjmmtthh", "zxxuueeg", "aanlljrrrxx", "dqqqaaabbb", "oocccffuucccjjjkkkjyyyeehh"], 1) === "oocccffuucccjjjkkkjyyyeehh"); // true
+// console.log(longestConsec([], 3) === ""); // true
+// console.log(longestConsec(["itvayloxrp","wkppqsztdkmvcuwvereiupccauycnjutlv","vweqilsfytihvrzlaodfixoyxvyuyvgpck"], 2) === "wkppqsztdkmvcuwvereiupccauycnjutlvvweqilsfytihvrzlaodfixoyxvyuyvgpck"); // true
+// console.log(longestConsec(["wlwsasphmxx","owiaxujylentrklctozmymu","wpgozvxxiu"], 2) === "wlwsasphmxxowiaxujylentrklctozmymu"); // true
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas"], -2) === ""); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 3) === "ixoyx3452zzzzzzzzzzzz"); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 15) === ""); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 0) === ""); // true
+
+
+
+
+
+/*
+P36
+Implement the function/method, minimum shorten.
+The function shortens a sentence such that it will fit within the character limit set.
+It shortens by removing vowels in the sequence of a, e, i, o, and u.
+Start removing from the end of the sentence.
+If it can not be shortened to fit within character limit, return an empty string. Spaces don’t count for the limit.
+*/
+
+
+
+
+
+// DO THIS AGAIN!!!!!!!!!!!!!!!!!
+
+
+
+// console.log(minimumShorten("This is a test sentence", 18)); // This is  test sentence
+// console.log(minimumShorten("Hello World", 8)); // Hllo Wrld
+// console.log(minimumShorten("Short", 10)); // Short
+// console.log(minimumShorten("A very long sentence with many vowels", 10)); // ""
+
+
+
+
+/*
+P37
+Given a string `s`, return the length of the longest substring between two equal characters, excluding the two characters. If there is no such substring return -1.
+
+In: string (chars)
+Out: integer (char count between two equal chars)
+Rules:
+  - dont include equal chars in count
+  - Default return: -1 (when no equal pairs)
+
+[D]
+1. check if there is a pair
+2. count the chars between the pair
+3. Return the count
+
+- if there is not a pair,
+  -- return -1
+
+- iterate over chars, end before last char
+  -- iterate over chars, start at outer index + 1, end at last char
+    --- if the outer index char equals the inner index char
+      ---- return the count of the chars between them
+
+CREATE `maxLengthBetweenEqualCharacters` function that takes `str` as arg
+IF there is not a pair
+  RETURN -1
+
+ITERATE over `str`, end before `str` length - 1
+  ITERATE over `str`, start at outer index + 1, end at last char
+    IF the outer index char equals the inner index char
+      RETURN inner index minus outer index minus 1
+*/
+
+function maxLengthBetweenEqualCharacters(str) {
+  if ([...str].filter(el => str.indexOf(el) !== str.lastIndexOf(el)).length === 0) return -1;
+
+  let count = 0;
+
+  for (let i = 0; i < str.length - 1; i++) {
+    for (let k = i + 1; k <= str.length - 1; k++) {
+      if (str[i] === str[k] && ((k - i - 1) > count)) {
+        count = k - i - 1;
+      }
+    }
+  }
+  return count;
+}
+
+// console.log(maxLengthBetweenEqualCharacters("acbsewb") === 3);
+// console.log(maxLengthBetweenEqualCharacters("acbsewbadzzzzzzzzzzzzd") === 12);
+// console.log(maxLengthBetweenEqualCharacters("aa") === 0);
+// console.log(maxLengthBetweenEqualCharacters("cbzxy") === -1);
+
+
+
+
+
+/*
+P38
+We're receiving a set of messages in code. The messages are sets of text strings, like:
+"alakwnwenvocxzZjsf"
+Write a method to decode these strings into numbers. The decoded number should be the number of lowercase
+characters between the first two uppercase characters. If there aren't two uppercase characters,
+the number should be 0.
+
+In: array (strings)
+Out: array (numbers)
+Rules:
+  - counts: lowercase letters between first 2 UPPERCASE letters
+    -- 0: empty strings; 1 or 0 UPPERCASE letters
+  - Default return: 0 (as a part of the return array)
+
+[D]
+1. Check for uppercase letters
+2. Count lowercase letters between them
+3. Return that count
+4. Repeat #1-3 for all elements
+
+- create `counts` array
+- iterate over the arr
+  -- if the word is empty or has 1 or 0 uppercase letters (helper)
+    --- add 0 to `counts`
+  -- add the count of the lowercase letters in between the two uppercase letters (helper) to `counts` array
+- return `counts`
+
+(helper)
+hasUppercaseChars
+- create 'count` 
+- iterate over the chars
+  -- if the char is uppercased
+    --- increment `count`
+- return count
+
+(helper)
+countLowercaseChars
+- iterate over the chars
+  -- create `firstUpper`
+  -- create `secondUpper`
+  -- if a char equals to the uppercase version of that char
+    --- if `firstUpper` is falsey, assign to current char
+    --- else assign `secondUpper` to current char
+      ---- return the index of `secondUpper` minus index of `firstUpper` minus 1
+*/
+
+function hasUppercaseChars(word) {
+  return [...word].reduce((count, letter) => letter === letter.toUpperCase() ? count += 1 : count, 0);
+ }
+
+ function countLowercaseChars(word) {
+   let firstUpper;
+   let secondUpper;
+ 
+   for (let letter of word) {
+     if (letter === letter.toUpperCase()) {
+       if (!firstUpper) firstUpper = letter;
+       else {
+         secondUpper = letter;
+         return word.lastIndexOf(secondUpper) - word.indexOf(firstUpper) - 1;
+       }
+     }
+   }
+ }
+ 
+ function decode(arr) {
+   let counts = [];
+ 
+   for (let word of arr) {
+     if (word.length === 0 || (hasUppercaseChars(word) <= 1)) counts.push(0);
+     else counts.push(countLowercaseChars(word));
+   }
+ 
+   return counts;
+ }
+ 
+ 
+//  console.log(decode(['ZoL', 'heLlo', 'XX'])) // [1, 0, 0]);
+//  console.log(decode(['foUrsCoreAnd', 'seven', ''])) // [2, 0, 0]);
+//  console.log(decode(['lucYintheskyWith', 'dIaMonDs'])) // [8, 1]);
+//  console.log(decode([]) ) // [];
+
+
+
+
+
+/*
+Given a sentence, write a function that finds the starting index of
+the rightmost occurrence of any consecutive vowel sequence in the sentence
+and the word it belongs to.
+The function should be case-insensitive and should only consider vowel
+sequences within individual words (not spanning multiple words).
+
+If a consecutive vowel sequence is found, return an array where the first element is
+the starting index of the sequence and the second element is the word containing that sequence.
+
+If no consecutive vowels are found, return an empty array.
+
+In: string (words)
+Out: array (index integer, string word)
+Rules:
+  - consecutive vowels:
+    -- two in a row
+    -- in one word
+  - case insensitive
+  - default return: []
+
+[D]
+1. Look for 2 vowels in a row from the right of each word
+2. Return the first index (i.e. the start of the 2 vowel consec seq) and the word it's in
+
+- iterate over the str from the end 
+ -- iterate over current word from the end
+  --- if the current letter and the next letter are vowels
+    ---- return an array with the index of the next letter and the current word
+- return []
+
+CREATE `rightmostConsecutiveVowel` function that takes `str` as arg
+ITERATE over `str` starting from the end, stopping at the first word
+ ITERATE over current word starting from the end, stopping at the second last letter
+  IF current letter AND next letter are vowels
+    RETURN [index of next letter, current word]
+RETURN []
+*/
+
+function rightmostConsecutiveVowel(str) {
+  let strArr = str.split(" ");
+
+  for (let i = strArr.length - 1; i >= 0; i--) {
+    let currentWord = strArr[i]
+
+    for (let k = currentWord.length - 1; k >= 1; k--) {
+      if ('aeiou'.includes(currentWord[k]) && 'aeiou'.includes(currentWord[k - 1])) {
+        return [str.lastIndexOf(currentWord) + (k - 1), currentWord];
+      }
+    }
+  }
+  
+  return [];
+}
+
+
+
+// console.log(rightmostConsecutiveVowel("The quick brown fox jumps over the laaazy dog")); // Output: [37, "laaazy"]
+// console.log(rightmostConsecutiveVowel("She sells sea shells on the sea shore")); // Output: [29, "sea"]
+// console.log(rightmostConsecutiveVowel("I like eating aaapples and oranGEs")); // Output: [15, "aaapples"]
+// console.log(rightmostConsecutiveVowel("This sentence has no consecutive vowels")); // Output: []
+// console.log(rightmostConsecutiveVowel("Queueing is fun but cooool")); // Output: [23, "cooool"]
