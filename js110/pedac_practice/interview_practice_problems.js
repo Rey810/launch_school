@@ -1557,6 +1557,8 @@ function mostCommonChar(str) {
 // p(mostCommonChar(myStr) === 'e');
 
 
+
+
 /*
 Problem 6
 Create a function that takes a string argument and returns a hash in which the keys represent the lowercase letters in the string, and the values represent how often the corresponding letter occurs in the string.
@@ -1613,6 +1615,8 @@ function countLetters(str) {
 // p(eq(countLetters('x'), {'x': 1}));
 // p(eq(countLetters(''), {}));
 // p(eq(countLetters('!!!'), {}));
+
+
 
 
 /*
@@ -1767,6 +1771,7 @@ function longestVowelSubstring(str) {
 
 
 
+
 /*
 Problem 9
 Create a function that takes two string arguments and returns the number of times that the second string occurs in the first string. Note that overlapping strings don't count: 'babab' contains 1 instance of 'bab', not 2.
@@ -1828,6 +1833,7 @@ function countSubstrings(source, target) {
 // p(countSubstrings('bbbaabbbbaab', 'baab') === 2);
 // p(countSubstrings('bbbaabbbbaab', 'bbaab') === 2);
 // p(countSubstrings('bbbaabbbbaabb', 'bbbaabb') === 1);
+
 
 
 
@@ -1895,6 +1901,7 @@ function evenSubstrings(str) {
 
 
 
+
 /*
 Problem 11
 Create a function that takes a nonempty string as an argument and returns an array consisting of a string and an integer. If we call the string argument s, the string component of the returned array t, and the integer component of the returned array k, then s, t, and k must be related to each other such that s === t * k. The values of t and k should be the shortest possible substring and the largest possible repeat count that satisfies this equation.
@@ -1929,6 +1936,10 @@ function repeatedSubstring(s) {
 // p(eq(repeatedSubstring('xyz'), ['xyz', 1]));
 // p(eq(repeatedSubstring('aaaaaaaa'), ['a', 8]));
 // p(eq(repeatedSubstring('superduper'), ['superduper', 1]));
+
+
+
+
 
 
 
@@ -2024,6 +2035,10 @@ function pangramCheck(alphaObj) {
 // p(isPangram(myStr) === true);
 
 
+
+
+
+
 /* Problem 13
 Create a function that takes two strings as arguments and returns true if some portion of the characters in the first string can be rearranged to match the characters in the second. Otherwise, the function should return false.
 
@@ -2071,6 +2086,9 @@ function unscramble(source, target) {
 // p(unscramble('phyarunstole', 'pythonrules') === true);
 // p(unscramble('phyarunstola', 'pythonrules') === false);
 // p(unscramble('boldface', 'coal') === true);
+
+
+
 
 
 /*
@@ -2327,6 +2345,83 @@ function nearestPrimeSum(arr) {
 
 // // Nearest prime to 163 is 167
 // p(nearestPrimeSum([50, 39, 49, 6, 17, 2]) === 4);
+
+
+
+
+/*
+Problem 18
+Create a function that takes an array of integers as an argument. Determine and return the index N for which all numbers with an index less than N sum to the same value as the numbers with an index greater than N. If there is no index that would make this happen, return -1.
+
+If you are given an array with multiple answers, return the index with the smallest value.
+
+The sum of the numbers to the left of index 0 is 0. Likewise, the sum of the numbers to the right of the last element is 0.
+
+In: array (numbers)
+Out: Number (index, N)
+Rules:
+  - N: index where all numbers before it summed equal all numbers after it summed
+  - Return first N occurrence
+  - Default N: -1
+
+[D]
+1. Go through each index, starting from 1
+  -Add numbers before and then add numbers after
+    - If the values are equal
+    - Return the current index
+3. Return -1
+
+- iterate over array
+  -- create 'beforeSum' and assign to sum of numbers before current index or 0
+  -- create 'afterSum' and assign to sum of numbers after current index or 0
+  -- if 'beforeSum' equals 'afterSum'
+    --- return current index
+- return -1
+
+CREATE `equalSumIndex` function that takes `arr` as arg
+ITERATE over `arr`, starting index of 0, ending at last element
+  CREATE `beforeSum` and ASSIGN to sum of numbers before current index OR 0
+  CREATE `afterSum` and ASSIGN to sum of numbers after current index OR 0
+  IF `beforeSum` EQUALS `afterSum` 
+    RETURN current index
+RETURN -1
+*/
+
+function equalSumIndex(arr) {
+  for (let currIdx = 0; currIdx < arr.length; currIdx++) {
+    let beforeSum;
+    let afterSum;
+
+    if (currIdx === 0) beforeSum = 0;
+    else {
+      beforeSum = arr.slice(0, currIdx).reduce((sum, curr) => sum += curr);
+    }
+
+    if (currIdx === arr.length - 1) afterSum = 0;
+    else {
+      afterSum = arr.slice(currIdx + 1).reduce((sum, curr) => sum += curr)
+    }
+
+    if (beforeSum === afterSum) return currIdx;
+  }
+
+  return -1;
+}
+
+p(equalSumIndex([1, 2, 4, 4, 2, 3, 2]) === 3);
+p(equalSumIndex([7, 99, 51, -48, 0, 4]) === 1);
+p(equalSumIndex([17, 20, 5, -60, 10, 25]) === 0);
+p(equalSumIndex([0, 2, 4, 4, 2, 3, 2]) === -1);
+
+// The following test case could return 0 or 3. Since we're
+// supposed to return the smallest correct index, the correct
+// return value is 0.
+p(equalSumIndex([0, 20, 10, -60, 5, 25]) === 0);
+
+
+
+
+
 
 
 /*
