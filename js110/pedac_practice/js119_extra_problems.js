@@ -816,6 +816,7 @@ function hasUppercaseChars(word) {
 
 
 /*
+P39
 Given a sentence, write a function that finds the starting index of
 the rightmost occurrence of any consecutive vowel sequence in the sentence
 and the word it belongs to.
@@ -877,3 +878,385 @@ function rightmostConsecutiveVowel(str) {
 // console.log(rightmostConsecutiveVowel("I like eating aaapples and oranGEs")); // Output: [15, "aaapples"]
 // console.log(rightmostConsecutiveVowel("This sentence has no consecutive vowels")); // Output: []
 // console.log(rightmostConsecutiveVowel("Queueing is fun but cooool")); // Output: [23, "cooool"]
+
+
+
+
+
+/*
+P41
+Your job is to write a function which increments a string to create a new string.
+
+If the string already ends with a number, the number should be incremented by 1.
+If the string does not end with a number, the number 1 should be appended to the new string.
+Examples:
+foo -> foo1
+foobar23 -> foobar24
+foo42 -> foo43
+foo9 -> foo10
+foo99 -> foo100
+
+1. Check if string has number
+2. Increment number or add number to string
+3. Return string containing new/incremented number
+
+- create array from string arg
+- filter out letters so that only numbers remain
+- if no numbers
+  -- add one to string and return that string
+- else 
+  -- increment number
+  -- add to string and return that string
+
+CREATE `incrementString` function that takes `str` as arg
+CONVERT `str` to array
+FILTER array for numbers
+IF array has length of 0
+  ADD 1 to `str` 
+  RETURN `str`
+ELSE 
+  JOIN array elements into number
+  INCREMENT number
+  ADD number to `str`
+  RETURN `str`
+*/
+
+function incrementString(str) {
+  let numericIndex = str.length - str.split('').reverse().findIndex(el => el < "0" || el > "9");
+  let numericPart = str.slice(numericIndex)
+  let nonNumericPart = str.slice(0, numericIndex);
+
+  if (nonNumericPart.length === 0) return numericPart.join('') + 1;
+  else return nonNumericPart.join('') + (Number(numericPart.join('')) + 1);
+}
+
+// console.log(incrementString("foobar0")); // "foobar1"
+// console.log(incrementString("foobar999")); // "foobar1000"
+// console.log(incrementString("foo")); // "foo1"
+// console.log(incrementString("foobar1")); // "foobar2"
+// console.log(incrementString("1")); // "2"
+// console.log(incrementString("9")); // "10"
+// console.log(incrementString("fo99obar99")); // "fo99obar100"
+
+
+
+/*
+isPrime
+
+function is_prime (number) {
+  if (number <= 1) return false; 
+  if (number <= 3) return true; 
+  if (number % 2 === 0 || number % 3 === 0) return false; 
+
+  for (let idx = 5; idx <= Math.sqrt(number); idx += 6) {
+    if (number % idx === 0 || number % idx + 2 === 0) return false; 
+  }
+  return true; 
+}
+
+*/
+
+
+
+/*
+Study session TA 22 Jan 2025
+// understanding
+// algorithm
+// code
+
+// Write a function robustSsearch that takes two arguments: an array of words and a query term. The function should return an array of words from the given array that match the query term. The function should be case insensitive, it should consider partial matches, and to account for keyboard typo should consider that the last two letters of the query term may have been reversed. -- Rey
+
+In: array (strings), target string
+Out: array (source strings)
+Rules:
+  - source strings in output:
+    -- contain target string at least (iow, partial match is ok)
+    -- last two characters of source string can be swapped and still match
+    -- case insensitive
+  - Default return: empty array
+
+[D]
+1. Iterate over source strings
+2. Find strings or substrings that match target string
+3. Return matched source strings in array
+
+- create 'matchedStringsArray' array variable
+- iterate over source strings array (can also use filter)
+  -- checkMatch (helper)
+  -- if (checkMatch)
+    --- append current word to matchedStringsArray 
+- Return 'matchedStringsArray'
+
+(helper)
+checkMatch
+- iterate over each character of current word
+  -- create substring from current character to last character
+  -- create altSubstring from current character to last character (with last 2 characters swopped)
+  -- if subtring OR altSubstring matches target string
+    --- return true
+- Return false
+*/
+
+// didnt check case sensitivity 
+// didnt check keyboard typos
+
+function robustSearch(source, target) {
+  let matchedStringsArray = [];
+
+  source.forEach(word => {
+    if (checkMatch(word, target)) matchedStringsArray.push(word)
+  })
+
+  return matchedStringsArray;
+}
+
+function checkMatch(word, target) {
+  let normalTarget = target.toLowerCase();
+  let typoCorrectedTarget = target.slice(0, -2) + target[target.length - 1] + target[target.length - 2];
+
+  for (let idx = 0; idx < word.length; idx++) {
+    let substring = word.slice(idx).toLowerCase();
+
+    if (substring === normalTarget || substring === typoCorrectedTarget) return true;
+  }
+
+  return false;
+}
+
+// Test Cases
+// console.log(robustSearch(["develop", "develpo", "deep", "dive", "devel"], "devel")); // ["develop", "develpo", "devel"]
+// console.log(robustSearch(["apple", "banAna", "cherry"], "naan")); // ["banana"]
+// console.log(robustSearch(["testing", "switch", "characters"], "testnig")); // []
+
+
+/* VERSION 2.0
+In: array (source words), query (may have swopped letters)
+Out: array (matched words)
+Rules:
+  - source words match when:
+    -- partial match
+    -- whole match
+    -- full/partial match to query with last two letters swapped
+  - Default: empty array
+
+[D]
+1. Iterate over source words
+2. Find those that match query or swopped query
+3. Return list of source words that match
+
+- create `matchedSourceWords` array
+- iterate over source words
+  -- if word matches query (helper)
+    --- add word to `matchedSourceWords`
+- Return `matchedSourceWords`
+
+(helper)
+isMatch(currentWord, query)
+- if currentWord contains query or query-swopped
+  -- return true
+- Return false
+
+-------------------------------------------------------
+
+function isMatch(currentWord, query) {
+  query = query.toLowerCase();
+  currentWord = currentWord.toLowerCase();
+
+  let swoppedQuery = query.slice(0, -2) + query[query.length -1] + query[query.length -2]
+
+  return currentWord.includes(query) || currentWord.includes(swoppedQuery);
+}
+
+function robustSearch(source, query) {
+  return source.filter(word => isMatch(word, query));
+}
+
+-------------------------------------------------------
+
+
+// Test Cases
+console.log(robustSearch(["develop", "develpo", "deep", "dive", "devel"], "devel")); // ["develop", "develpo", "devel"]
+console.log(robustSearch(["apple", "banAna", "cherry"], "naan")); // ["banAna"]
+console.log(robustSearch(["testing", "switch", "characters"], "testnig")); // []
+*/
+
+
+
+
+
+/* Write a function that returns the maximum possible consecutive alternating odd and even (or even and odd) numbers. Minimum possible length is 2. If there’s none return [].
+
+In: array (integers)
+Out: array (longest conescutive alternating odd-even/even-odd numbers)
+Rules:
+  - sequence can be odd-even OR even-odd but must alternate (eg. odd-even-odd-even-odd OR even-odd-even-odd-even)
+  - Default return: empty array (length of sequence < 2)
+
+
+[D]
+1. Iterate over array
+2. Find longest sequence of elements that match rules
+3. Return that sequence in an array
+
+- create `longestSeq` array and set to first element in array
+- create `currentSeq` array and set to first element in array
+- iterate over array
+  -- if current number and the next number alternate
+    --- add the next number to `currentSeq`
+    --- if `currentSeq` > `longestSeq`
+      --- Reassign `longestSeq` to copy of `currentSeq`
+  -- else 
+    --- Reset `currentSeq` and assign to array value at next index
+- Return `longestSeq`
+*/
+
+function longestAlternatingSubarray(arr) {
+  let longestSeq = [arr[0]];
+  let currentSeq = [...longestSeq];
+
+  for (let i = 0; i < arr.length - 1; i++) {
+    if ((arr[i] % 2 === 0 && arr[i + 1] % 2 === 1) || arr[i] % 2 === 1 && arr[i + 1] % 2 === 0) {
+      currentSeq.push(arr[i + 1]);
+
+      if (currentSeq.length > longestSeq.length) longestSeq = [...currentSeq];
+    } else {
+      currentSeq = [arr[i + 1]];
+    }
+  }
+
+  return longestSeq.length < 2 ? [] : longestSeq;
+}
+
+// Test cases
+// console.log(longestAlternatingSubarray([1, 2, 3, 4, 5, 6])); // Expected: [1, 2, 3, 4, 5, 6]
+// console.log(longestAlternatingSubarray([2, 4, 6, 8])); // Expected: []
+// console.log(longestAlternatingSubarray([1, 3, 5, 7])); // Expected: []  
+// console.log(longestAlternatingSubarray([1, 1, 3, 7, 8, 5])); // Expected: [7, 8, 5]
+// console.log(longestAlternatingSubarray([4, 6, 7, 12, 11, 9, 17])); // Expected: 6, 7, 12, 11][
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Write a function that returns the maximum possible consecutive alternating odd and even (or even and odd) numbers. Minimum possible length is 2. If there’s none return []. -- Nick
+
+// // Test cases
+// console.log(longestAlternatingSubarray([1, 2, 3, 4, 5, 6])); // Expected: [1, 2, 3, 4, 5, 6]
+// console.log(longestAlternatingSubarray([2, 4, 6, 8])); // Expected: []
+// console.log(longestAlternatingSubarray([1, 3, 5, 7])); // Expected: []
+// console.log(longestAlternatingSubarray([1, 1, 3, 7, 8, 5])); // Expected: [7, 8, 5]
+// console.log(longestAlternatingSubarray([4, 6, 7, 12, 11, 9, 17])); // Expected: [6, 7, 12, 11]
+
+// // Write a function robustSsearch that takes two arguments: an array of words and a query term. The function should return an array of words from the given array that match the query term. The function should be case insensitive, it should consider partial matches, and to account for keyboard typo should consider the that last two letters of the query term may have been reversed. -- Rey
+
+// // Test Cases
+// console.log(robustSearch(["develop", "develpo", "deep", "dive", "devel"], "devel")); // ["develop", "develpo", "devel"]
+// console.log(robustSearch(["apple", "banana", "cherry"], "naan")); // ["banana"]
+// console.log(robustSearch(["testing", "switch", "characters"], "testnig")); // []
+
+
+/*
+
+Problem
+  - Write a function that returns the maximum possible consecutive alternating
+    odd and even (or even and odd) numbers. Minimum possible length is 2.
+    If there’s none return []. -- Nick
+
+
+  - Input: array with random numbers
+  - Output: Array representing maximum possible consecutive alternating odd and even
+
+  - Rules
+    - Explicit:
+      - Return empty array if no alternating odd and even
+      - return MAXIMUM POSSIBLE
+
+    - Implicit:
+      
+
+  - Questions
+    
+
+Examples and Test Cases
+console.log(longestAlternatingSubarray([1, 2, 3, 4, 5, 6])); // Expected: [1, 2, 3, 4, 5, 6]
+console.log(longestAlternatingSubarray([2, 4, 6, 8])); // Expected: []
+console.log(longestAlternatingSubarray([1, 3, 5, 7])); // Expected: []
+console.log(longestAlternatingSubarray([1, 1, 3, 7, 8, 5])); // Expected: [7, 8, 5]
+console.log(longestAlternatingSubarray([4, 6, 7, 12, 11, 9, 17])); // Expected: [6, 7, 12, 11]
+
+Data Structures
+arrays
+
+
+Algorithm
+  - create function longestAlternatingSubarray which takes an input array as argument
+  - define current consecutive subArray equal to empty array
+  - iterate over elements of input array starting at index 1
+    - if element at index and the index before it are not both even or odd
+      if length of currentAlternating is 0, push both elements
+      - add element to current consecutive subarray
+  - return current consecutive subarray
+
+Code
+*/
+
+// function longestAlternatingSubarray(inputArray) {
+//   let currentAlternatingSubarray = [];
+//   for (let i = 1; i < inputArray.length; i++) {
+//     if (inputArray[i] % 2 !== inputArray[i - 1] % 2) {
+//       if (currentAlternatingSubarray.length === 0) {
+//         currentAlternatingSubarray.push(inputArray[i - 1]);
+//       }
+//       currentAlternatingSubarray.push(inputArray[i]);
+//     };
+//   }
+//   return currentAlternatingSubarray;
+// }
+
+// function longestAlternatingSubarray(arr) {
+//   let longestSubarray = [];
+//   let currentSubarray = [arr[0]];
+
+//   for (let i = 1; i < arr.length; i++) {
+//       if ((arr[i] % 2 !== arr[i - 1] % 2)) {
+//           currentSubarray.push(arr[i]);
+//           if (currentSubarray.length > longestSubarray.length) {
+//               longestSubarray = [...currentSubarray];
+//           }
+//       } else {
+//           currentSubarray = [arr[i]];
+//       }
+//   }
+
+//   return longestSubarray.length >= 2 ? longestSubarray : [];
+// }
+
+// console.log(longestAlternatingSubarray([1, 2, 3, 4, 5, 6])); // Expected: [1, 2, 3, 4, 5, 6]
+// console.log(longestAlternatingSubarray([2, 4, 6, 8])); // Expected: []
+// console.log(longestAlternatingSubarray([1, 3, 5, 7])); // Expected: []
+// console.log(longestAlternatingSubarray([1, 1, 3, 7, 8, 5])); // Expected: [7, 8, 5]
+// console.log(longestAlternatingSubarray([4, 6, 7, 12, 11, 9, 17])); // Expected: [6, 7, 12, 11]
+// console.log(longestAlternatingSubarray([2, 2, 3, 4, 5, 1, 1])); // Expected: [2, 3, 4, 5]
+// console.log(longestAlternatingSubarray([1, 2, 3, 3, 3, 3, 4, 5, 6, 7, 8])); // Expected : [3, 4, 5, 6, 7, 8]
+
