@@ -1,3 +1,30 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////// ROUND 1 /////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+const p = console.log;
+const eq = (arr1, arr2) => JSON.stringify(arr1) === JSON.stringify(arr2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 Problem 1
 
@@ -44,9 +71,6 @@ function smallerNumbersThanCurrent(array) {
 
   return numCounts;
 }
-
-const p = console.log;
-const eq = (arr1, arr2) => JSON.stringify(arr1) === JSON.stringify(arr2);
 
 // p(eq(smallerNumbersThanCurrent([8, 1, 2, 2, 3]), [3, 0, 1, 1, 2]));
 // p(eq(smallerNumbersThanCurrent([7, 7, 7, 7]), [0, 0, 0, 0]));
@@ -1192,13 +1216,40 @@ function whatIsDifferent(arr) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////// SAME QUESTIONS, SECOND ROUND ////////////////////////////////////
+////////////////////////////// SAME QUESTIONS, ROUND 2 ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2406,17 +2457,17 @@ function equalSumIndex(arr) {
   }
 
   return -1;
-}
+ }
 
-p(equalSumIndex([1, 2, 4, 4, 2, 3, 2]) === 3);
-p(equalSumIndex([7, 99, 51, -48, 0, 4]) === 1);
-p(equalSumIndex([17, 20, 5, -60, 10, 25]) === 0);
-p(equalSumIndex([0, 2, 4, 4, 2, 3, 2]) === -1);
+// p(equalSumIndex([1, 2, 4, 4, 2, 3, 2]) === 3);
+// p(equalSumIndex([7, 99, 51, -48, 0, 4]) === 1);
+// p(equalSumIndex([17, 20, 5, -60, 10, 25]) === 0);
+// p(equalSumIndex([0, 2, 4, 4, 2, 3, 2]) === -1);
 
 // The following test case could return 0 or 3. Since we're
 // supposed to return the smallest correct index, the correct
 // return value is 0.
-p(equalSumIndex([0, 20, 10, -60, 5, 25]) === 0);
+// p(equalSumIndex([0, 20, 10, -60, 5, 25]) === 0);
 
 
 
@@ -2491,3 +2542,157 @@ function whatIsDifferent(arr) {
 // p(whatIsDifferent([1, 1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1]) === 11);
 // p(whatIsDifferent([3, 4, 4, 4]) === 3);
 // p(whatIsDifferent([4, 4, 4, 3]) === 3);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// SAME QUESTIONS, ROUND 3 ////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+14min 
+
+Problem 1
+Create a function that takes an array of numbers as an argument. For each number, determine how many numbers in the array are smaller than it, and place the answer in an array. Return the resulting array.
+
+When counting numbers, only count unique values. That is, if a number occurs multiple times in the array, it should only be counted once.
+
+In: array (integers)
+Out: array (integers)
+Rules:
+  - count unique values smaller than each value
+  - Default: empty array
+
+[D]
+1. Filter for unique values
+2. Check how many values are smaller than currently looked at value
+3. Include count in array
+4. Return that array
+
+- create 'filteredArr' arr
+- create `output` arr
+- iterate over source arr (look at using `map`)
+  -- count values in `filteredArr` that are smaller than current number
+  -- append count to output array  
+- Return output array
+*/
+
+function smallerNumbersThanCurrent(sourceArr) {
+  let filteredArr = sourceArr.reduce((arr, currEl) => {
+    if (!arr.includes(currEl)) arr.push(currEl);
+    return arr;
+  }, [])
+
+  let output = [];
+
+  for (let i = 0; i < sourceArr.length; i++) {
+    output.push(filteredArr.filter(el => el < sourceArr[i]).length);
+  }
+
+  return output;
+}
+
+
+// p(eq(smallerNumbersThanCurrent([8, 1, 2, 2, 3]), [3, 0, 1, 1, 2]));
+// p(eq(smallerNumbersThanCurrent([7, 7, 7, 7]), [0, 0, 0, 0]));
+// p(eq(smallerNumbersThanCurrent([6, 5, 4, 8]), [2, 1, 0, 3]));
+// p(eq(smallerNumbersThanCurrent([1]), [0]));
+
+// let myArray = [1, 4, 6, 8, 13, 2, 4, 5, 4];
+// let result = [0, 2, 4, 5, 6, 1, 2, 3, 2];
+// p(eq(smallerNumbersThanCurrent(myArray), result));
+
+
+
+
+/*
+15min
+
+Problem 2
+Create a function that takes an array of integers as an argument. The function should return the minimum sum of 5 consecutive numbers in the array. If the array contains fewer than 5 elements, the function should return null.
+
+In: array (integers)
+Out: integer (smallest sum of 5 integers)
+Rules:
+  - numbers used for sum must be consecutive
+  - Defualt return: null (arr has less than 5 elements)
+
+[D]
+1. Iterate over each number
+2. Find the sum of this number and the 4 after it. 
+3. Return the smallest sum
+
+- create `smallestSum` variable and set to 0
+- iterate over source, stop 4 elements before its end
+  -- create a slice from the current iteration to another 4 numbers
+  -- sum the numbers
+  -- if it's smaller than `smallestSum`
+    --- reassign `smallestSum` to current sum
+- Return `smallestSum`
+
+CREATE minimumSum function that takes `arr` as argument
+CREATE `smallestSum` variable and ASSIGN to null
+ITERATE over `arr` from 0 to `arr` length - 4
+  CREATE `subArr` and ASSIGN to `arr` sliced from current index to current index + 5
+  CREATE `currSum` and ASSIGN to SUM `subArr` (use reduce)
+  REASSIGN `smallestSum` to value of `currSum` on first iteration
+  IF `currSum` < `smallestSum`
+    REASSIGN `smallestSum` to `currSum`
+RETURN `smallestSum`
+*/
+
+function minimumSum(arr) {
+  let smallestSum = null;
+
+  
+  for (let i = 0; i < arr.length - 4; i++) {
+    let subArr = arr.slice(i, i + 5);
+    let currSum = subArr.reduce((sum, currEl) => sum + currEl);
+
+    smallestSum = smallestSum || currSum;
+
+    if (currSum < smallestSum) smallestSum = currSum;
+  }
+
+  return smallestSum;
+}
+
+
+// p(minimumSum([1, 2, 3, 4]) === null);
+// p(minimumSum([1, 2, 3, 4, 5, -5]) === 9);
+// p(minimumSum([1, 2, 3, 4, 5, 6]) === 15);
+// p(minimumSum([55, 2, 6, 5, 1, 2, 9, 3, 5, 100]) === 16);
+// p(minimumSum([-1, -5, -3, 0, -1, 2, -4]) === -10);
+
+
+
+
+
+
+
+
+
