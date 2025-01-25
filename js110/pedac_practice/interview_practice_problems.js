@@ -1736,7 +1736,7 @@ function pairs(arr) {
 
     pairsCount += Math.floor(numberCount / 2);
   }
-  console.log(pairsCount);
+
   return pairsCount;
 }
 
@@ -2690,9 +2690,310 @@ function minimumSum(arr) {
 
 
 
+/*
+20.6min 
+
+Problem 3
+Create a function that takes a string argument and returns a copy of the string with every second character in every third word converted to uppercase. Other characters should remain the same.
+
+In: string (words)
+Out: string (words)
+Rules:
+  - every 2nd char of every 3rd word to uppercase
+  - every other character remains the same
+
+[D]
+1. Find every 3rd word
+2. For 3rd word, find every 2nd character
+3. Change those characters to uppercase
+4. Return string of words showing changes
+
+- create `wordsArr` from arg string
+- iterate over words (map)
+  -- return result of passing every 3rd word to `uppercaser` (helper)
+- join `wordsArr` into a string
+
+(helper)
+uppercaser(word)
+- create `newWord` string
+- iterate over the word
+  -- if index + 1 is divisible by 2
+    --- uppercase the letter
+    --- add uppercased letter to `newWord`
+  -- else 
+    --- add current letter to `newWord`
+- Return `newWord`
+*/
+
+function upperCaser(word) {
+  let newWord = '';
+  word = [...word];
+
+
+  for (let i = 0; i < word.length; i++) {
+    if ((i + 1) % 2 === 0) newWord += word[i].toUpperCase();
+    else newWord += word[i]
+  }
+
+  return newWord;
+}
+
+function toWeirdCase(str) {
+  let wordsArr = str.split(" ");
+
+  return wordsArr.map((word, index) => {
+    if (index > 0 && ((index + 1) % 3 === 0)) return upperCaser(word);
+    else return word;
+  }).join(" ");
+
+}
+
+
+
+// let original = 'Lorem Ipsum is simply dummy text of the printing world';
+// let expected = 'Lorem Ipsum iS simply dummy tExT of the pRiNtInG world';
+// p(toWeirdCase(original) === expected);
+
+// original = 'It is a long established fact that a reader will be distracted';
+// expected = 'It is a long established fAcT that a rEaDeR will be dIsTrAcTeD';
+// p(toWeirdCase(original) === expected);
+
+// p(toWeirdCase('aaA bB c') === 'aaA bB c');
+
+// original = "Mary Poppins' favorite word is " +
+//            "supercalifragilisticexpialidocious";
+// expected = "Mary Poppins' fAvOrItE word is " +
+//            "sUpErCaLiFrAgIlIsTiCeXpIaLiDoCiOuS"
+// p(toWeirdCase(original) === expected);
 
 
 
 
+/*
+Problem 4
+36min first attempt (incomplete)
+11min second attempt (complete✅)
+
+Create a function that takes an array of integers as an argument and returns an array of two numbers that are closest together in value. If there are multiple pairs that are equally close, return the pair that occurs first in the array.
+
+In: array (integers)
+Out: array (integers: 2 closest in value)
+Rules:
+  - if multiple pairs are equally close, return first pair
+  - closest in value means: smallest diff between 2 numbers
+
+[D]
+1. Find the numbers that have the smallest diff between them
+2. Return these two numbers in their original order in an array
+
+- create 'smallestPair' array
+- create 'currSmallestDiff'
+- iterate over arr, last iteration at second last element
+  -- iterate over arr, with current number as starting index, last iteration at last element
+    --- find diff between outer current number and inner current number
+    --- if `smallestPair` has length of 0 OR diff < `currSmallestDIff`
+      ---- replace 1st and 2nd index position values of `smallestPair` with outer current number and inner current number
+      --- reassign `currSmallestDiff` to diff
+- Return `smallestPair`
+*/
+
+function closestNumbers(arr) {
+  let smallestPair = [];
+  let currSmallestDiff; 
+
+  for (let outer = 0; outer < arr.length - 1; outer++) {
+    for (let inner = outer + 1; inner < arr.length; inner++) {
+
+       let sorted = [arr[outer], arr[inner]].sort((a, b) => a - b);
+
+       if (smallestPair.length === 0 || sorted[1] - sorted[0] < currSmallestDiff) {
+        smallestPair[0] = arr[outer];
+        smallestPair[1] = arr[inner];
+        currSmallestDiff = sorted[1] - sorted[0]
+       }
+    }
+  }
+  return smallestPair
+}
 
 
+// p(eq(closestNumbers([5, 25, 15, 11, 20]), [15, 11]));
+// p(eq(closestNumbers([19, 25, 32, 4, 27, 16]), [25, 27]));
+// p(eq(closestNumbers([12, 22, 7, 17]), [12, 7]));
+
+
+
+
+/*
+13min
+
+Problem 5
+Create a function that takes a string argument and returns the character that occurs most often in the string. If there are multiple characters with the same greatest frequency, return the one that appears first in the string. When counting characters, consider uppercase and lowercase versions to be the same.
+
+In: string (word/words)
+Out: string (character)
+Rules:
+  - character that occurs the most 
+  - case insensitive
+  - if many have same occurrence, return first
+
+[D]
+1. Find unique characters
+2. Count them
+3. Return the one that occurs first in the source string
+
+- create `uniqueChars` object
+- iterate over source
+  -- if lowercase char exists in `uniqueChars`, 
+    --- increment it 
+  -- else add lowercase char to it
+
+- create `highestCount` variable and set to 0
+- iterate over `uniqueChars`
+  -- if current char has count bigger than `highestCount`
+    --- Reassign `highestCount` to current char's value
+- Return `highestCount`
+*/
+
+function mostCommonChar(str) {
+  let uniqueChars = {};
+
+  for (let char of str) {
+    char = char.toLowerCase();
+    uniqueChars[char] = uniqueChars[char] + 1 || 1;
+  }
+
+  let highestCount = 0;
+  let highestChar = null;
+
+  for (let char in uniqueChars) {
+    if (uniqueChars[char] > highestCount) {
+      highestCount = uniqueChars[char];
+      highestChar = char;
+    }
+  }
+
+  return highestChar;
+}
+
+// p(mostCommonChar('Hello World') === 'l');
+// p(mostCommonChar('Mississippi') === 'i');
+// p(mostCommonChar('Happy birthday!') === 'h');
+// p(mostCommonChar('aaaaaAAAA') === 'a');
+
+// let myStr = 'Peter Piper picked a peck of pickled peppers.';
+// p(mostCommonChar(myStr) === 'p');
+
+// myStr = 'Peter Piper repicked a peck of repickled peppers. He did!';
+// p(mostCommonChar(myStr) === 'e');
+
+
+
+/*
+6min
+
+Problem 6
+Create a function that takes a string argument and returns a hash in which the keys represent the lowercase letters in the string, and the values represent how often the corresponding letter occurs in the string.
+*/
+
+function countLetters(str) {
+  return [...str].reduce((obj, currChar) => {
+    if (currChar >= 'a' && currChar <= 'z') {
+      obj[currChar] = obj[currChar] + 1 || 1;
+    }
+    return obj;
+  }, {})
+}
+
+
+// TEST CASES
+// const objeq = function(obj1, obj2) {
+//   let keys1 = Object.keys(obj1);
+//   let keys2 = Object.keys(obj2);
+
+//   if (keys1.length !== keys2.length) {
+//     return false;
+//   }
+
+//   for (let key of keys1) {
+//     if (! keys2.includes(key)) {
+//       return false;
+//     } else if (obj1[key] !== obj2[key]) {
+//       return false;
+//     }
+//   }
+
+//   return true;
+// }
+
+// let expected = {'w': 1, 'o': 2, 'e': 3, 'b': 1, 'g': 1, 'n': 1};
+// p(objeq(countLetters('woebegone'), expected));
+
+// expected = {'l': 1, 'o': 1, 'w': 1, 'e': 4, 'r': 2,
+//             'c': 2, 'a': 2, 's': 2, 'u': 1, 'p': 2};
+// p(objeq(countLetters('lowercase/uppercase'), expected));
+
+// expected = {'u': 1, 'o': 1, 'i': 1, 's': 1};
+// p(objeq(countLetters('W. E. B. Du Bois'), expected));
+
+// p(objeq(countLetters('x'), {'x': 1}));
+// p(objeq(countLetters(''), {}));
+// p(objeq(countLetters('!!!'), {}));
+
+
+
+/*
+12min
+
+Problem 7
+Create a function that takes an array of integers as an argument and returns the number of identical pairs of integers in that array. For instance, the number of identical pairs in [1, 2, 3, 2, 1] is 2: there are two occurrences each of both 2 and 1.
+
+If the array is empty or contains exactly one value, return 0.
+
+If a certain number occurs more than twice, count each complete pair once. For instance, for [1, 1, 1, 1] and [2, 2, 2, 2, 2], the function should return 2. The first array contains two complete pairs while the second has an extra 2 that isn't part of the other two pairs.
+
+In: array (integers)
+Out: integer (count of integer pairs)
+Rules:
+  - count a pair once (eg. [1, 1, 1, 1] has 2 pairs)
+  - Default return: 0 (empty array or array has one value)
+
+[D]
+1. Find unique integers
+2. Count them
+3. Sum all the pair counts
+4. Return that sum
+
+- create `uniqueNums` object
+- iterate over source
+  -- increment or add number to `uniqueNums`
+- create `pairsCount`
+- iterate over `uniqueNums`
+  -- Divide current value by 2 and floor it (remove decimals)
+  -- Add this value to `pairsCount`
+*/
+
+
+function pairs (arr) {
+  let uniqueNums = {};
+
+  for (let int of arr) {
+    uniqueNums[int] = uniqueNums[int] + 1 || 1;
+  }
+
+  let pairsCount = 0;
+
+  for (let int in uniqueNums) {
+    if (uniqueNums[int] > 1) pairsCount += Math.floor(uniqueNums[int] / 2)
+  }
+
+  return pairsCount;
+}
+
+// p(pairs([3, 1, 4, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7]) === 3);
+// p(pairs([2, 7, 1, 8, 2, 8, 1, 8, 2, 8, 4]) === 4);
+// p(pairs([]) === 0);
+// p(pairs([23]) === 0);
+// p(pairs([997, 997]) === 1);
+// p(pairs([32, 32, 32]) === 1);
+// p(pairs([7, 7, 7, 7, 7, 7, 7]) === 3);
