@@ -2997,3 +2997,271 @@ function pairs (arr) {
 // p(pairs([997, 997]) === 1);
 // p(pairs([32, 32, 32]) === 1);
 // p(pairs([7, 7, 7, 7, 7, 7, 7]) === 3);
+
+
+/*
+9min
+
+Problem 8
+Create a function that takes a non-empty string as an argument. The string consists entirely of lowercase alphabetic characters. The function should return the length of the longest vowel substring. The vowels of interest are "a", "e", "i", "o", and "u".
+
+In: string (letters)
+Out: integer (length)
+Rules:
+  - longest vowel substring
+  - vowels: aeiou
+  - arg has only lowercase letters
+
+[D]
+1. Find a vowel
+2. Count consecutive vowels
+3. Return longest consecutive vowels
+
+- create 'longestLength' variable
+- create `currLength` variable 
+- iterate over source
+  -- if current letter is a vowel
+    --- increment `currLength`
+    --- if `currLength` > `longestLength`
+      ---- reassign `longestLength` to `currLength`
+  -- else
+    --- reassign `currLength` to 0
+- Return `longestLength`
+*/
+
+function longestVowelSubstring(str) {
+  let longestLength = 0;
+  let currLength = 0;
+
+  for (let char of str) {
+    if ('aeiou'.includes(char)) {
+      currLength += 1;
+      if (currLength > longestLength) longestLength = currLength;
+    } else {
+      currLength = 0;
+    }
+  }
+
+  return longestLength;
+}
+
+
+
+// p(longestVowelSubstring('cwm') === 0);
+// p(longestVowelSubstring('many') === 1);
+// p(longestVowelSubstring('launchschoolstudents') === 2);
+// p(longestVowelSubstring('eau') === 3);
+// p(longestVowelSubstring('beauteous') === 3);
+// p(longestVowelSubstring('sequoia') === 4);
+// p(longestVowelSubstring('miaoued') === 5);
+
+
+/*
+14min
+
+Problem 9
+Create a function that takes two string arguments and returns the number of times that the second string occurs in the first string. Note that overlapping strings don't count: 'babab' contains 1 instance of 'bab', not 2.
+
+You may assume that the second argument is never an empty string.
+
+In: string, string (source, target)
+Out: integer (count of target in source)
+Rules:
+  - lowercase
+  - overlapping strings don't count
+  - target is never empty
+  - Default return: 0
+
+[D]
+1. Compare portions of the source with the target
+2. Count when portion of the source matches the target
+3. Return the total matching count
+
+- create `totalCount` variable
+- iterate over source, stop target length + 1 before the end
+  -- create substring from current position to current position + length of target
+  -- if substring matches target
+    --- increment `totalCount`
+    --- increment iterator by target length
+- Return `totalCount`
+*/
+
+function countSubstrings(source, target) {
+  let totalCount = 0;
+
+  for (let i = 0; i <= source.length - target.length; i++) {
+    let subString = source.slice(i, i + target.length)
+    if (subString === target) {
+      totalCount += 1;
+      i += target.length - 1;
+    }
+  }
+
+  return totalCount;
+}
+
+// p(countSubstrings('babab', 'bab') === 1);
+// p(countSubstrings('babab', 'ba') === 2);
+// p(countSubstrings('babab', 'b') === 3);
+// p(countSubstrings('babab', 'x') === 0);
+// p(countSubstrings('babab', 'x') === 0);
+// p(countSubstrings('', 'x') === 0);
+// p(countSubstrings('bbbaabbbbaab', 'baab') === 2);
+// p(countSubstrings('bbbaabbbbaab', 'bbaab') === 2);
+// p(countSubstrings('bbbaabbbbaabb', 'bbbaabb') === 1);
+
+
+/*
+16min
+
+Problem 10
+Create a function that takes a string of digits as an argument and returns the number of even-numbered substrings that can be formed. For example, in the case of '1432', the even-numbered substrings are '14', '1432', '4', '432', '32', and '2', for a total of 6 substrings.
+
+If a substring occurs more than once, you should count each occurrence as a separate substring.
+
+In: string (number)
+Out: integer (even-numbered substring count)
+Rules:
+  - Each occurrence counts (even if they're the same eg. 142142)
+  - Default return: 0
+
+[D]
+1. Create all different substrings
+2. Count all even-numbered substrings 
+3. Return count
+
+- create `total` variable
+- iterate over source
+  -- iterate for current character over source
+    --- create `currentSubstring` variable
+    --- convert to a number
+    --- if number is even
+      ---- increment `total`
+- return `total`
+*/
+
+function evenSubstrings(str) {
+  let total = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    for (let k = i + 1; k <= str.length; k++) {
+
+      let currSubStringNum = Number(str.slice(i, k));
+      if (currSubStringNum % 2 == 0) total += 1;
+   
+    }
+  }
+
+  return total;
+}
+
+// p(evenSubstrings('1432') === 6);
+// p(evenSubstrings('3145926') === 16);
+// p(evenSubstrings('2718281') === 16);
+// p(evenSubstrings('13579') === 0);
+// p(evenSubstrings('143232') === 12);
+
+
+/*
+16min
+
+Problem 11
+Create a function that takes a nonempty string as an argument and returns an array consisting of a string and an integer. If we call the string argument s, the string component of the returned array t, and the integer component of the returned array k, then s, t, and k must be related to each other such that s === t * k. The values of t and k should be the shortest possible substring and the largest possible repeat count that satisfies this equation.
+
+You may assume that the string argument consists entirely of lowercase alphabetic letters.
+
+In: string
+Out Array (substring, count)
+Rules:
+  - string ("s") = substring ("t") * repeat count ("k")
+  - t: shortest possible substring
+  - k: largest possible count
+
+[D]
+1. Create substrings, starting really small
+2. Multiply those by a count, start really big
+3. Increase substring length while decreasing count until they equate the source string
+
+- iterate over source, iterator can be the substring length
+  -- create `count` and set to source length divided by substring length
+  -- create `substring` with iterator 
+  -- if substring * count === source
+    --- return [substring, count]
+  -- else count minus 1
+*/
+
+function repeatedSubstring(s) {
+  for (let i = 1; i <= s.length; i++) {
+    let k = s.length / i;
+    let t = s.slice(0, i);
+
+    if (t.repeat(k) === s) return [t, k];
+    
+  }
+}
+
+// p(eq(repeatedSubstring('xyzxyzxyz'), ['xyz', 3]));
+// p(eq(repeatedSubstring('xyxy'), ['xy', 2]));
+// p(eq(repeatedSubstring('xyz'), ['xyz', 1]));
+// p(eq(repeatedSubstring('aaaaaaaa'), ['a', 8]));
+// p(eq(repeatedSubstring('superduper'), ['superduper', 1]));
+
+
+/*
+10min
+
+Problem 12
+Create a function that takes a string as an argument and returns true if the string is a pangram, false if it is not.
+
+Pangrams are sentences that contain every letter of the alphabet at least once. For example, the sentence "Five quacking zephyrs jolt my wax bed." is a pangram since it uses every letter at least once. Note that case is irrelevant.
+
+In: string
+Out: boolean
+Rules:
+  - true: str contains every letter a-z
+  - case insensitive
+
+[D]
+1. create an alphabet object
+2. count the occurrenc of each char
+3. Return true if every alphabetic character was found
+
+- create `alphabetObj` object
+- iterate over string
+  -- increment lowercased current letter in `alphabetObj` object
+- If every letter has a count above 0
+  -- Return true
+- Else return false
+*/
+
+function isPangram(str) {
+  let alphabetObj = {};
+
+  for (let code = 'a'.charCodeAt(); code <= 'z'.charCodeAt(); code++) {
+    alphabetObj[String.fromCharCode(code)] = 0;
+  }
+
+  for (let letter of str) {
+    letter = letter.toLowerCase()
+    if (letter >= 'a' && letter <= 'z') alphabetObj[letter] += 1;
+  }
+
+  for (let letter in alphabetObj) {
+    if (alphabetObj[letter] < 1) return false;
+  }
+
+  return true;
+}
+
+// p(isPangram('The quick, brown fox jumps over the lazy dog!') === true);
+// p(isPangram('The slow, brown fox jumps over the lazy dog!') === false);
+// p(isPangram("A wizard’s job is to vex chumps quickly in fog.") === true);
+// p(isPangram("A wizard’s task is to vex chumps quickly in fog.") === false);
+// p(isPangram("A wizard’s job is to vex chumps quickly in golf.") === true);
+
+// let myStr = 'Sixty zippers were quickly picked from the woven jute bag.';
+// p(isPangram(myStr) === true);
+
+
+
+
