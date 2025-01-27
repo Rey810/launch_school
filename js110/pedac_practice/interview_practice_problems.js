@@ -3264,4 +3264,427 @@ function isPangram(str) {
 
 
 
+/*
+17min
+
+Problem 13
+Create a function that takes two strings as arguments and returns true if some portion of the characters in the first string can be rearranged to match the characters in the second. Otherwise, the function should return false.
+
+You may assume that both string arguments only contain lowercase alphabetic characters. Neither string will be empty.
+
+In: string (source characters)
+Out: string (target word)
+Rules:
+  - try rearrange some portion of source to get target
+  - source and target are lowercase alphabetic
+
+[D]
+1. Check if each character of target is in source
+2. Return true if so otherwise return false
+
+- iterate over target
+  -- if source includes current target character
+    --- remove target character that matches source character
+    --- remove source character that matches target character
+- if my target is empty it means all characters have been found
+  -- return true
+- else 
+  -- return false
+*/
+
+function unscramble(source, target) {
+  let sourceArr = [...source];
+  let targetArr = [...target];
+
+  for (let char of target) {
+    if (sourceArr.includes(char)) {
+      sourceArr.splice(sourceArr.indexOf(char), 1);
+      targetArr.splice(targetArr.indexOf(char), 1);
+    }
+  }
+
+  return !targetArr.length;
+}
+
+
+// p(unscramble('ansucchlohlo', 'launchschool') === true);
+// p(unscramble('phyarunstole', 'pythonrules') === true);
+// p(unscramble('phyarunstola', 'pythonrules') === false);
+// p(unscramble('boldface', 'coal') === true);
+
+
+
+
+/*
+12min
+
+Problem 14
+Create a function that takes a single integer argument and returns the sum of all the multiples of 7 or 11 that are less than the argument. If a number is a multiple of both 7 and 11, count it just once.
+
+For example, the multiples of 7 and 11 that are below 25 are 7, 11, 14, 21, and 22. The sum of these multiples is 75.
+
+If the argument is negative, return 0.
+
+In: integer
+Out: integer out (sum)
+Rules:
+  - sum: multiples of 7 or 11 less than source
+  - Default return: 0 (eg. values less than 7)
+
+[D]
+1. Iterate from 7 to source minus 1 and sum all the numbers that are multiples of 7 and 11, or 11, or 7
+2. Return the sum
+
+- create `sum` variable
+- iterate from 7, stop at source - 1
+  -- if iterator is divisible by 7 AND 11
+    --- add it to `sum`
+    --- increment iterator by 6
+  -- if iterator is divisible by 11
+    --- add it to `sum`
+  -- if iterator is divisible by 7
+    --- add it to `sum`
+- Return `sum`
+*/
+
+function sevenEleven(source)  {
+  let sum = 0;
+
+  for (let i = 7; i < source; i++) {
+    if (i % 7 === 0 && i % 11 === 0) {
+      sum += i;
+      i += 6;
+    } 
+    else if (i % 11 === 0 || i % 7 === 0) sum += i;
+  }
+
+  return sum;
+}
+
+// p(sevenEleven(10) === 7);
+// p(sevenEleven(11) === 7);
+// p(sevenEleven(12) === 18);
+// p(sevenEleven(25) === 75);
+// p(sevenEleven(100) === 1153);
+// p(sevenEleven(0) === 0);
+// p(sevenEleven(-100) === 0);
+
+
+
+
+/*
+12min
+
+Problem 15
+Create a function that takes a string argument that consists entirely of numeric digits and computes the greatest product of four consecutive digits in the string. The argument will always have more than 4 digits.
+
+In: string (numbers)
+Out: integer (largest product)
+Rules:
+  - largest product: 4 consec numbers multiplied
+  - source > 4 digits always
+
+[D]
+1. Slice 4 digits at a time in order and multiply them
+2. Return the greatest product
+
+- create `greatestProduct` variable
+- iterate over source, stop 3 iterations before the end
+  -- create `currentProduct` and set to 4 digits from current iteration to current iteration + 3 multiplied together
+  -- if `currentProduct` > `greatestProduct`
+    --- reassign `greatestProduct` to `currentProduct`
+- Return `greatestProduct`
+*/
+
+function greatestProduct(str) {
+  let greatestProduct = 0;
+  str = str.split('')
+
+  for (let i = 0; i < str.length - 3; i++) {
+    let currentProduct = str.slice(i, i + 4).reduce((sum, curr) => sum * curr, 1);
+    
+    if (currentProduct > greatestProduct) greatestProduct = currentProduct;
+  }
+
+  return greatestProduct;
+}
+
+
+// p(greatestProduct('23456') === 360);      // 3 * 4 * 5 * 6
+// p(greatestProduct('3145926') === 540);    // 5 * 9 * 2 * 6
+// p(greatestProduct('1828172') === 128);    // 1 * 8 * 2 * 8
+// p(greatestProduct('123987654') === 3024); // 9 * 8 * 7 * 6
+
+
+/*
+7min
+
+Problem 16
+
+Create a function that returns the count of distinct case-insensitive alphabetic characters and numeric digits that occur more than once in the input string. You may assume that the input string contains only alphanumeric characters.
+
+In: string (alphanumeric)
+Out: integer (count)
+Rules:
+  - count:  occur more than once
+            case-insensitive
+            number or letter
+
+[D]
+1. Create a list with counts of each unique alphanumeric character
+2. Count those that occur more than once
+3. Return the count
+
+- creat `count`
+- create `uniqueChars` object
+- iterate over source
+  --- if lowercased current char is in `uniqueChars`
+    ---- increment it
+  --- else 
+    ---- add it to `uniqueChars`
+- iterate over `uniqueChars`
+  --- if property has value more than 1,
+    ---- increment `count`
+- Return `count`
+*/
+
+function distinctMultiples(source) {
+  let count = 0;
+  let uniqueChars = {};
+
+  for (let char of source) {
+    char = char.toLowerCase();
+    uniqueChars[char] = uniqueChars[char] + 1 || 1;
+  }
+
+  for (let uniqueChar in uniqueChars) {
+    if (uniqueChars[uniqueChar] > 1) count += 1;
+  }
+
+  return count;
+}
+
+// p(distinctMultiples('xyz') === 0);              // (none)
+// p(distinctMultiples('xxyypzzr') === 3);         // x, y, z
+// p(distinctMultiples('xXyYpzZr') === 3);         // x, y, z
+// p(distinctMultiples('unununium') === 2);        // u, n
+// p(distinctMultiples('multiplicity') === 3);     // l, t, i
+// p(distinctMultiples('7657') === 1);             // 7
+// p(distinctMultiples('3141592653589793') === 4); // 3, 1, 5, 9
+// p(distinctMultiples('2718281828459045') === 5); // 2, 1, 8, 4, 5
+
+
+
+
+
+/*
+16min
+
+Problem 17
+Create a function that takes an array of integers as an argument. The function should determine the minimum integer value that can be appended to the array so the sum of all the elements equal the closest prime number that is greater than the current sum of the numbers. For example, the numbers in [1, 2, 3] sum to 6. The nearest prime number greater than 6 is 7. Thus, we can add 1 to the array to sum to 7.
+
+Notes:
+The array will always contain at least 2 integers.
+All values in the array must be positive (> 0).
+There may be multiple occurrences of the various numbers in the array.
+
+In: array (integers)
+Out: integer
+Rules: 
+  - min integer value: closest prime - sum of array integers
+  - closest prime: must be bigger than sum of array integers
+[D]
+1. Sum the array integers
+2. Look for smallest prime number starting at sum + 1
+3. Return "min. integer value" = "prime" - "sum"
+
+- create `sum` variable (reduce method)
+- create `prime` and assign to calculatePrime (helper) passing in value of `sum` + 1
+- Return `prime` minus `sum`
+
+(helper)
+calculatePrime(startingValue)
+- iterate from startingValue indefinitely
+  -- if isPrime (helper)
+    --- return current value
+
+(helper)
+isPrime(startingValue)
+- iterate from 2 to starting value - 1
+  -- if the startingValue is divisible by current number
+    --- return false
+  -- else 
+    --- return true
+*/
+
+function nearestPrimeSum(arr) {
+  let sum = arr.reduce((sum, currVal) => sum + currVal);
+  let prime = calculatePrime(sum + 1);
+
+  return prime - sum;
+}
+
+function calculatePrime(value) {
+  for (let currVal = value; true; currVal++) {
+    if (isPrime(currVal)) return currVal;
+  }
+}
+
+function isPrime(value) {
+  for (let i = 2; i < value; i++) {
+    if (value % i === 0) return false
+  }
+
+  return true;
+}
+
+// p(nearestPrimeSum([1, 2, 3]) === 1);        // Nearest prime to 6 is 7
+// p(nearestPrimeSum([5, 2]) === 4);           // Nearest prime to 7 is 11
+// p(nearestPrimeSum([1, 1, 1]) === 2);        // Nearest prime to 3 is 5
+// p(nearestPrimeSum([2, 12, 8, 4, 6]) === 5); // Nearest prime to 32 is 37
+
+// // Nearest prime to 163 is 167
+// p(nearestPrimeSum([50, 39, 49, 6, 17, 2]) === 4);
+
+
+
+
+/*
+16min
+
+Problem 18
+Create a function that takes an array of integers as an argument. Determine and return the index N for which all numbers with an index less than N sum to the same value as the numbers with an index greater than N. If there is no index that would make this happen, return -1.
+
+If you are given an array with multiple answers, return the index with the smallest value.
+
+The sum of the numbers to the left of index 0 is 0. Likewise, the sum of the numbers to the right of the last element is 0.
+
+In: array (integers)
+Out: integer ("N")
+Rules: 
+  - "N": lower indexed numbers summed === higher indexed numbers summed
+  - if multiple "N", return smallest "N"
+  - Default return: -1
+
+[D]
+1. Find left sums and right sums
+2. Each time, compare the sum
+3. Save the index to "N" if the sums are equal
+
+- create "N" variable
+- iterate over the array 
+  -- create `leftSum` and assign it to sum of slice from 0 to current iterator
+  -- create `rightSum` and assign it to sum of slice from current iterator + 1 to end
+  -- if `leftSum` equals `rightSum` 
+    --- if "N" has not been assigned
+      ---- assign "N" to current iterator
+      ---- Return "N"
+- Return "N"
+*/
+
+function equalSumIndex(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    let leftSum = arr.slice(0, i).reduce((sum, curr) => sum + curr, 0);
+    let rightSum = arr.slice(i + 1).reduce((sum, curr) => sum + curr, 0);
+
+    console.log('leftSum', leftSum)
+
+    if (leftSum === rightSum) return i;
+  }
+
+  return -1
+}
+
+
+
+// p(equalSumIndex([1, 2, 4, 4, 2, 3, 2]) === 3);
+// p(equalSumIndex([7, 99, 51, -48, 0, 4]) === 1);
+// // p(equalSumIndex([17, 20, 5, -60, 10, 25]) === 0);
+// p(equalSumIndex([0, 2, 4, 4, 2, 3, 2]) === -1);
+
+// // The following test case could return 0 or 3. Since we're
+// // supposed to return the smallest correct index, the correct
+// // return value is 0.
+// p(equalSumIndex([0, 20, 10, -60, 5, 25]) === 0);
+
+
+
+
+
+
+/*
+12min
+
+Problem 19
+Create a function that takes an array of integers as an argument and returns the integer that appears an odd number of times. There will always be exactly one such integer in the input array.
+
+In: array (integers)
+Out: integer (count)
+Rules:
+  - odd integer: only 1 per array
+
+[D]
+1. Count the occurrences of unique integers in the array
+2. Return the integer that occurs an odd number of times
+
+- create `intCounts` object
+- iterate over source
+  -- if `intCounts` includes the current value
+    --- increment it
+  -- else 
+    --- add it to `intCounts`
+- iterate over `intCounts`
+  -- if current property has value not divisible by 2
+    --- return current value
+*/
+
+function oddFellow(arr) {
+  let intCounts = {};
+
+  for (let int of arr) {
+    intCounts[int] = intCounts[int] + 1 || 1;
+  }
+
+  for (let prop in intCounts) {
+    if (intCounts[prop] % 2 === 1) return Number(prop);
+  }
+}
+
+
+// p(oddFellow([4]) === 4);
+// p(oddFellow([7, 99, 7, 51, 99]) === 51);
+// p(oddFellow([7, 99, 7, 51, 99, 7, 51]) === 7);
+// p(oddFellow([25, 10, -6, 10, 25, 10, -6, 10, -6]) === -6);
+// p(oddFellow([0, 0, 0]) === 0);
+
+
+
+
+
+/*
+4min
+
+Problem 20
+Create a function that takes an array of numbers, all of which are the same except one. Find and return the number in the array that differs from all the rest.
+
+The array will always contain at least 3 numbers, and there will always be exactly one number that is different.
+
+In: array (integers)
+Out: integer (different number)
+Rules:
+  - always 1 number that's different
+
+[D]
+1. Find number not equal to the other numbers
+*/
+
+function whatIsDifferent(arr) {
+  return arr.filter(int => arr.indexOf(int) === arr.lastIndexOf(int))[0];
+}
+
+// p(whatIsDifferent([0, 1, 0]) === 1);
+// p(whatIsDifferent([7, 7, 7, 7.7, 7]) === 7.7);
+// p(whatIsDifferent([1, 1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1]) === 11);
+// p(whatIsDifferent([3, 4, 4, 4]) === 3);
+// p(whatIsDifferent([4, 4, 4, 3]) === 3);
 
