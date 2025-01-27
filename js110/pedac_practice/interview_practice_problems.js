@@ -3587,8 +3587,6 @@ function equalSumIndex(arr) {
     let leftSum = arr.slice(0, i).reduce((sum, curr) => sum + curr, 0);
     let rightSum = arr.slice(i + 1).reduce((sum, curr) => sum + curr, 0);
 
-    console.log('leftSum', leftSum)
-
     if (leftSum === rightSum) return i;
   }
 
