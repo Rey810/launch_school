@@ -1691,16 +1691,16 @@ function groupAnagrams(source) {
 
 
 
-
-// We have a list having unique values from 1 to n, but unordered with an unknown amount of missing values.
-// We have to output the missing numbers sorted by value.
-// The number 1 should be in the input array, if it's not present in the input array,
-// it should be included in the results. See the example below.
-
-// [8, 10, 11, 7, 3, 15, 6, 14, 5, 12]  ---> [1, 2, 4, 9, 13]
-
-
 /*
+Problem 4
+
+We have a list having unique values from 1 to n, but unordered with an unknown amount of missing values.
+We have to output the missing numbers sorted by value.
+The number 1 should be in the input array, if it's not present in the input array,
+it should be included in the results. See the example below.
+
+[8, 10, 11, 7, 3, 15, 6, 14, 5, 12]  ---> [1, 2, 4, 9, 13]
+
 In: array (integers)
 Out: array (integers)
 Rules:
@@ -1780,3 +1780,335 @@ Rules:
 // console.log(missNumsFinder([9, 10, 7, 2, 11, 8, 1, 17, 6, 16, 18, 19, 15, 3, 13])); //[4, 5, 12, 14]
 
 
+
+
+
+/*
+33min 
+
+Problem 32
+
+Write a function, snakecase, that transforms each word in a sentence to alternate
+between lower (even index value) and upper (odd index value) cases when the word
+before or after it begins with "s".
+
+In: string (words)
+Out: string (words)
+Rules:
+  - snakecase:
+    -- if prev/next word starts with 's', change the characters to snake case
+    -- even-index: lowercase
+    -- odd-index: uppercase
+
+[D]
+1. Go over the words and see if the prev/next word starts with `s`
+2. Change current words characters if so
+3. Do this for all the words
+4. Return a string with all the words and snakecased words
+
+- create `snakeCase` array
+- iterate over `snakeCase` array
+  -- if the index is 0 and the next word starts with `s`
+    --- change and return current word
+  -- else if the index is source length minus 1 and prev word starts with `s`
+    --- change and return current word
+  -- else if prev or next word starts with `s`
+    --- change and return current word
+  -- else return current word
+- Return `snakeCase` array
+
+(helper)
+toSnakeCase(word)
+- iterate over the word
+  -- if current character has an odd index
+    --- return current character uppercased
+  -- else return current character lowercased
+- return transformed word
+*/
+
+function snakecase(source) {
+  let snakeCaseArr = source.split(" ");
+
+  return snakeCaseArr.map((word, idx, arr) => {
+    if (idx === 0) {
+      if (arr[idx + 1][0] === 's') return toSnakeCase(word);
+      else return word;
+    } 
+    else if (idx === arr.length - 1) {
+      if (arr[idx - 1][0] === 's') return toSnakeCase(word);
+      else return word;
+    } 
+    else if (arr[idx + 1][0] === 's' || arr[idx - 1][0] === 's') return toSnakeCase(word);
+      else return word;
+  }).join(" ");
+}
+
+function toSnakeCase(word) {
+  let snakeCasedWord = '';
+  
+  for (let i = 0; i < word.length ; i++) {
+    if (i % 2 === 1) snakeCasedWord += word[i].toUpperCase();
+    else snakeCasedWord += word[i].toLowerCase();
+  }
+
+  return snakeCasedWord;
+}
+
+// console.log(snakecase("Snakes slither silently")); // "sNaKeS sLiThEr sIlEnTlY"
+// console.log(snakecase("simple sentence structure")); // "sImPlE sEnTeNcE sTrUcTuRe"
+// console.log(snakecase("apples are sweet")); // "apples aRe sweet"
+// console.log(snakecase("swiftly swimming swans")); // "sWiFtLy sWiMmInG sWaNs"
+// console.log(snakecase("the sun sets slowly")); // "tHe sUn sEtS sLoWlY"
+// console.log(snakecase("A quick brown fox")); // "A quick brown fox"
+
+
+
+
+/*
+2min
+
+Problem 31
+
+Given two strings needle and haystack, return the index of the first occurrence of needle in haystack,
+or -1 if needle is not part of haystack.
+*/
+
+function occurrenceIdx(haystack, needle) {
+  return haystack.indexOf(needle);
+}
+
+// console.log(occurrenceIdx("sadbutsad", "sad")); // 0
+// console.log(occurrenceIdx("I didn't study last night", "last")); // 15
+// console.log(occurrenceIdx("sadbutsad", "happy")); // -1
+
+
+
+/*
+12min
+
+Problem 30
+
+Create a function that takes an array of numbers as an argument.
+For each number, determine how many numbers in the array are smaller than it,
+and place the answer in an array. Return the resulting array.
+
+When counting numbers, only count unique values.
+That is, if a number occurs multiple times in the array, it should only be counted once.
+
+In: array (integers)
+Out: array (integers)
+Rules: 
+  - counting: only unique values
+
+[D]
+1. Compare each number to every other number
+2. Count the unique numbers smaller than each number
+3. Return an array of those counts in the original order
+
+- create `counts` arr
+- iterate over source
+  -- create `unqiueNums` arr
+  -- iterate over source 
+    --- if inner index number is smaller than outer index number and if it's not there
+      ---- add inner index number to `uniqueNums` 
+  -- add the length of `uniqueNums` arr to `counts` arr
+- Return `counts` arr 
+*/
+
+function smallerNumbersThanCurrent(source) {
+  let counts = [];
+
+  source.forEach(outerNum => {
+    let uniqueNums = [];
+
+    for (let innerIdx = 0; innerIdx < source.length; innerIdx++) {
+      if (!uniqueNums.includes(source[innerIdx]) && source[innerIdx] < outerNum) {
+        uniqueNums.push(source[innerIdx]);
+      }  
+    }
+
+    counts.push(uniqueNums.length)
+  })
+
+  return counts;
+}
+
+
+
+// const eq = (arr1, arr2) => JSON.stringify(arr1) === JSON.stringify(arr2);
+
+// p(eq(smallerNumbersThanCurrent([8, 1, 2, 2, 3]), [3, 0, 1, 1, 2]));
+// p(eq(smallerNumbersThanCurrent([7, 7, 7, 7]), [0, 0, 0, 0]));
+// p(eq(smallerNumbersThanCurrent([6, 5, 4, 8]), [2, 1, 0, 3]));
+// p(eq(smallerNumbersThanCurrent([1]), [0]));
+
+// let myArray = [1, 4, 6, 8, 13, 2, 4, 5, 4];
+// let result = [0, 2, 4, 5, 6, 1, 2, 3, 2];
+// p(eq(smallerNumbersThanCurrent(myArray), result));
+
+
+
+
+
+/*
+10min
+
+Problem 3
+
+You'll be given a string of random characters (numbers, letters, and symbols).
+To decode this string into the key we're searching for:
+(1) count the number of occurences of each ascii lowercase letter, and
+(2) return an ordered string, 26 places long, corresponding to the number of 
+    occurences for each corresponding letter in the alphabet.
+
+The string returned should always be 26 characters long, and only count lowercase letters.
+You can assume that each lowercase letter will appear a maximum of 9 times in the input str.
+In: string (characters)
+Out: string (numbers)
+Rules:
+  - output
+    -- count lowercase alphabetic characters
+    -- always 26 numbers long (i.e. representing 'a' to 'z')
+  - default output: '00000000000000000000000000'
+
+[D]
+1. create alphabet
+2. count alphabetic characters 
+3. Return 26-character string of numbers corresponding to alphabetic character order
+
+- create `alphabet` object
+- iterate over source
+  -- if it's a lowercase alphabetic character, increment it's value in `alphabet`
+- Return `alphabet` values as a string
+*/
+
+function decrypt(source) {
+  let alphabet = createAlphabet();
+  let cleanSource = [...source].filter(char => char >= 'a' && char <= 'z');
+
+  for (let char of cleanSource) {
+    alphabet[char] += 1;
+  }
+
+  return Object.values(alphabet).join('');
+}
+
+function createAlphabet() {
+  let alphabet = {};
+  for (let charCode = 'a'.charCodeAt(); charCode <= 'z'.charCodeAt(); charCode++) {
+    alphabet[String.fromCharCode(charCode)] = 0;
+  }
+
+  return alphabet;
+}
+
+// console.log(decrypt('$aaaa#bbb*ccfff!z') === '43200300000000000000000001');
+// console.log(decrypt('z$aaa#ccc%eee1234567890') === '30303000000000000000000001');
+// console.log(decrypt('the quick brown fox jumps over the lazy dog') === '11113112111111411212211111');
+// console.log(decrypt('a1b2c3D4dda') === '21120000000000000000000000');
+// console.log(decrypt('a1aba2aca3aDaa4dda') === '91120000000000000000000000');
+// console.log(decrypt('1203904942@$2') === '00000000000000000000000000');
+// console.log(decrypt('ABCJDK3ROKGMIS3949') === '00000000000000000000000000');
+// console.log(decrypt('') === '00000000000000000000000000');
+
+
+
+
+/*
+45min
+
+Problem 29
+
+Given an array of strings made only from lowercase letters,
+return an array of all characters that show up in all strings within the given array (including duplication).
+For example, if a character occurs 3 times in all strings but not 4 times,
+you need to include that character three time in the final answer.
+
+In: array (word strings)
+Out: array (character strings)
+Rules:
+  - character must occur in each string 
+  - default return: empty string
+
+[D]
+1. Search for characters that appear in each word
+2. Store those characters
+3. Return them
+
+- create `commonChars` array
+- iterate over the array
+  -- iterate over the words
+    --- if a character is found in every word
+      ---- append to `commonChars`
+      ---- replace current character with an empty string
+- Return `commonChars`
+*/
+
+function commonChars(source) {
+  let commonChars = [];
+  let firstWord = source[0];
+  let arr = [...source];
+  
+  for (let char of firstWord) {
+    if (arr.every(word => word.includes(char))) {
+      commonChars.push(char);
+      arr = arr.map(word => word.replace(char, ''));
+    }
+  }
+
+
+  return commonChars;
+}
+
+
+
+// p(commonChars(['a', 'b'])) // []
+// p(commonChars(['belllla', 'abelll', 'rolller'])) // ['e', 'l', 'l', 'l']
+// p(commonChars(['cool', 'lock', 'cook'])) // ['c', 'o']
+// p(commonChars(['hello', 'goodbye', 'booye', 'random'])) // ['o']
+
+
+
+
+/*
+13min
+
+Problem 28
+
+Given a non-empty string check if it can be constructed by taking a substring of it
+and appending multiple copies of the substring together.
+You may assume the given string consists of lowercase english letters only.
+
+In: string (characters)
+Out: boolean
+Rules:
+  - true: substring copies can be used to make source string
+
+[D]
+1. Create substrings smallest to biggest
+2. Repeat them a number of times
+3. Return true if the substring can be multiplied a certain repeat times to equal the source string
+
+- iterate over the source
+  -- create `substring` and set to source sliced from 0 to current iteration
+  -- create `repeat` and set to source divided by `substring` length 
+  -- if `repeat` is greater than 1 AND `substring` multipled `repeat` times equals `source
+    --- return true
+- return false
+*/
+
+function repeatedSubstringPattern(str) {
+  for (let i = 1; i <= str.length; i++) {
+    let substring = str.slice(0, i);
+    let repeat = Math.floor(str.length / substring.length);
+
+    if (repeat > 1 && substring.repeat(repeat) === str) return true;
+  }
+
+  return false;
+}
+
+
+// p(repeatedSubstringPattern("abab") === true);
+// p(repeatedSubstringPattern("aba") === false);
+// p(repeatedSubstringPattern("abaababaab") === true);
