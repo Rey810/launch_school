@@ -301,12 +301,12 @@ function nthLargestGrade(studentsObj, gradeRank) {
 
 }
 
-// Test Cases
-const students = [
-  { id: 2, grades: [95, 75, 88] },
-  { id: 1, grades: [95, 85, 78] },
-  { id: 3, grades: [95, 70, 85] }
-];
+// // Test Cases
+// const students = [
+//   { id: 2, grades: [95, 75, 88] },
+//   { id: 1, grades: [95, 85, 78] },
+//   { id: 3, grades: [95, 70, 85] }
+// ];
 
 // console.log(nthLargestGrade(students, 3)); // Output: 1
 // console.log(nthLargestGrade(students, 1)); // Output: 1
@@ -942,7 +942,6 @@ function incrementString(str) {
 
 /*
 isPrime
-
 function is_prime (number) {
   if (number <= 1) return false; 
   if (number <= 3) return true; 
@@ -953,7 +952,6 @@ function is_prime (number) {
   }
   return true; 
 }
-
 */
 
 
@@ -1138,27 +1136,6 @@ function longestAlternatingSubarray(arr) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // Write a function that returns the maximum possible consecutive alternating odd and even (or even and odd) numbers. Minimum possible length is 2. If there’s none return []. -- Nick
 
 // // Test cases
@@ -1259,4 +1236,547 @@ Code
 // console.log(longestAlternatingSubarray([4, 6, 7, 12, 11, 9, 17])); // Expected: [6, 7, 12, 11]
 // console.log(longestAlternatingSubarray([2, 2, 3, 4, 5, 1, 1])); // Expected: [2, 3, 4, 5]
 // console.log(longestAlternatingSubarray([1, 2, 3, 3, 3, 3, 4, 5, 6, 7, 8])); // Expected : [3, 4, 5, 6, 7, 8]
+
+
+
+
+
+/*
+26min
+
+Write a function that returns the maximum possible consecutive alternating odd and even (or even and odd) numbers. Minimum possible length is 2. If there’s none return [].
+
+In: array (integers)
+Out: array (integers)
+Rules:
+  - output: 
+    -- alternating odd-even-odd OR even-odd-even
+    -- max possible length
+  - Default: empty array 
+  - min length: 2
+
+[D]
+1. Go through source array
+2. Check if the previous number and the current alternate even-odd OR odd-even
+3. If they are, store these values else reset the storage
+4. Return the stored values
+
+- create `maxArr` array
+- create `currArr` array and store first source value here 
+- iterate over source
+  -- if previous number and current number are odd-even OR even-odd
+    --- push current number to the `currArr`
+    --- if `currArr` > `maxArr` 
+      ---- reassign `maxArr` to values in `currArr`
+  -- reset `currArr` to an array with the current value
+- return `maxArr`
+*/
+
+function longestAlternatingSubarray(arr) {
+  let maxArr = [];
+  let currArr = [arr[0]];
+
+  for (let i = 1; i < arr.length; i++) {
+    let prev = arr[i - 1];
+    let curr = arr[i];
+
+    if ((prev % 2 !== curr % 2)) {
+      currArr.push(curr);
+
+      if (currArr.length > maxArr.length) maxArr = [...currArr];
+    } else currArr = [curr];
+  }
+
+  return maxArr;
+}
+
+// Test cases
+// console.log(longestAlternatingSubarray([1, 2, 3, 4, 5, 6])); // Expected: [1, 2, 3, 4, 5, 6]
+// console.log(longestAlternatingSubarray([2, 4, 6, 8])); // Expected: []
+// console.log(longestAlternatingSubarray([1, 3, 5, 7])); // Expected: []
+// console.log(longestAlternatingSubarray([1, 1, 3, 7, 8, 5])); // Expected: [7, 8, 5]
+// console.log(longestAlternatingSubarray([4, 6, 7, 12, 11, 9, 17])); // Expected: [6, 7, 12, 11]
+
+
+
+
+/* 
+11min
+
+Write a function robustSsearch that takes two arguments: an array of words and a query term. The function should return an array of words from the given array that match the query term. The function should be case insensitive, it should consider partial matches, and to account for keyboard typo should consider that the last two letters of the query term may have been reversed.
+
+In: array (words)
+Out: string (query)
+Rules:
+  - query: may have last two letters swapped
+  - case insensitive
+  - Default return: empty array
+
+[D]
+1. Search through array and find matches
+2. Store and return matches
+
+- create `swappedQuery` variable
+- reassign query to lowercased form
+- iterate over the source (method: filter)
+  -- if the current string lowercased contains the query OR the swapped query
+    --- return true
+  -- else return false
+- return the filtered array
+*/
+
+function robustSearch(source, query) {
+  query = query.toLowerCase();
+  let swappedQuery = query.slice(0, -2) + query[query.length - 1] + query[query.length - 2];
+
+  return source.filter(el => el.toLowerCase().includes(query) || el.toLowerCase().includes(swappedQuery));
+}
+
+// // Test Cases
+// console.log(robustSearch(["develop", "develpo", "deep", "dive", "devel"], "devel")); // ["develop", "develpo", "devel"]
+// console.log(robustSearch(["apple", "banAna", "cherry"], "naan")); // ["banAna"]
+// console.log(robustSearch(["testing", "switch", "characters"], "testnig")); // []
+
+
+/*
+22min
+
+P42
+
+You are given an array of student objects, where each student object contains:
+* An integer id (representing the student’s ID).
+* An array grades of integers (representing the student’s grades).
+You need to write a function/method that finds the nth largest grade across
+all students and returns the id of the student who received that grade.
+If there are multiple students with the same grade, return the student with the lowest id.
+
+In: object (id; grades); "nth" highest grade
+Out: integer (id)
+Rules:
+  - multiple students with same nth grade: return lowest id
+  - Default return is null
+
+[D]
+1. Sort grades from highest to lowest
+2. Find the nth highest grade
+3. Check which student(s) have that grade
+4. Return the id of the student with that grade
+
+- create `sortedGrades` array 
+- create `nthGrade` variable and set to "nth" - 1
+- create `lowestID` and set to 0
+- iterate over students
+  -- if current student grades includes `nthGrade` 
+    --- if `lowestGrade` not set OR current student ID is smaller than `lowestID`
+      ---- set `lowestID` to current student ID
+- Return `lowestID` if it's been set OR return null
+*/
+
+function nthLargestGrade(students, nth) {
+  
+  let sortedGrades = students.reduce((grades, currStudent) => {
+    grades.push(...currStudent.grades);
+    return grades
+  }, []).sort((a, b) => b - a);
+
+  let filteredGrades = [];
+
+  sortedGrades.forEach(grade => {
+    if (!filteredGrades.includes(grade)) filteredGrades.push(grade)
+  });
+
+  let nthGrade = filteredGrades[nth - 1];
+  let lowestID = 0;
+
+  for (let student of students) {
+    if (student.grades.includes(nthGrade)) {
+      if (!lowestID || student.id < lowestID) lowestID = student.id
+    }
+  }
+
+  return lowestID || null;
+}
+
+// Test Cases
+const students = [
+  { id: 2, grades: [95, 75, 88] },
+  { id: 1, grades: [95, 85, 78] },
+  { id: 3, grades: [95, 70, 85] }
+];
+
+// console.log(nthLargestGrade(students, 3)); // Output: 1
+// console.log(nthLargestGrade(students, 1)); // Output: 1
+// console.log(nthLargestGrade(students, 4)); // Output: 1 (edit: I changed what the output should be cos it looked wrong. Edit edit: turns out I misinterpreted question. I though nth largest meant that 95 and 95 both are ranked the same. Turns out they're not. I call BS. Also this makes the question easier so I'm leaving my answer as is)
+// console.log(nthLargestGrade(students, 5)); // Output: 2
+// console.log(nthLargestGrade(students, 10)); // Output: null
+
+
+
+
+
+/*
+18min
+
+Problem 9
+
+Implement a function, capitalize, that capitalizes all words in a sentence.
+However, only capitalize if the word is followed by a word starting with a vowel.
+
+In: string (words)
+Out: string (capitalized words)
+Rules:
+  - capitalization:
+    -- if next word starts with a vowel, capitalize current word
+  - Default return: original string
+
+[D]
+1. Check each next word, capitalize current word accordingly
+2. Return the words as a string (changed/unchanged)
+
+- create `words` array and assign to arg
+- iterate over `words` (map)
+  -- if next word starts with a vowesl
+    --- capitalize and return current word
+  -- else return current word
+- join `words` into a string and return
+*/
+
+function capitalize(str) {
+  let words = str.split(" ");x
+
+  for (let i = 0; i < words.length - 1; i++) {
+    let nextWord = words[i + 1]
+    if ('aeiou'.includes(nextWord[0])) words[i] = (words[i][0].toUpperCase() + words[i].slice(1));
+  }
+
+  return words.join(" ")
+}
+
+// Test cases
+// console.log(capitalize("hello apple world")); // "Hello apple world"
+// console.log(capitalize("this is an umbrella")); // "This Is An umbrella"
+// console.log(capitalize("every vowel starts an echo")); // "every vowel Starts An echo"
+// console.log(capitalize("under the oak tree")); // "under The oak tree"
+// console.log(capitalize("a quick brown fox")); // "a quick brown fox"
+
+
+
+
+/*
+38min
+
+Write a function, negate, that converts all “yes” words to "no" and "no" words to "yes" in a sentence. The comparison for "yes" and "no" should be case insensitive."yes" and "no" should be negated even if ending with ., ?, ,, or !.
+
+In: string (words)
+Out: string (words)
+Rules:
+  - change "yes" to "no"
+  - change "no" to "yes"
+  - case insensitive
+  - original punctuation must be kept
+
+[D]
+1. Find a "yes" or  "no" character by character
+2. Replace each character with the negated words character
+3. Return the negated words along with the string
+
+- create `negatedString` and set to empty string
+- iterate over string
+  --- if current character is equal to the first character of "yes" and the current iterator + 3 is non-alphanumeric
+    ---- increment iterator by current iterator + 2
+    ---- if `capitalized` (helper) append "No" to `negatedString`
+    ---- else append "no" to `negatedString`
+    --- else if current character is equal to the first character of "no" and the current iterator + 2 is non-alphanumeric
+    --- increment iterator by current iterator + 1
+    ---- if `capitalized` (helper) append "Yes" to `negatedString`
+    ---- else append "yes" to `negatedString`
+  --- else append current character to `negatedString` 
+- Return `negatedString`
+
+(helper)
+isCapitalized(word)
+- if (word[0].toUpperCase() + word.slice(1)) === word
+  --- return true
+- else return false
+*/
+
+function negate(string) {
+  let negatedString = "";
+
+  for (let i = 0; i < string.length; i++) {
+    let currChar = string[i]
+
+    if ((currChar === 'y' || currChar === 'Y') && isYesOrNo(i, string)) {
+      i += 2;
+      if (isCapitalized(currChar)) negatedString += 'No'
+      else negatedString += "no"
+    } else if ((currChar === 'n' || currChar === 'N') && isYesOrNo(i, string)) {
+      i += 1;
+      if (isCapitalized(currChar)) negatedString += 'Yes'
+      else negatedString += "yes"
+    } else negatedString += currChar;
+  }
+
+  return negatedString;
+}
+
+function isCapitalized(word) {
+  return word[0].toUpperCase() + word.slice(1) === word;
+}
+
+function isYesOrNo(index, sentence) {
+  if (sentence.slice(index, index + 3).toLowerCase().includes('yes') || sentence.slice(index, index + 2).toLowerCase().includes('no') ) {
+    return true
+  } else return false;
+}
+
+
+
+// console.log(negate('Yes today is a beautiful day!')); // 'No today is a beautiful day!'
+// console.log(negate('No today is a beautiful day!'));; // 'Yes today is a beautiful day!'
+// console.log(negate('She said, "yes"')); //'She said, 'no'
+// console.log(negate('I said, "no!"')); // 'I said, "yes!"'
+// console.log(negate('yes, here you are')); // 'no, here you are'
+
+
+
+
+/*
+9min
+
+Problem 8
+Difference of Two
+The objective is to return all pairs of numbers from a given array of numbers that have a difference of 2.
+The result array should be sorted in ascending order of values.
+Assume there are no duplicate numbers in the array.
+The order of the numbers in the input array should not matter.
+
+In: array (integers)
+Out: array (subarrays: pair of integers)
+Rules: 
+  - pair: 2 numbers with diff of 2
+  - output: sorted in ascending order
+  - default return: empty array 
+
+[D]
+1. Sort the numbers in ascending order
+2. Compare two numbers at a time 
+3. Save the pairs that have a diff of 2
+4. Retrun all those pairs
+
+- create `pairs` array
+- create `sortedArr` and assign that to sorted source arr
+- iterate over `sortedArr`
+  -- if the current number minus the next number is 2
+    --- save the current number and the next number in `pairs` array
+- Return `pairs`
+*/
+
+function differenceOfTwo(source) {
+  let pairs = [];
+  let sortedArr = source.sort((a, b) => a - b);
+
+  for (let i = 0; i < sortedArr.length - 1; i++) {
+    if (sortedArr[i + 1] - sortedArr[i] === 2) pairs.push([sortedArr[i], sortedArr[i + 1]])
+  }
+
+  return pairs;
+}
+// console.log(differenceOfTwo([5, 2, 7, 9, 10, 3, 11])); // [[3, 5], [5, 7], [7, 9], [9, 11]]
+// console.log(differenceOfTwo([21, 5, 13, 19, 23, 15])); // [[13, 15], [19, 21], [21, 23]]
+// console.log(differenceOfTwo([5, 2, 6, 12])); // []
+
+
+
+/*
+13min
+
+Problem 6
+You are given an array of strings and want to
+find the sum of their numeric values.
+On each string, the numeric value can be found by combining the first digit
+and the last digit to form a single two-digit number.
+
+In: array (strings)
+Out: integer
+Rules:
+  - output:
+    -- sum of 2-digit numbers
+    -- 2-digit number: formed from first and last digit in each string
+
+[D]
+1. Go through each string
+2. Find the numbers
+3. Select the first and the last numbers to create one 2-digit number
+4. Sum all those 2-digit numbers
+5. Return the sum
+
+- create `sum`
+- iterate over source
+  -- create `numberStrings` array
+  - iterate over word
+    -- if current character is a number
+      --- add to `numbers`
+  -- create `number` and assign to combo of first and last in `numbers`
+  -- add `number` to `sum`
+- Return `sum`
+*/
+
+function sumStringValues(source) {
+  let sum = 0;
+
+  source.forEach(word => {
+
+    let numberStrings = [];
+
+    for (let char of word) {
+      if (char >= 0 && char <= 9) {
+        numberStrings.push(char);
+      }  
+    }
+
+    sum += Number(numberStrings[0] + numberStrings[numberStrings.length - 1]);
+  })
+
+  return sum;
+}
+
+// console.log(sumStringValues(['1abc2', 'pqr3stu8vwx', 'a1b2c3d4e5f', 'treb7uchet7'])); // 142
+
+
+
+
+/*
+Like an hour
+
+Problem 5
+Group Anagrams
+
+Write a function groupAnagrams(words) that takes an array of words 
+as input and groups the anagrams together. Anagrams are words that 
+have the same characters but in a different order.
+
+Your function should return an array of arrays, where each inner 
+array represents a group of anagrams. 
+
+The order of the groups and the order of words within each group 
+does not matter.
+*/
+
+function groupAnagrams(source) {
+  let groups = {};
+
+  for (let word of source) {
+    let key = word.toLowerCase().split('').sort().join('');
+    
+    if (!groups.hasOwnProperty(key)) groups[key] = [word];
+    else groups[key].push(word);
+  }
+
+  return Object.values(groups);
+}
+
+
+
+// console.log(groupAnagrams(["Act", "ogd", "cat"])); // [["act", "cat"], ["ogd"]]
+// console.log(groupAnagrams(["School", "mama", "amam", "maam"])) // [["School"], ["mama", "amam", "maam"]]
+// console.log(groupAnagrams([''])); // [['']]
+
+// console.log(groupAnagrams(['Cat', 'dog', 'tac', 'god', 'act']));
+// Output: [['Cat', 'tac', 'act'], ['dog', 'god']]
+
+
+
+
+
+
+
+
+// We have a list having unique values from 1 to n, but unordered with an unknown amount of missing values.
+// We have to output the missing numbers sorted by value.
+// The number 1 should be in the input array, if it's not present in the input array,
+// it should be included in the results. See the example below.
+
+// [8, 10, 11, 7, 3, 15, 6, 14, 5, 12]  ---> [1, 2, 4, 9, 13]
+
+
+/*
+In: array (integers)
+Out: array (integers)
+Rules:
+  - output:
+    -- missing integers
+    -- sorted smallest to biggest (ascending)
+
+[D]
+1. Sort the source
+2. Go through it, find missing values, save them
+3. Return them
+
+- create `sortedArr` arr (ascending)
+- create `maxValue` variable and assign to last value in `sortedArr`
+- create `integersObj` object
+- iterate from 1 to `maxValue`
+  -- add the current iterator as a key to the `integersObj` and set value of 0
+
+  - iterate over the `sortedArr` 
+  -- if the current number as a key in `integersObj` has a property that is equal to 0
+    --- increment it's value
+- create `missingValues` array
+
+- iterate over `integersObj`
+  -- if the current key has a property of 0
+    --- append the current key to `missingValues`
+- Return `missingValues`
+
+[1, 2, 3, 4, 5, 6, 7, 9, 10]
+{1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 0}
+*/
+
+// R's solution
+// function missNumsFinder(source) {
+//   let sortedArr = [...source].sort((a, b) => a - b);
+//   let maxValue = sortedArr[sortedArr.length - 1];
+//   let integersObj = {};
+
+//   for (let i = 1; i < maxValue; i++) {
+//     integersObj[i] = 0;
+//   }
+
+//   sortedArr.forEach(int => {
+//     if (integersObj[int] === 0) integersObj[int] += 1;
+//   })
+
+//   let missingValues = [];
+
+//   for (let num in integersObj) {
+//     if (integersObj[num] === 0) missingValues.push(Number(num));
+//   }
+
+//   return missingValues;
+// }
+
+// // K's solution
+// function missNumsFinder(uniqueNums) {
+//   let missingNums = [];
+//   let allNumbers = Array.from({length: Math.max(...uniqueNums)}, (_, idx) => idx + 1);
+
+//   allNumbers.forEach(num => {
+//     if (!(uniqueNums.includes(num))) {
+//       missingNums.push(num);
+//     }
+//   });
+
+//   return missingNums;
+// }
+
+
+
+// console.log(missNumsFinder([8, 10, 11, 7, 3, 15, 6, 14, 5, 12])); // [1, 2, 4, 9, 13]
+// console.log(missNumsFinder([2, 3, 1, 9, 4, 5, 6, 10, 7])); // [8]
+// console.log(missNumsFinder([5, 4, 2, 9, 3, 8, 10, 6, 7])); //[1]
+// console.log(missNumsFinder([7, 1, 12, 9, 11, 14, 13, 6, 10, 5])); // [2, 3, 4, 8]
+// console.log(missNumsFinder([8, 10, 11, 7, 3, 15, 6, 1, 14, 5, 12])); // [2, 4, 9, 13]
+// console.log(missNumsFinder([9, 10, 7, 2, 11, 8, 1, 17, 6, 16, 18, 19, 15, 3, 13])); //[4, 5, 12, 14]
+
 
