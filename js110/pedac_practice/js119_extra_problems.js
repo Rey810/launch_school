@@ -2112,3 +2112,567 @@ function repeatedSubstringPattern(str) {
 // p(repeatedSubstringPattern("abab") === true);
 // p(repeatedSubstringPattern("aba") === false);
 // p(repeatedSubstringPattern("abaababaab") === true);
+
+
+
+
+
+
+/*
+27min
+
+Problem 27
+
+Write a program that prints the longest sentence in a string based on the number of words.
+Sentences may end with periods (.), exclamation points (!), or question marks (?).
+You should treat any sequence of characters that are not spaces or sentence-ending characters as a word.
+Thus, -- should count as a word. Log the longest sentence and its word count to the console.
+Pay attention to the expected output, and be sure you preserve the punctuation from the end of the sentence.
+Note that this problem is about manipulating and processing strings.
+As such, every detail about the string matters (e.g., case, punctuation, tabs, spaces, etc.).
+
+In: string (sentences)
+Out: string (longest sentence); string (word count of longest sentence)
+Rules:
+  - sentences separated by: . ! ?
+  - words: everything except . ! ? and spaces (eg. '--' is a word)
+
+[D]
+1. Go through source and split up the sentences when ".!?" is found
+2. Go through those sentences and count the words
+3. Return the sentence with the most words and the word count
+
+
+- create `sentences` and assign to `sentenceCreator` call
+- create `largestWordCount` and set to 0 
+- create `largestSentence` and set to ''
+- iterate over sentences
+  -- if the sentence has a word count more than `largestWordCount`
+    --- reassign `largestWordCount` to current sentence word count
+    --- reassign `largestSentence` to current sentence
+- Return `largestSentence` and "The longest sentence has `largestWordCount` words
+
+(helper)
+sentenceCreator(source)
+- create `sentences` variable
+- create `sentenceStartIndex` and set to 0
+- iterate over the source character by character
+  -- if the current character is a sentence ender (i.e. ".!?")
+    --- create `sentence` and set to all characters from `sentenceStartIndex` to the current index (inclusive)
+    --- append `sentence` to `sentences`
+    --- reassign `sentenceStartIndex` to current index + 1`
+- Return `sentences`
+*/
+
+function longestSentence(source) {
+  let sentences = sentenceCreator(source);
+  let largestWordCount = 0;
+  let largestSentence = '';
+
+  for (let sentence of sentences) {
+    let currentWordCount = sentence.split(" ").length;
+
+    if (!largestWordCount || currentWordCount > largestWordCount) {
+      largestWordCount = currentWordCount
+      largestSentence = sentence;
+    }
+  }
+
+  return largestSentence + `\nThe largest sentence has ${largestWordCount} words.`;
+}
+
+function sentenceCreator(source) {
+  let sentences = [];
+  let sentenceStartIndex = 0;
+
+  for (let i = 0; i < source.length; i++) {
+    if (`.!?`.includes(source[i])) {
+      sentences.push(source.slice(sentenceStartIndex, i + 1));
+      sentenceStartIndex = i + 2;
+    }
+  }
+
+  return sentences;
+}
+
+
+let longText =
+  'Four score and seven years ago our fathers brought forth on this ' +
+  'continent a new nation, conceived in liberty, and dedicated to the ' +
+  'proposition that all men are created equal. Now we are engaged in a ' +
+  'great civil war, testing whether that nation, or any nation so ' +
+  'conceived and so dedicated, can long endure. We are met on a great ' +
+  'battlefield of that war. We have come to dedicate a portion of that ' +
+  'field, as a final resting place for those who here gave their lives ' +
+  'that that nation might live. It is altogether fitting and proper that ' +
+  'we should do this.';
+
+let longerText = longText +
+  'But, in a larger sense, we can not dedicate, we can not consecrate, ' +
+  'we can not hallow this ground. The brave men, living and dead, who ' +
+  'struggled here, have consecrated it, far above our poor power to add ' +
+  'or detract. The world will little note, nor long remember what we say ' +
+  'here but it can never forget what they did here. It is for us the ' +
+  'living, rather, to be dedicated here to the unfinished work which ' +
+  'they who fought here have thus far so nobly advanced. It is rather ' +
+  'for us to be here dedicated to the great task remaining before us -- ' +
+  'that from these honored dead we take increased devotion to that ' +
+  'cause for which they gave the last full measure of devotion -- that ' +
+  'we here highly resolve that these dead shall not have died in vain ' +
+  '-- that this nation, under God, shall have a new birth of freedom -- ' +
+  'and that government of the people, by the people, for the people, ' +
+  'shall not perish from the earth.';
+
+// longestSentence(longText);
+// // Four score and seven years ago our fathers brought forth on this continent a new nation,
+// // conceived in liberty, and dedicated to the proposition that all men are created equal.
+// // //
+// // The longest sentence has 30 words.
+
+// longestSentence(longerText);
+// // It is rather for us to be here dedicated to the great task remaining before us -- 
+// // that from these honored dead we take increased devotion to that cause for which they gave
+// // the last full measure of devotion --
+// // that we here highly resolve that these dead shall not have died in vain --
+// // that this nation, under God, shall have a new birth of freedom --
+// // and that government of the people, by the people, for the people, shall not perish from the earth.
+
+// // The longest sentence has 86 words.
+
+// longestSentence("Where do you think you're going? What's up, Doc?");
+// // Where do you think you're going?
+
+// // The longest sentence has 6 words.
+
+// longestSentence("To be or not to be! Is that the question?");
+// // To be or not to be!
+//
+// The longest sentence has 6 words.
+
+
+
+
+
+/*
+15min
+Problem 26
+
+Write a function that computes the difference between the square of the sum of the first 
+count positive integers and the sum of the squares of the first count positive integers.
+
+In: integer
+Out: integer
+Rules:
+  - diff between: square of the sum - sum of the squares
+
+[D]
+1. Calculate the sum then square it
+2. Calculate the sum of squaring each number
+3. Return #1 minus #2
+
+--------------------
+sumSquareDifference
+- Return `squareOfSum` minus `sumOfSquares`
+
+(helper)
+squareOfSum
+- create `sum` and set to 0
+- iterate over the number
+  -- increment `sum` by current number
+- Return `sum` squared
+
+(helper)
+sumOfSquares
+- create `sum` and set to 0
+- iterate over the number
+  -- increment `sum` by the square of current number 
+- Return `sum`
+*/
+
+function sumSquareDifference(int) {
+  return squareOfSum(int) - sumOfSquares(int);
+}
+
+function squareOfSum(int) {
+  let sum = 0;
+
+  for (let num = 1; num <= int; num++) {
+    sum += num;
+  }
+
+  return sum * sum;
+}
+
+function sumOfSquares(int) {
+  let sum = 0;
+
+  for (let num = 1; num <= int; num++) {
+    sum += num * num;
+  }
+
+  return sum;
+}
+
+// console.log(sumSquareDifference(3));      // 22 --> (1 + 2 + 3)**2 - (1**2 + 2**2 + 3**2)
+// console.log(sumSquareDifference(10));     // 2640
+// console.log(sumSquareDifference(1));      // 0
+// console.log(sumSquareDifference(100));    // 25164150
+
+
+
+
+
+/*
+27min
+
+Problem 25
+
+You have to create a function that takes a positive integer number
+and returns the next bigger number formed by the same digits:
+
+In: integer
+Out: integer
+Rules:
+  - output
+    -- next biggest number
+    -- same digits
+
+[D]
+1. Start incrementing from the given number
+2. Continue until the incremented number contains all the numbers of the given number
+3. Return that incremented number
+
+- if given number has no digits after the first digit bigger than the first digit
+  -- return -1
+- iterate from given number
+  -- if each digit in the current number is included in the given number
+    --- return the current number
+
+12
+13
+14
+15
+16
+...
+21 -> "21" -> [2, 1] 
+
+531 -> [5, 3, 1] -> [5, 3] if all these are bigger than the removed value -> bigger integer not possible
+*/
+
+function nextBiggerNum(int) {
+  let intArr = [...String(int)];
+  let digitsArr = [...String(int)];
+  let lastDigit = digitsArr.pop();
+
+  if (digitsArr.every(digit => digit >= lastDigit)) return -1;
+
+  for (let currNum = int + 1; true; currNum++) {
+    // let hasValidNextNum = ([...String(currNum)].every(num => intArr.includes(num))) && (intArr.every(num => [...String(currNum)].includes(num)));
+
+    let hasValidNextNum = JSON.stringify(intArr.sort()) === JSON.stringify([...String(currNum)].sort())
+
+    console.log(intArr);
+    if (hasValidNextNum) return currNum;
+  }
+}
+
+// p(nextBiggerNum(1432))// === 2134);
+// p(nextBiggerNum(12) === 21);
+// p(nextBiggerNum(513) === 531);
+// p(nextBiggerNum(2017)=== 2071);
+// p(nextBiggerNum(111) === -1);
+// p(nextBiggerNum(531) === -1);
+// p(nextBiggerNum(123456789) === 123456798);
+
+
+
+/*
+11min
+
+Problem 21
+
+Create a function that takes a string argument that consists entirely of numeric digits and computes the greatest product of four consecutive digits in the string. The argument will always have more than 4 digits.
+
+In: string (integers)
+Out: integer
+Rules:
+  - output:
+    -- biggest product of 4 consecutive integers
+
+[D]
+1. Creat 4 digit numbers from the given string number
+2. Keep track of the largest product
+3. Return the largest product
+
+- create `largestProduct` and set to 0
+- iterate over the number
+  -- create `currentProduct` and set to product of numbers from current index to current index + 4
+  -- if `currentProduct` is bigger than `largestProduct` 
+    --- reassign `largestProduct` to `currentProduct`
+- Return `largestProduct`
+
+23456
+length -> 5
+i -> length - 4
+*/
+
+function greatestProduct(str) {
+  let largestProduct = 0;
+  let numArr = [...str];
+
+  for (let i = 0; i <= numArr.length - 4; i++) {
+    let currProduct = numArr.slice(i, i + 4).reduce((product, curr) => product * curr, 1)
+    if (currProduct > largestProduct) largestProduct = currProduct;
+  }
+
+  return largestProduct;
+}
+
+// p(greatestProduct('23456') === 360);      // 3 * 4 * 5 * 6
+// p(greatestProduct('3145926') === 540);    // 5 * 9 * 2 * 6
+// p(greatestProduct('1828172') === 128);    // 1 * 8 * 2 * 8
+// p(greatestProduct('123987654') === 3024); // 9 * 8 * 7 * 6
+
+
+
+
+
+/*
+17min
+
+Problem 2
+Given a list of integers and a single sum value, return the first two values
+in order of appearance that add up to form the sum.
+
+If there are two or more pairs with the required sum,
+the pair whose second element has the smallest index is the solution.
+
+Example:
+
+console.log(sumPairs([4, 3, 2, 3, 4],         8)); [4, 4]
+                      ^-----^         4 + 2 = 6, indices: 0, 2
+                         ^-----^      3 + 3 = 6, indices: 1, 3
+                            ^-----^   2 + 4 = 6, indices: 2, 4
+== [4, 2]
+
+Negative numbers and duplicate numbers can and will appear.
+
+In: array (integers); integer (sum)
+Out: array (integers)
+Rules:
+  - output:
+    -- 2 integers from source that add up to `sum` (2nd arg)
+    -- 2nd integer with smallest index
+    -- default return: undefined
+
+[D]
+1. Sum two integers together in order of the source
+2. If two integers sum to the 2nd arg return them in an array
+3. Otherwise return undefined
+
+- create `integersArr` variable
+- create `currSmallestIndex` 
+- iterate over array
+  -- iterate through array from outer number to inner index
+    --- if current number + number at inner index equals `sum` arg and inner index is less than `currSmallestIndex`
+      ---- reassign `integersArr` to [current number, number at inner index]
+      ---- reassign `currSmallestIndex` to inner index
+- Return undefined
+*/
+
+function sumPairs(arr, sum) {
+  let integersArr = undefined;
+  let currSmallestIndex = 0;
+
+  for (let outer = 0; outer <= arr.length - 2; outer++) {
+    for (let inner = outer + 1; inner <= arr.length - 1; inner++) {
+      if ((!currSmallestIndex || inner < currSmallestIndex) && (arr[outer] + arr[inner] === sum)) {
+        integersArr = [arr[outer], arr[inner]];
+        currSmallestIndex = inner;
+      }
+    }
+  }
+
+  return integersArr;
+}
+
+ 
+//  // // Test cases
+//  console.log(sumPairs([11, 3, 7, 5], 10)); // [3, 7]
+//  console.log(sumPairs([0, 0, -2, 3], 2)); // undefined
+//  console.log(sumPairs([1, 2, 3, 4, 1, 0], 2)); // [1, 1]
+//  console.log(sumPairs([10, 5, 2, 3, 7, 5], 10)); // [3, 7]
+//  console.log(sumPairs([0, 2, 0], 0)); // [0, 0]
+//  console.log(sumPairs([5, 9, 13, -3], 10)); // [13, -3]
+
+
+
+
+
+
+/*
+6min
+
+Problem 19
+
+Create a function that takes two strings as arguments and returns true if some portion of the characters in the first string can be rearranged to match the characters in the second. Otherwise, the function should return false.
+
+You may assume that both string arguments only contain lowercase alphabetic characters. Neither string will be empty.
+
+In: string (source); string (target)
+Out: boolean
+Rules:
+  - can (some) chars in source be arranged to make target
+  - non-empty args
+  - lowecase alphabetic args only
+
+[D]
+1. Check if every character in target is found in source
+
+- iterate over target
+  -- if current char is not in source
+    --- return false
+  -- else
+    -- remove curr char from source
+- Return true
+*/
+
+function unscramble(source, target) {
+  let sourceArr = [...source];
+
+  for (let i = 0; i < target.length; i++) {
+    if (!sourceArr.includes(target[i])) return false;
+    else sourceArr.splice(sourceArr.indexOf(target[i]), 1);
+  }
+
+  return true;
+}
+
+
+
+// p(unscramble('ansucchlohlo', 'launchschool') === true);
+// p(unscramble('phyarunstole', 'pythonrules') === true);
+// p(unscramble('phyarunstola', 'pythonrules') === false);
+// p(unscramble('boldface', 'coal') === true);
+
+
+
+
+
+
+
+/*
+9min
+
+Problem 17
+
+Create a function that takes a string of digits as an argument and returns the number of even-numbered substrings that can be formed. For example, in the case of '1432', the even-numbered substrings are '14', '1432', '4', '432', '32', and '2', for a total of 6 substrings.
+
+If a substring occurs more than once, you should count each occurrence as a separate substring.
+
+
+In: string (integers)
+Out: integer
+Rules:
+  - even-numbered substrings: divisible by 2
+
+[D]
+1. Create number combos
+2. Count the combos that are divisible by 2
+3. Return that count
+
+- create `count` and set to 0
+- iterate over string starting from 0
+  -- iterate over string starting from outer current index + 1
+    -- create `substring` and set to string from outer index to inner index
+    -- convert `substring` to number
+    -- if `substring` is divisible by 2
+      --- increment `count`
+- return `count`
+
+14
+1432
+4
+432
+32
+2
+*/
+
+function evenSubstrings(str) {
+  let count = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    for (let k = i + 1; k <= str.length; k++) {
+      if (Number(str.slice(i, k)) % 2 === 0) count += 1;
+    }
+  }
+
+  return count;
+}
+
+
+// p(evenSubstrings('1432') === 6);
+// p(evenSubstrings('3145926') === 16);
+// p(evenSubstrings('2718281') === 16);
+// p(evenSubstrings('13579') === 0);
+// p(evenSubstrings('143232') === 12);
+
+
+
+
+
+/*
+6min
+
+Problem 16
+
+Create a function that takes a non-empty string as an argument.
+The string consists entirely of lowercase alphabetic characters.
+The function should return the length of the longest vowel substring.
+The vowels of interest are "a", "e", "i", "o", and "u".
+
+In: string (characters)
+Out: integer
+Rules:
+  - vowels: 'aeiou'
+
+[D]
+1. Go through characters and start counting when a vowel is found
+2. Stop counting when vowels no longer follow the first
+3. Save count
+4. Repeat and return the biggest count
+
+- create `count` and set to 0
+- create `biggestCount` and set to 0
+- iterate over characters
+  -- if currect char is a vowel
+    --- increment `count`
+    --- if `count` is bigger than `biggestCount`
+      ---- reassign `biggestCount` to `count`
+  -- else
+    --- reassign `count` to 0
+- Return `biggestCount`
+*/
+
+function longestVowelSubstring(str) {
+  let count = 0;
+  let biggestCount = 0;
+
+  for (let char of str) {
+    if ('aeiou'.includes(char)) {
+      count += 1;
+      
+      if (count > biggestCount) biggestCount = count; 
+    } else count = 0;
+  }
+
+  return biggestCount;
+}
+
+// p(longestVowelSubstring('cwm') === 0);
+// p(longestVowelSubstring('many') === 1);
+// p(longestVowelSubstring('launchschoolstudents') === 2);
+// p(longestVowelSubstring('eau') === 3);
+// p(longestVowelSubstring('miaoued') === 5);
+// p(longestVowelSubstring('sequoia') === 4);
+// p(longestVowelSubstring('beauteous') === 3);
