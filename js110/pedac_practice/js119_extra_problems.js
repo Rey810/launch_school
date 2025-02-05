@@ -1734,27 +1734,27 @@ Rules:
 */
 
 // R's solution
-// function missNumsFinder(source) {
-//   let sortedArr = [...source].sort((a, b) => a - b);
-//   let maxValue = sortedArr[sortedArr.length - 1];
-//   let integersObj = {};
+function missNumsFinder(source) {
+  let sortedArr = [...source].sort((a, b) => a - b);
+  let maxValue = sortedArr[sortedArr.length - 1];
+  let integersObj = {};
 
-//   for (let i = 1; i < maxValue; i++) {
-//     integersObj[i] = 0;
-//   }
+  for (let i = 1; i < maxValue; i++) {
+    integersObj[i] = 0;
+  }
 
-//   sortedArr.forEach(int => {
-//     if (integersObj[int] === 0) integersObj[int] += 1;
-//   })
+  sortedArr.forEach(int => {
+    if (integersObj[int] === 0) integersObj[int] += 1;
+  })
 
-//   let missingValues = [];
+  let missingValues = [];
 
-//   for (let num in integersObj) {
-//     if (integersObj[num] === 0) missingValues.push(Number(num));
-//   }
+  for (let num in integersObj) {
+    if (integersObj[num] === 0) missingValues.push(Number(num));
+  }
 
-//   return missingValues;
-// }
+  return missingValues;
+}
 
 // // K's solution
 // function missNumsFinder(uniqueNums) {
@@ -1995,6 +1995,7 @@ function decrypt(source) {
 
 function createAlphabet() {
   let alphabet = {};
+
   for (let charCode = 'a'.charCodeAt(); charCode <= 'z'.charCodeAt(); charCode++) {
     alphabet[String.fromCharCode(charCode)] = 0;
   }
@@ -2676,3 +2677,223 @@ function longestVowelSubstring(str) {
 // p(longestVowelSubstring('miaoued') === 5);
 // p(longestVowelSubstring('sequoia') === 4);
 // p(longestVowelSubstring('beauteous') === 3);
+
+
+
+
+
+
+
+/*
+10min
+
+Problem 15
+
+Create a function that takes a string argument and returns a hash in which the keys represent the lowercase letters in the string, and the values represent how often the corresponding letter occurs in the string.
+In: string 
+Out: hash (key: lowercase letter; prop: count)
+Rules:
+  - only count lowercase alphabetic characters
+
+[D]
+1. Find and count unique lowercase letters
+2. Return the letters and their counts in a hash
+
+- create `hash` obj
+- iterate over source
+  - if current char is lowercase alphabetic
+    -- if the current char is not in `hash`
+      --- create a new key with value of current char and set prop to 1
+    -- else
+      --- increment current char key in `hash` by 1
+- return `hash`
+*/
+
+function countLetters(str) {
+  let hash = {};
+
+  for (let char of str) {
+    if (char >= 'a' && char <= 'z') hash[char] = hash[char] + 1 || 1;
+  }
+
+  return hash;
+}
+
+
+// TEST CASES
+const objeq = function(obj1, obj2) {
+  let keys1 = Object.keys(obj1);
+  let keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (let key of keys1) {
+    if (! keys2.includes(key)) {
+      return false;
+    } else if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// let expected = {'w': 1, 'o': 2, 'e': 3, 'b': 1, 'g': 1, 'n': 1};
+// p(objeq(countLetters('woebegone'), expected));
+
+// expected = {'l': 1, 'o': 1, 'w': 1, 'e': 4, 'r': 2,
+//             'c': 2, 'a': 2, 's': 2, 'u': 1, 'p': 2};
+// p(objeq(countLetters('lowercase/uppercase'), expected));
+
+// expected = {'u': 1, 'o': 1, 'i': 1, 's': 1};
+// p(objeq(countLetters('W. E. B. Du Bois'), expected));
+
+// p(objeq(countLetters('x'), {'x': 1}));
+// p(objeq(countLetters(''), {}));
+// p(objeq(countLetters('!!!'), {}));
+
+
+
+
+
+
+
+/* 
+Write a function that returns the count of combinations of three numbers
+that have 2 odd numbers and 1 even. If there’s none return -1.
+All numbers in the array will be integers greater than 0.
+
+In: array (integers)
+Out: integer
+Rules:
+  - output
+    --- count of combos
+    -- combo: 2 odd AND 1 even
+  - default return: -1 (no combos)
+
+[D]
+1. Go through all numbers and build combos
+2. Keep a tally of all the combos
+3. Return the combo count
+
+- create `count` and set to 0
+- iterate over source and stop at source length - 3
+  --- create `combo` obj
+  -- iterate over source from outer index
+    --- if current integer is odd AND combo has less than 2 odd
+      ---- increment odd key
+    --- else if the combo has less than 1 even 
+      ---- increment even key
+    --- if combo has 2 odd and 1 even
+      ---- increment `count`
+      ---- reassign `combo` keys to 0
+      ---- reset inner index to 0
+- If `count` is 0, return -1
+- else return `count`
+
+
+123
+125
+134
+136
+156
+235
+236
+345
+356
+*/
+
+// function countTriples(source) {
+//   let count = 0;
+
+//   for (let i = 0; i <= source.length - 3; i++) {
+//     let combo = { odd: 0, even: 0 };
+
+//     for (let k = i; k < source.length; k++) {
+//       let currInt = source[k];
+      
+//       if (currInt % 2 === 1 && combo.odd < 2) combo.odd += 1;
+//       else if (combo.even < 1) combo.even += 1;
+
+//       if (combo.even === 1 && combo.odd === 2) {
+//         count += 1;
+//         console.log( { combo })
+//         combo.even = 0;
+//         combo.odd = 0;
+//         console.log( { combo })
+//       }
+//     }
+
+//   }
+
+//   return count;
+// }
+
+
+
+/* 
+Write a function that returns the count of combinations of three numbers
+that have 2 odd numbers and 1 even. If there’s none return -1.
+All numbers in the array will be integers greater than 0.
+
+In: array (integers)
+Out: integer
+Rules:
+  - combo: 2 odd and 1 even
+  - default return: -1
+
+[D]
+1. Count how many even numbers
+2. Count odd numbers and divide by 2 to get odd pairs
+3. Multiply even with odd pairs to get total combo number
+
+- create `oddNums`  set to source filtered for odd numbers
+- create `evenNums` set to source filtered for even numbers
+- if either of those are empty, return -1 as no combos can be made
+- create `oddPairs` set to `oddNums` divided by 2
+- return `oddPairs` multiplied by `evenNums`
+*/
+
+function countTriples(source) {
+  let oddNums = source.filter(num => num % 2 === 1);
+  let evenNums = source.filter(num => num % 2 === 0);
+
+  if (oddNums.length < 1 || evenNums.length < 1) return -1;
+
+  let oddPairs = (oddNums.length * (oddNums.length - 1)) / 2;
+
+  return oddPairs * evenNums.length;
+}
+
+
+// console.log(countTriples([1, 2, 3, 4])); // Expected output: 2
+// console.log(countTriples([2, 4, 6, 8])); // Expected output: -1
+// console.log(countTriples([1, 3, 5, 7])); // Expected output: -1
+// console.log(countTriples([1, 2, 3, 4, 5, 6])); // Expected output: 9
+
+
+
+
+
+/*
+Write a function that takes a sentence string as an argument and returns that string with every occurrence of a "number word" — 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine' — converted to its corresponding digit character.
+
+Example: wordToDigit('Please call me at five five five one two three four. Thanks.');
+// "Please call me at 5 5 5 1 2 3 4. Thanks."
+*/
+
+function wordToDigit(str) {
+  let numsObj = { 'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9}
+  
+  return str.split(' ').map(word => {
+    let cleanWord = word.split("").filter(char => char >= 'a' && char <= 'z').join('');
+    
+    if (cleanWord in numsObj) return word.replace(cleanWord, numsObj[cleanWord])
+    else return word;
+  }).join(" ")
+
+}
+
+console.log(wordToDigit('Please call me at five five five one two three four. Thanks.'));
