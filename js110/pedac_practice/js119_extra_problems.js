@@ -2896,4 +2896,390 @@ function wordToDigit(str) {
 
 }
 
-console.log(wordToDigit('Please call me at five five five one two three four. Thanks.'));
+// console.log(wordToDigit('Please call me at five five five one two three four. Thanks.'));
+
+
+
+
+
+/*
+29min
+
+Problem 14
+
+Create a function that takes a string argument and returns the character that occurs most often in the string. If there are multiple characters with the same greatest frequency, return the one that appears first in the string. When counting characters, consider uppercase and lowercase versions to be the same.
+
+In: string 
+Out: string (1 character)
+Rules:
+  - output:
+    -- character occuring the most
+    -- case insensitive
+    -- lowercase version returned
+    -- if equal frequencies, return the lowest indexed character
+    -- only count alphabetic characters
+
+[D]
+1. Go over characters
+2. Keep track of the count of each character
+3. Return first character with highest count (most common char)
+
+- create `countsObj` 
+- iterate over source
+  -- if lowercased current char exists as a key in `countsObj`
+    --- increment the key's value
+  -- else
+    --- add the current char as a new key in `countsObj`
+- create `highestCount` and set to 0
+- create `char`
+  - iterate over `countssObj`
+  -- if current character has a count higher than `highestCount`
+    --- reassign `highestCount` to current characters count
+    --- reassign `char` to current character
+- Return `char`
+*/
+
+function mostCommonChar(str) {
+  let countsObj = {};
+
+  for (char of str) {
+    char = char.toLowerCase();
+    
+    if (char >= 'a' && char <= 'z') {
+      if (char in countsObj) countsObj[char] = countsObj[char] + 1;
+      else countsObj[char] = 1;
+    }
+  }
+
+  let highestChar = Object.keys(countsObj)[0];
+
+  for (let char in countsObj) {
+    if (countsObj[char] > countsObj[highestChar]) {
+      highestChar = char;
+    }
+  }
+
+  return highestChar;
+}
+
+// p(mostCommonChar('Hello World') === 'l');
+// p(mostCommonChar('Mississippi') === 'i');
+// p(mostCommonChar('Happy birthday!') === 'h');
+// p(mostCommonChar('aaaaaAAAA') === 'a');
+
+// let myStr = 'Peter Piper picked a peck of pickled peppers.';
+// p(mostCommonChar(myStr) === 'p');
+
+// myStr = 'Peter Piper repicked a peck of repickled peppers. He did!';
+// p(mostCommonChar(myStr) === 'e');
+
+
+
+
+
+/* 
+22min
+
+Problem 13
+
+Create a function that takes an array of integers as an argument and returns an array of two numbers that are closest together in value. If there are multiple pairs that are equally close, return the pair that occurs first in the array.
+
+In: array (integers)
+Out: array (2 integers; original order)
+Rules:
+  - output:
+    -- 2 integers closest in value
+    -- respect original order
+    -- be the pair that occurs first
+
+-----------
+
+D:
+12, 22, 7, 17
+
+22, 12
+10
+
+12, 7
+5
+
+12, 17
+5
+
+22, 7
+15
+
+22, 17
+5
+
+17, 7
+10
+
+A:
+1. Iterate over the numbers for each number
+2. Sort 2 at a time by size
+3. Keep track of their difference and their original order
+4. Return the 2 that have the smallest difference
+
+- create `pair` and set to empty array
+- create `smallestDiff` and set to 0
+- iterate over the source, stop at source length - 1
+  -- create `subarr` with current number and next number
+  -- sort it (ascending)
+  -- if smallestDiff is 0 OR first value minus the second value is smaller than `smallestDiff`
+    --- reassign `smallestDiff` to current diff (first value minus the second value)
+    --- reassign elements in `pair` to [current number, next number]
+- Return `pair`
+*/
+
+function closestNumbers(source) {
+  let pair = [];
+  let smallestDiff = 0;
+
+  for (let i = 0; i < source.length - 1; i++) {
+
+    for (let k = i + 1; k < source.length; k++) {
+      let subArr = [source[i], source[k]].sort((a, b) => b - a);
+      let diff = subArr[0] - subArr[1];
+
+      if (!smallestDiff || diff < smallestDiff) {
+        smallestDiff = diff;
+        pair[0] = source[i];
+        pair[1] = source[k];
+      }
+    }
+  }
+
+  console.log(pair);
+  return pair;
+}
+
+// const eq = (arr1, arr2) => JSON.stringify(arr1) === JSON.stringify(arr2);
+// p(eq(closestNumbers([5, 25, 15, 11, 20]), [15, 11]));
+// p(eq(closestNumbers([19, 25, 32, 4, 27, 16]), [25, 27]));
+// p(eq(closestNumbers([12, 22, 7, 17]), [12, 7]));
+
+
+
+
+
+
+/*
+15min
+
+Problem 12
+
+Create a function that takes a string argument and returns a copy of the string with
+every second character in every third word converted to uppercase.
+Other characters should remain the same.
+
+In: string
+Out: string
+Rules:
+  - uppercase conversion: 
+    -- every 3rd word
+      --- every 2nd character
+
+----------------
+A:
+1. Find every 3rd word
+2. In those words, find and uppercase every 2nd character
+3. Return a string showing the changes
+
+- iterate over string
+  -- if the word is a 3rd word
+    --- uppercase every 2nd character (see uppercaseChars)
+  -- else
+    --- keep the unchanged word
+- return the string showing the changes
+  
+
+function uppercaseChars(word)
+- iterate over the word
+  -- if the current character is a 2nd character 
+    --- uppercase it
+- return the word showing the changes
+*/
+
+function toWeirdCase(str) {
+ return str.split(' ').map((word, i) => (i > 0 && (i + 1) % 3 === 0) ? uppercaseChars(word) : word).join(' ');
+}
+
+function uppercaseChars(word) {
+  return [...word].map((char, i) => (i + 1) % 2 === 0 ? char.toUpperCase() : char).join('');
+}
+
+
+// let original = 'Lorem Ipsum is simply dummy text of the printing world';
+// let expected = 'Lorem Ipsum iS simply dummy tExT of the pRiNtInG world';
+// p(toWeirdCase(original) === expected);
+
+// original = 'It is a long established fact that a reader will be distracted';
+// expected = 'It is a long established fAcT that a rEaDeR will be dIsTrAcTeD';
+// p(toWeirdCase(original) === expected);
+
+// p(toWeirdCase('aaA bB c') === 'aaA bB c');
+
+// original = "Mary Poppins' favorite word is " +
+//            "supercalifragilisticexpialidocious";
+// expected = "Mary Poppins' fAvOrItE word is " +
+//            "sUpErCaLiFrAgIlIsTiCeXpIaLiDoCiOuS"
+// p(toWeirdCase(original) === expected);
+
+
+
+
+
+/*
+24min
+
+Problem 11
+
+Given a string of lowercase alphabetic characters,
+count all possible substrings (not necessarily distinct) that have exactly "k" distinct characters.
+Your Task:
+You don't need to read input or print anything.
+Your task is to complete the function substrCount() which takes
+the string "S" and an integer "K" as inputs and returns the number of substrings having exactly "K" distinct characters.
+
+In: string (alphabetic); integer ("K")
+Out: integer (count)
+Rules:
+  - "k": number of distinct characters
+  - count: substrings with "k" number of distinct characters
+
+----------
+A:
+1. Find all substrings
+2. Filter for the ones that have "k" unique characters
+3. Return the count of this
+
+- create `substrings` and set to `createSubstrings` value
+- create `count` variable and set to 0
+- iterate over `substrings`
+  - create `currObj` object
+  -- iterate over current str
+    -- if the current character is in `currObj` 
+      --- increment it's value
+    -- else
+      --- add current character as new key and set value to 1
+  - if `currObj`` has `k` unique characters (see kCharCheck)
+    -- increment `count`
+
+
+createSubstrings(string)
+- create `substrings` array
+- iterate over string for each character
+  -- iterate over string
+    --- create `susbtring` and set to string slice from outer index to inner index + 1
+    --- append to `substrings`
+- return `substrings`
+
+
+kCharCheck(obj, k)
+- Count the number of keys in obj
+- if the number of keys is equal to "k"
+  -- return true
+- else
+  -- return false
+*/
+
+function substrCount(str, k) {
+  let substrings = createSubstrings(str);
+  let count = 0;
+
+  substrings.forEach(substring => {
+    let uniqueChars = [];
+
+    for (let char of substring) {
+      if (!uniqueChars.includes(char)) uniqueChars.push(char);
+    }
+
+    if (uniqueChars.length === k) count += 1;
+
+    // let currObj = {};
+
+    // for (let char of substring) {
+    //   if (char in currObj) currObj[char] += 1;
+    //   else currObj[char] = 1;
+    // }
+
+    // if (kUniqueChars(currObj, k)) count += 1;
+  })
+
+  return count;
+}
+
+function createSubstrings(str) {
+  let substrings = [];
+
+  for (let i = 0; i < str.length; i++) {
+    for (let k = i + 1; k <= str.length; k++) {
+      substrings.push(str.slice(i, k));
+    }
+  }
+
+  return substrings;
+}
+
+// function kUniqueChars(obj, k) {
+//   return Object.keys(obj).length === k;
+// }
+
+
+
+// console.log(substrCount("aba", 2)); // 3
+// console.log(substrCount("abaaca", 1)); // 7
+
+
+
+
+
+
+/*
+16min
+
+Problem 10
+
+Given an array, return an array of all the elements which are leaders.
+A Leader is an element that is greater than all of the elements on its right side in the array.
+
+In: array (integers)
+Out: array (integers i.e. leaders)
+Rules:
+  - leader: integer greater than ALL integers to it's right
+  - always include last element in array
+  - default return: empty array
+
+-------------
+A:
+1. For each number, determine whether all the numbers after it are smaller
+2. If so, keep this number in an array
+3. When done for all the numebers, return that array
+
+- create `leaders` array
+- iterate over source
+  -- create `subarr` from current index + 1 to end of source
+  -- if every number in `subarr` is smaller than current number
+    --- add current number to `leaders` array
+- return `leaders` array
+*/
+
+function getLeaders(arr) {
+  let leaders = [];
+
+  for (let i = 0; i < arr.length;  i++) {
+    let subarr = arr.slice(i + 1);
+    let isLeader = subarr.every(int => int < arr[i])
+  
+    if (isLeader) leaders.push(arr[i]);
+  }
+
+  return leaders;
+
+}
+
+// console.log(getLeaders([10,22,12,3,0,6])) // [22, 12, 6]
+// console.log(getLeaders([4, 7, 1, 0])) // [7, 1, 0]
+// console.log(getLeaders([1])) // [1]
+// console.log(getLeaders([])) // []
