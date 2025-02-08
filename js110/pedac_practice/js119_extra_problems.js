@@ -266,40 +266,40 @@ findAllGrades(studentObj)
 - Return 'gradesFound'
 */
 
-function findAllGrades(studentObj) {
-  const gradesFound = [];
+// function findAllGrades(studentObj) {
+//   const gradesFound = [];
 
-  studentObj.forEach(student => {
-    student.grades.forEach(grade => {
-        gradesFound.push(grade)
-    })
-  })
+//   studentObj.forEach(student => {
+//     student.grades.forEach(grade => {
+//         gradesFound.push(grade)
+//     })
+//   })
 
-  return gradesFound.sort((a, b) => b - a);
+//   return gradesFound.sort((a, b) => b - a);
   
-}
+// }
 
-function nthLargestGrade(studentsObj, gradeRank) {
-  const allGradesArray = findAllGrades(studentsObj);
-  const nthLargestGrade = allGradesArray[gradeRank - 1];
+// function nthLargestGrade(studentsObj, gradeRank) {
+//   const allGradesArray = findAllGrades(studentsObj);
+//   const nthLargestGrade = allGradesArray[gradeRank - 1];
 
-  let studentIndex = null;
+//   let studentIndex = null;
 
-  studentsObj.forEach(student => {
+//   studentsObj.forEach(student => {
 
-    student.grades.forEach(grade => {
-      if (grade === nthLargestGrade && student.id < studentIndex) {
-        studentIndex = student.id
-      } else if (grade === nthLargestGrade && !studentIndex) {
-        studentIndex = student.id;
-      }
-    })
+//     student.grades.forEach(grade => {
+//       if (grade === nthLargestGrade && student.id < studentIndex) {
+//         studentIndex = student.id
+//       } else if (grade === nthLargestGrade && !studentIndex) {
+//         studentIndex = student.id;
+//       }
+//     })
 
-  })
+//   })
 
-  return studentIndex;
+//   return studentIndex;
 
-}
+// }
 
 // // Test Cases
 // const students = [
@@ -1372,37 +1372,37 @@ Rules:
 - Return `lowestID` if it's been set OR return null
 */
 
-function nthLargestGrade(students, nth) {
+// function nthLargestGrade(students, nth) {
   
-  let sortedGrades = students.reduce((grades, currStudent) => {
-    grades.push(...currStudent.grades);
-    return grades
-  }, []).sort((a, b) => b - a);
+//   let sortedGrades = students.reduce((grades, currStudent) => {
+//     grades.push(...currStudent.grades);
+//     return grades
+//   }, []).sort((a, b) => b - a);
 
-  let filteredGrades = [];
+//   let filteredGrades = [];
 
-  sortedGrades.forEach(grade => {
-    if (!filteredGrades.includes(grade)) filteredGrades.push(grade)
-  });
+//   sortedGrades.forEach(grade => {
+//     if (!filteredGrades.includes(grade)) filteredGrades.push(grade)
+//   });
 
-  let nthGrade = filteredGrades[nth - 1];
-  let lowestID = 0;
+//   let nthGrade = filteredGrades[nth - 1];
+//   let lowestID = 0;
 
-  for (let student of students) {
-    if (student.grades.includes(nthGrade)) {
-      if (!lowestID || student.id < lowestID) lowestID = student.id
-    }
-  }
+//   for (let student of students) {
+//     if (student.grades.includes(nthGrade)) {
+//       if (!lowestID || student.id < lowestID) lowestID = student.id
+//     }
+//   }
 
-  return lowestID || null;
-}
+//   return lowestID || null;
+// }
 
 // Test Cases
-const students = [
-  { id: 2, grades: [95, 75, 88] },
-  { id: 1, grades: [95, 85, 78] },
-  { id: 3, grades: [95, 70, 85] }
-];
+// const students = [
+//   { id: 2, grades: [95, 75, 88] },
+//   { id: 1, grades: [95, 85, 78] },
+//   { id: 3, grades: [95, 70, 85] }
+// ];
 
 // console.log(nthLargestGrade(students, 3)); // Output: 1
 // console.log(nthLargestGrade(students, 1)); // Output: 1
@@ -3283,3 +3283,616 @@ function getLeaders(arr) {
 // console.log(getLeaders([4, 7, 1, 0])) // [7, 1, 0]
 // console.log(getLeaders([1])) // [1]
 // console.log(getLeaders([])) // []
+
+
+
+
+
+/*
+15min
+
+Problem 1
+
+Write a function that takes a string as an argument and returns an array that contains every
+word from the string, with each word followed by a space and the word's length.
+If the argument is an empty string or if no argument is passed, the function should return an empty array.
+You may assume that every pair of words in the string will be separated by a single space.
+
+In: string (words);
+Out: array (word; word length)
+Rules:
+  - one space separates each word (i.e. word can contain non-space characters)
+  - empty array or no argument: return empty array
+-----------
+A:
+1. Count the characters in each word
+2. Return those words with their character counts
+
+- create `words` array
+- iterate over `words`
+  -- count characters in word
+  -- return word and the character count
+- return `words` array
+*/
+
+function wordLengths(str) {
+  if (str === '' || str === undefined) return [];
+  return str.split(' ').map(word => `${word} ${word.length}`);
+}
+
+// console.log(wordLengths('cow sheep chicken'));
+// // ["cow 3", "sheep 5", "chicken 7"]
+
+// console.log(wordLengths('baseball hot dogs and apple pie'));
+// // ["baseball 8", "hot 3", "dogs 4", "and 3", "apple 5", "pie 3"]
+
+// console.log(wordLengths("It ain't easy, is it?"));
+// // ["It 2", "ain't 5", "easy, 5", "is 2", "it? 3"]
+
+// console.log(wordLengths('Supercalifragilisticexpialidocious'));
+// // ["Supercalifragilisticexpialidocious 34"]
+
+// console.log(wordLengths(''));      // []
+// console.log(wordLengths());        // []
+
+
+
+
+
+
+/*
+17min
+
+p42
+
+You are given an array of student objects, where each student object contains:
+* An integer id (representing the student’s ID).
+* An array grades of integers (representing the student’s grades).
+You need to write a function/method that finds the nth largest grade across
+all students and returns the id of the student who received that grade.
+If there are multiple students with the same grade, return the student with the lowest id.
+
+In: object (students); integer ('nth' largest grade)
+Out:  integer (student id)
+Rules:
+  - if multiple students with same grade, return the lowest id
+
+----------
+D:
+Array for all the grades
+
+A:
+1. Get all the grades
+2. Find the "nth" grade
+3. Find the lowest id student with "nth" grade
+4. Return that student's id
+
+- create `grades` array (see helper createGrades)
+- create `nth` grade
+- create `id` and set to 0
+- iterate over students array
+  -- if the current student contains `nth` grade AND (`id` is 0 OR current student id is smaller than `id`)
+    --- reset `id` to current student id
+
+function createGrades(students)
+- create `grades` array
+- iterate over the students
+  -- add the values from the current grades key to `grades`
+- sort `grades`
+- return `grades`
+*/
+
+function createGrades(studentsArr) {
+  let grades = [];
+
+  for (let student of studentsArr) {
+    grades.push(...student.grades);
+  }
+
+  return grades.sort((a, b) => b - a);
+}
+
+
+function nthLargestGrade(studentsArr, nthGrade) {
+  let grades = createGrades(studentsArr);
+  let nth = grades[nthGrade - 1];
+  
+  let id = null;
+
+  for (let student of studentsArr) {
+    if (student.grades.includes(nth) && (!id || student.id < id)) id = student.id
+  }
+
+  return id;
+}
+
+
+
+
+// Test Cases
+const students = [
+  { id: 2, grades: [95, 75, 88] },
+  { id: 1, grades: [95, 85, 78] },
+  { id: 3, grades: [95, 70, 85] }
+];
+
+// console.log(nthLargestGrade(students, 3)); // Output: 1
+// console.log(nthLargestGrade(students, 1)); // Output: 1
+// console.log(nthLargestGrade(students, 4)); // Output: 2
+// console.log(nthLargestGrade(students, 5)); // Output: 1
+// console.log(nthLargestGrade(students, 10)); // Output: null
+
+
+
+
+
+
+/*
+30min
+
+p41
+Your job is to write a function which increments a string to create a new string.
+
+If the string already ends with a number, the number should be incremented by 1.
+If the string does not end with a number, the number 1 should be appended to the new string.
+
+foobar999
+999raboof
+
+999
+raboof
+
+1000
+foobar
+
+foobar1000
+
+foo
+
+oof
+
+0
+foo
+
+1 
+foo
+
+foo1
+
+In: string (alphaneumeric)
+Out: string (alphanumeric)
+Rules:
+  - ending number: increment it
+  - no ending nummber: add a 1
+
+-------
+
+1. Separate ending number from string
+2. Increment number or add a number
+3. Join the string and the number
+4. Return that
+
+- create `reversedNum` 
+- create `reversedStr` 
+- create `reversedSource` and set to reversed string
+
+- iterate over string
+  -- if char is a number
+    --- add to str
+  -- else 
+    --- create `substring` and set to string from current index to the end
+    --- reset `str` to `substring`
+
+- if `reversedNum` length is 0 (empty)
+  --- reset `reversedNum` to 1
+- else 
+  --- increment `reversedNum` (see incrementStrNum)
+
+- join `reversedNum` and `reversedStr`
+- return that reversed to original order
+
+function incrementStrNum(reversedNumStr)
+- create `reversedNum` and set to `reversedNumStr`
+- reverse `reversedNum` to original order (see incrementStrNum)
+- convert to a num and increment it
+- change back to a string
+- reverse back and return `reversedNum`
+*/
+
+
+// SOLUTION USING REVERSE 
+// function incrementStrNum(reversedNumArr) {
+//   let reversedNum = [...reversedNumArr];
+//   return String(Number(reversedNum.reverse().join('')) + 1).split('').reverse();
+// }
+
+
+// function incrementString(str) {
+//   let reversedNum = [];
+//   let reversedStr = [];
+//   let reversedSource  = [...str].reverse();
+
+//   for (let i = 0; i < reversedSource.length; i++) {
+//     if (reversedSource[i] >= '0' && reversedSource[i] <= '9') reversedNum.push(reversedSource[i]);
+//     else {
+//       let substring = reversedSource.slice(i);
+//       reversedStr = substring;
+//       break;
+//     }
+//   }
+
+//   if (reversedNum.length === 0) reversedNum[0] = 1;
+//   else reversedNum = incrementStrNum(reversedNum);
+
+//   return reversedNum.concat(reversedStr).reverse().join('');
+  
+  
+// }
+
+// SOLUTION WITHOUT REVERSE
+function incrementString(source) {
+  let num = '';
+  let str = '';
+
+  for (let i = source.length - 1; i >= 0; i--) {
+    if (source[i] >= '0' && source[i] <= '9') num = source[i] + num;
+    else {
+      str = source.slice(0, i + 1);
+      break;
+    }
+  }
+  
+  if (num.length === 0) num = 1;
+  else num = Number(num) + 1;
+  
+  return str + num;
+}
+
+
+// console.log(incrementString("foobar0")); // "foobar1"
+// console.log(incrementString("foobar999")); // "foobar1000"
+// console.log(incrementString("foo")); // "foo1"
+// console.log(incrementString("foobar1")); // "foobar2"
+// console.log(incrementString("1")); // "2"
+// console.log(incrementString("9")); // "10"
+// console.log(incrementString("fo99obar99")); // "fo99obar100"
+
+
+
+
+
+
+
+
+/*  
+Subarray Sum:
+Write a function that takes an array of numbers and a target sum. The function should return an array containing two numbers from the input array that add up to the target sum. If no such pair exists, return an empty array
+
+In: array (source); integer (target)
+Out: array (integers)
+Rules:
+  - target int: two numbers added together
+  - default return: empty array (no pair)
+
+------
+
+3, 3, 2, 4
+7
+
+
+
+0
+
+0 1
+3 3
+6
+
+0 2
+3 2
+5
+
+0 3
+3 4 
+7
+
+
+
+-> [3, 4]
+
+A:
+1. Compare every number with every other number in the array 
+2. Find the two numbers that equates the target
+
+
+- create `pairs` array and set to empty array
+- iterate for each number
+  -- iterate over the numbers starting at the outer index
+    --- if number at outer index + number at the inner index + 1 is equal to target
+      ---- reassign `pairs` to new array [outer num, inner num]
+      ---- return `pairs`
+- return `pairs`
+*/
+
+function findPairWithSum(source, target) {
+  for (let i = 0; i < source.length - 1; i++) {
+    for (let k = i; k < source.length - 1; k++) {
+      if (source[i] + source[k + 1] === target) {
+        return [source[i], source[k + 1]];
+      }
+    }
+  }
+
+  return [];
+}
+
+
+
+// console.log(findPairWithSum([2, 7, 11, 15], 9)) // [2, 7]
+// console.log(findPairWithSum([2, 7, 11, 15], 3)) // []
+// console.log(findPairWithSum([-1, -2, -3, -4, -5], -7)) // [-2, -5];
+// console.log(findPairWithSum([3, 3, 2, 4], 6)) // [3, 3];
+
+
+
+
+
+
+/*
+Implement a function, capitalize, that capitalizes all words in a sentence.
+However, only capitalize if the word is followed by a word starting with a vowel.
+
+
+
+hello apple world -> Hello apple world
+
+In: string (lowercased words)
+Out: string (mixed case words)
+Rules:
+  - capitalize: when next word starts with a vowel
+  - vowel: aeiou
+
+----------
+D:
+Array to store words
+
+A:
+1. Go through the words, capitalize the necessary words
+2. Return string containing all the words
+
+- create `words` array
+- iterate over words, stop at 2nd last word 
+  -- if next word (current iteration + 1) starts with a vowel
+    --- append capitalized current word to `words` (see capitalize)
+  -- else
+    --- append current word to `words`
+- join elements in `words` into a string
+- return joined elements string
+
+capitalize(word)
+---------
+- create `firstLetter` and set to first character in `word`
+- create `rest` and set to every other character in `word`
+- return `firstLetter` + `rest`
+*/
+
+function capitalizeWord(word) {
+  let firstLetter = word[0].toUpperCase();
+  let rest = word.slice(1);
+
+  return firstLetter + rest;
+}
+
+function capitalize(str) {
+  let words = str.split(" ");
+  // let changedWords = [];
+
+  for (let i = 0; i < words.length - 1; i++) {
+    // if (i === words.length - 1) {
+    //   changedWords.push(words[i]);
+    //   break;
+    // }
+    
+    if ('aeiou'.includes(words[i + 1][0])) {
+      words[i] = capitalizeWord(words[i]);
+    };
+  }
+
+  // words.push(words[words.length - 1]);
+
+  return words.join(" ");
+}
+
+
+// Test cases
+// console.log(capitalize("hello apple world")); // "Hello apple world"
+// console.log(capitalize("this is an umbrella")); // "This Is An umbrella"
+// console.log(capitalize("every vowel starts an echo")); // "every vowel Starts An echo"
+// console.log(capitalize("under the oak tree")); // "under The oak tree"
+// console.log(capitalize("a quick brown fox")); // "a quick brown fox"
+
+
+
+
+
+
+
+
+
+/*
+Unique String Characters
+Given two strings, return the characters that are not common in the two strings.
+
+Ex:
+xyab 
+xzca
+-> ybzc
+
+abc
+abba
+-> c
+
+In: strings (2 sources)
+Out: string
+Rules:
+  - output
+    -- not common
+    -- unique characters
+    -- default return: ''
+
+-------
+
+A:
+1. Find characters not included in both strings
+
+- create `uniques`
+- iterate over each word
+  -- if the other word does not include the current character
+    --- add the current character to `uniques`
+- return `uniques`
+*/
+
+function uniqueStringCharacters(str1, str2) {
+  let uniques = '';
+
+  for (let char of str1) {
+    if (!str2.includes(char)) uniques += char
+  }
+
+  for (let char of str2) {
+    if (!str1.includes(char)) uniques += char
+  }
+  
+
+  return uniques;
+}
+
+// JavaScript test cases
+// console.log(uniqueStringCharacters("xyab","xzca") === "ybzc"); // true
+// console.log(uniqueStringCharacters("a","z") === "az"); // true
+// console.log(uniqueStringCharacters("abcd","de") === "abce"); // true
+// console.log(uniqueStringCharacters("abc","abba") === "c"); // true
+// console.log(uniqueStringCharacters("xyz","zxy") === ""); // true
+
+
+
+
+
+/*
+35min
+
+Nested Array Flattening with Depth:
+Write a function that takes a nested array and an optional depth parameter. The function should flatten the array up to the specified depth. If no depth is provided, it should fully flatten the array.
+
+
+[1, [2, [3, [4]], 5]]
+-> [1, 2, 3, 4, 5]
+
+[]
+[1]
+
+[2, [3, [4]], 5]
+[3, [4], 5]
+[4]
+
+
+depth: 2
+[1, [2, [3, [4]], 5]]
+-> [1, 2, 3, [4], 5]
+
+
+
+In: array (arrays/integers); integer (depth; optional)
+Out: array (flattened)
+Rules:
+  - depth: 
+    -- how many levels to flatten
+    -- optional: flatten completely if not provided
+
+-----------
+A: 
+1. Flatten the array "depth" amount of times or until it's completely flat
+
+- create `count` variable
+- if `depth` is not 0
+  -- iterate over array
+    --- if current element is an array
+      ---- return the result of flattenArray with current element passed as 1st arg and depth - 1 as 2nd arg
+    --- else 
+      ---- return current element
+  -- return a flattened array
+- return element (argument)
+*/
+
+function flattenArray(arr, depth = Infinity) {
+  if (depth > 0) {
+    arr = arr.map(el => {
+      if (Array.isArray(el)) {
+        return flattenArray(el, depth - 1);
+      } else return el;
+    })
+
+    return arr.flat();
+  }
+  
+  return arr;
+}
+
+
+// console.log(flattenArray([1, [2, [3, [4]], 5]]));
+// // [1, 2, 3, 4, 5]
+
+// console.log(flattenArray([1, [2, [3, [4]], 5]], 1));
+// // // [1, 2, [3, [4]], 5]
+
+// console.log(flattenArray([1, [2, [3, [4]], 5]], 2));
+// // // [1, 2, 3, [4], 5]
+
+// console.log(flattenArray([1, 2, 3, 4, 5]));
+// // // [1, 2, 3, 4, 5]
+
+
+
+
+
+
+
+
+
+/*
+Array Average
+Write a function that takes one argument, an array of integers, and returns the average of all the integers in the array, rounded down to the integer component of the average. The array will never be empty, and the numbers will always be positive integers.
+*/
+
+average([1, 5, 87, 45, 8, 8]);       // 25
+average([9, 47, 23, 95, 16, 52]);    // 40
+
+
+
+
+
+
+
+
+/*
+Problem Description:
+Write a function that takes two arguments: an inventory item ID and a list of transactions. The function should return an array containing only the transactions for the specified inventory item.
+Here's the function signature and test cases:
+*/
+
+
+// Test cases
+let transactions = [ { id: 101, movement: 'in',  quantity:  5 },
+                     { id: 105, movement: 'in',  quantity: 10 },
+                     { id: 102, movement: 'out', quantity: 17 },
+                     { id: 101, movement: 'in',  quantity: 12 },
+                     { id: 103, movement: 'out', quantity: 20 },
+                     { id: 102, movement: 'out', quantity: 15 },
+                     { id: 105, movement: 'in',  quantity: 25 },
+                     { id: 101, movement: 'out', quantity: 18 },
+                     { id: 102, movement: 'in',  quantity: 22 },
+                     { id: 103, movement: 'out', quantity: 15 }, ];
+
+console.log(transactionsFor(101, transactions));
+// returns
+// [ { id: 101, movement: "in",  quantity:  5 },
+//   { id: 101, movement: "in",  quantity: 12 },
