@@ -3184,49 +3184,34 @@ kCharCheck(obj, k)
   -- return false
 */
 
-function substrCount(str, k) {
-  let substrings = createSubstrings(str);
-  let count = 0;
+// function substrCount(str, k) {
+//   let substrings = createSubstrings(str);
+//   let count = 0;
 
-  substrings.forEach(substring => {
-    let uniqueChars = [];
+//   substrings.forEach(substring => {
+//     let uniqueChars = [];
 
-    for (let char of substring) {
-      if (!uniqueChars.includes(char)) uniqueChars.push(char);
-    }
+//     for (let char of substring) {
+//       if (!uniqueChars.includes(char)) uniqueChars.push(char);
+//     }
 
-    if (uniqueChars.length === k) count += 1;
+//     if (uniqueChars.length === k) count += 1;
+//   })
 
-    // let currObj = {};
-
-    // for (let char of substring) {
-    //   if (char in currObj) currObj[char] += 1;
-    //   else currObj[char] = 1;
-    // }
-
-    // if (kUniqueChars(currObj, k)) count += 1;
-  })
-
-  return count;
-}
-
-function createSubstrings(str) {
-  let substrings = [];
-
-  for (let i = 0; i < str.length; i++) {
-    for (let k = i + 1; k <= str.length; k++) {
-      substrings.push(str.slice(i, k));
-    }
-  }
-
-  return substrings;
-}
-
-// function kUniqueChars(obj, k) {
-//   return Object.keys(obj).length === k;
+//   return count;
 // }
 
+// function createSubstrings(str) {
+//   let substrings = [];
 
+//   for (let i = 0; i < str.length; i++) {
+//     for (let k = i + 1; k <= str.length; k++) {
+//       substrings.push(str.slice(i, k));
+//     }
+//   }
+
+//   return substrings;
+// }
 
 // console.log(substrCount("aba", 2)); // 3
 // console.log(substrCount("abaaca", 1)); // 7
@@ -3859,12 +3844,44 @@ function flattenArray(arr, depth = Infinity) {
 
 
 /*
+6min
+
 Array Average
 Write a function that takes one argument, an array of integers, and returns the average of all the integers in the array, rounded down to the integer component of the average. The array will never be empty, and the numbers will always be positive integers.
+
+In: array (integers)
+Out: integer
+Rules:
+  - average: sum of numbers / number count
+  - numbers: positive
+  - array: never empty
+
+---------
+A:
+1. Find the sum of the integers
+2. Find the integer count
+3. Find the average (sum/count)
+
+- create `sum`
+- iterate over the arr
+  -- add the current number to the running `sum`
+- return `sum` divided by the arr.length rounded down to integer
+
+
+1, 5, 87, 45, 8, 8
+-> 25.6 -> 25
+
 */
 
-average([1, 5, 87, 45, 8, 8]);       // 25
-average([9, 47, 23, 95, 16, 52]);    // 40
+function average(arr) {
+  return Math.floor(arr.reduce((sum, curr) => sum + curr) / arr.length);
+}
+
+// console.log(average([1, 5, 87, 45, 8, 8]));       // 25
+// console.log(average([9, 47, 23, 95, 16, 52]));    // 40
+
+
+
 
 
 
@@ -3874,11 +3891,51 @@ average([9, 47, 23, 95, 16, 52]);    // 40
 
 
 /*
+8min
+
 Problem Description:
 Write a function that takes two arguments: an inventory item ID and a list of transactions. The function should return an array containing only the transactions for the specified inventory item.
 Here's the function signature and test cases:
+
+In: integer (ID); array (nested objects)
+Out: array (nested objects)
+Rules:
+  - matched items: ID-dependent
+
+--------
+D:
+Array to hold objects
+
+A:
+1. Find the objects matching the given ID
+
+- iterate over the array
+  -- if the current object's ID matches the ID argument
+    --- keep it
+  -- else
+    --- filter it out
+- return the transactions kept
+
+- create `filteredIDs` array
+- iterate over the array argument
+  --- if the current object's ID matches the ID argument
+    ---- append it to `fitleredIDs` array
+- return `filteredIDs` array
 */
 
+function transactionsFor(id, arr) {
+  let filteredIDs = [];
+
+  for (let obj of arr) {
+    if (obj.id === id) filteredIDs.push(obj);
+  }
+
+  return filteredIDs;
+}
+
+// function transactionsFor(id, arr) {
+//   return arr.filter(transaction => transaction.id === id);
+// }
 
 // Test cases
 let transactions = [ { id: 101, movement: 'in',  quantity:  5 },
@@ -3892,7 +3949,364 @@ let transactions = [ { id: 101, movement: 'in',  quantity:  5 },
                      { id: 102, movement: 'in',  quantity: 22 },
                      { id: 103, movement: 'out', quantity: 15 }, ];
 
-console.log(transactionsFor(101, transactions));
+// console.log(transactionsFor(101, transactions));
 // returns
 // [ { id: 101, movement: "in",  quantity:  5 },
 //   { id: 101, movement: "in",  quantity: 12 },
+//   { id: 101, movement: "out", quantity: 18 }, ]
+
+
+
+
+
+
+
+
+/*
+28min
+
+COUNT NUMBER OF SUBSTRINGS 
+Given a string of lowercase alphabets,
+count all possible substrings (not necessarily distinct) that have exactly k distinct characters.
+
+Examples:
+length: 3
+k: 2
+index inclusive: 1
+
+"aba"
+2
+-> 3 
+
+0
+1
+a
+0
+2
+ab
+0
+3
+aba
+b
+ba
+
+
+abaaca
+1
+-> 7
+
+a
+ab
+aba
+abaa
+abaac
+abaaca
+b
+ba
+baa
+baac
+baaca
+a
+aa
+aac
+aaca
+a
+ac
+aca
+c
+ca
+a
+
+In: string (source), integer ('k')
+Out: integer 
+Rules:
+  - characters: lowercase
+  - output
+    -- count of substrings with 'k' unique characters
+    -- multiple substrings with identical characters each count
+---------
+D:
+Array to hold all substrings
+
+A:
+1. Find all substrings
+2. Keep the substrings with `k` number of unique characters
+
+- create `substrings` array and set to createSubstrings (helper)
+- iterate over `substrings`
+  -- if current string has `k` unqiue characters
+    --- keep it
+  -- else 
+    --- remove the current string
+- return the length of `substrings` 
+
+-------------------------------------
+function createSubstrings(string, k)
+- create `substrings` array 
+- iterate over string until string length minus 'k' (inclusive) (see helper: createSubstrings)
+  -- iterate over the string for each current character, start at outer index + 1
+    --- create `substring` and set to characters sliced from outer index to inner index
+    --- append `substrings` to `substrings`
+- return `substrings`
+*/
+
+function substrCount(str, k) {
+  let substrings = createSubstrings(str, k);
+
+  return substrings.filter(substring => {
+    let uniqueChars = [];
+
+    for (let char of substring) {
+      if (!uniqueChars.includes(char)) uniqueChars.push(char);
+    }
+
+    return uniqueChars.length === k;
+  }).length
+}
+
+function createSubstrings(string, k) {
+  let substrings = [];
+
+  for (let i = 0; i <= string.length - k; i++) {
+    for (let k = i + 1; k <= string.length; k++) {
+      substrings.push(string.slice(i, k));
+    }
+  }
+
+  return substrings;
+}
+
+// console.log(substrCount("aba", 2)); // 3
+// console.log(substrCount("abaaca", 1)); // 7
+
+
+
+
+
+
+
+/*
+24min
+
+Given a sentence, write a function that finds the starting index of
+the rightmost occurrence of any consecutive vowel sequence in the sentence
+and the word it belongs to.
+The function should be case-insensitive and should only consider vowel
+sequences within individual words (not spanning multiple words).
+
+If a consecutive vowel sequence is found, return an array where the first element is
+the starting index of the sequence and the second element is the word containing that sequence.
+
+If no consecutive vowels are found, return an empty array.
+
+Examples:
+She sells sea shells on the sea shore
+sea
+e -> ea (vowel sequence)
+
+I like eating aaapples and oranGEs
+aaapples
+a (2nd) -> aa (vowel sequence)
+
+In: string
+Out: array (integer; string)
+Rules:
+  - vowel sequence: most right; vowels only; at least 2
+  - default return: []
+  - case insensitive
+--------------------
+A:
+1. Starting from the back, find 2 vowels in a row
+2. Store the index of the 2nd vowel found
+3. Store the word containg 2 vowels
+
+- create `startIndex`
+- create `word` 
+- iterate from the back
+  -- if current char and the next char are vowels
+    --- assign `startIndex` to index of next char
+    --- reassign `word` to the result of findWord with next char and current char passed as a string (helper)
+    --- return [`startIndex`, `word`]
+
+function findWord(string, chars)
+-------------------
+- iterate over string from the back
+  -- if a word includes chars
+    --- return the word
+*/
+
+function rightmostConsecutiveVowel(str) {
+  let startIndex;
+  let word;
+  let vowels = 'aeiouAEIOU';
+
+  for (let i = str.length - 1; i >= 0; i--) {
+    if (vowels.includes(str[i]) && vowels.includes(str[i - 1])) {
+      startIndex = i - 1;
+      word = findWord(str, `${str[i - 1]}${str[i]}`);
+      return [startIndex, word];
+    }
+  }
+
+  return [];
+
+}
+
+function findWord(str, chars) {
+  let words = str.split(" ").reverse();
+
+  for (let word of words) {
+    if (word.includes(chars)) return word;
+  }
+}
+
+// console.log(rightmostConsecutiveVowel("The quick brown fox jumps over the laaazy dog")); // Output: [37, "laaazy"]
+// console.log(rightmostConsecutiveVowel("She sells sea shells on the sea shore")); // Output: [29, "sea"]
+// console.log(rightmostConsecutiveVowel("I like eating aaapples and oranGEs")); // Output: [15, "aaapples"]
+// console.log(rightmostConsecutiveVowel("This sentence has no consecutive vowels")); // Output: []
+// console.log(rightmostConsecutiveVowel("Queueing is fun but cooool")); // Output: [23, "cooool"]
+
+
+
+
+
+/* 
+25min
+
+We're receiving a set of messages in code. The messages are sets of text strings, like:
+"alakwnwenvocxzZjsf"
+Write a method to decode these strings into numbers. The decoded number should be the number of lowercase
+characters between the first two uppercase characters. If there aren't two uppercase characters,
+the number should be 0.
+
+Examples:
+'ZoL', 'heLlo', 'XX
+1, 0, 0
+
+'foUrsCoreAnd', 'seven', ''
+2, 0, 0
+
+'lucYintheskyWith', 'dIaMonDs'
+8, 1
+
+In: array (strings)
+Out: array
+Rules:
+  - output
+    -- count of lowercased letters in between first 2 uppercase characters
+---------------
+D:
+Array for the counts
+
+A:
+1. Find the first uppercased leter
+2. Start counting the following letters 
+3. Stop counting when another uppercase letter is found
+
+- iterate over array
+  -- count the lowercase letters (helper)
+- return all the counts
+
+function countLowers(word)
+-------------------------
+- create `count` and set to 0
+- create `upperCount`
+- iterate over the word
+  -- if `upperCount` is less than 2
+    --- if the curr char is uppercased
+      ---- increment `upperCount`
+    --- increment `count`
+- return `count`
+*/
+
+function decode(arr) {
+  return arr.map(word => countLowers(word))
+}
+
+function countLowers(word) {
+  let count = 0;
+  let upperCount = 0;
+
+  for (let char of word) {
+    if (upperCount < 2) {
+      if (char.toUpperCase() === char) upperCount += 1;
+      else if (upperCount === 1) count += 1;
+    }
+  }
+
+  return upperCount === 2 ? count : 0;
+}
+
+// console.log(decode(['ZoL', 'heLlo', 'XX'])) // [1, 0, 0]);
+// console.log(decode(['foUrsCoreAnd', 'seven', ''])) // [2, 0, 0]);
+// console.log(decode(['lucYintheskyWith', 'dIaMonDs'])) // [8, 1]);
+// console.log(decode([]) ) // [];
+
+
+
+
+
+/*
+14min
+
+Given a string `s`, return the length of the longest substring between two equal characters, excluding the two characters. If there is no such substring return -1.
+
+Example:
+acbsewba
+ac
+acb
+acbs
+...
+cb
+cbs
+cbse
+
+6
+
+In: string
+Out: integer
+Rules:
+  - longest substring: between 2 identical characters
+  - default return: -1
+---------------------
+D:
+Strings
+
+A: 
+1. Find substrings between identical character
+2. Find the longest one and return that
+
+- create `longest` and set to -1
+- iterate over string
+  -- iterate over string, starting from outer index + 1
+    --- if char at outer index position and char at inner index position are the same
+      ---- create `substring` from outer index position to inner index position
+      ---- create `count` and set to `substring` length - 2
+      ---- if `count` > longest
+        ----- reassign `longest` to `count`
+- return `count`
+*/
+
+function maxLengthBetweenEqualCharacters(str) {
+  let longest = -1;
+
+  for (let i = 0; i < str.length; i++) {
+    for (let k = i + 1; k < str.length; k++) {
+      if (str[i] === str[k]) {
+      let currLength = str.slice(i, k + 1).length - 2;
+
+      if (currLength > longest) longest = currLength;
+      }
+    }
+  }
+
+  return longest;
+}
+
+
+
+
+console.log(maxLengthBetweenEqualCharacters("acbsewb") === 3);
+console.log(maxLengthBetweenEqualCharacters("acbsewba") === 6);
+console.log(maxLengthBetweenEqualCharacters("aa") === 0);
+console.log(maxLengthBetweenEqualCharacters("cbzxy") === -1);
