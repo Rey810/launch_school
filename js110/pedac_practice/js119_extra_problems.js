@@ -4173,6 +4173,8 @@ function findWord(str, chars) {
 /* 
 25min
 
+p38
+
 We're receiving a set of messages in code. The messages are sets of text strings, like:
 "alakwnwenvocxzZjsf"
 Write a method to decode these strings into numbers. The decoded number should be the number of lowercase
@@ -4249,6 +4251,8 @@ function countLowers(word) {
 /*
 14min
 
+p37
+
 Given a string `s`, return the length of the longest substring between two equal characters, excluding the two characters. If there is no such substring return -1.
 
 Example:
@@ -4306,7 +4310,274 @@ function maxLengthBetweenEqualCharacters(str) {
 
 
 
-console.log(maxLengthBetweenEqualCharacters("acbsewb") === 3);
-console.log(maxLengthBetweenEqualCharacters("acbsewba") === 6);
-console.log(maxLengthBetweenEqualCharacters("aa") === 0);
-console.log(maxLengthBetweenEqualCharacters("cbzxy") === -1);
+// console.log(maxLengthBetweenEqualCharacters("acbsewb") === 3);
+// console.log(maxLengthBetweenEqualCharacters("acbsewba") === 6);
+// console.log(maxLengthBetweenEqualCharacters("aa") === 0);
+// console.log(maxLengthBetweenEqualCharacters("cbzxy") === -1);
+
+
+
+
+
+
+
+
+
+/* 
+36min
+
+p36
+
+Implement the function/method, minimum shorten.
+The function shortens a sentence such that it will fit within the character limit set.
+It shortens by removing vowels in the sequence of a, e, i, o, and u.
+Start removing from the end of the sentence.
+If it can not be shortened to fit within character limit, return an empty string. Spaces don’t count for the limit.
+
+Examples:
+This is a test sentence (19)
+-> 18
+= This is test sentence
+
+Hello World (10)
+-> 8
+= Hllo Wrld
+
+Short (5)
+-> 10
+= Short
+
+A very long sentence with many vowels (31)
+-> 10
+= ""
+
+In: string (source); integer (target length)
+Out: string 
+Rules:
+  - output
+    1) modified string: string with vowels removed to match target length
+    2) original string: string length less than target length
+    3) empty string: original string minus vowels is bigger than target length 
+  - default return : empty string
+  - vowels removal: in order of a, e, i, o, u
+  - case sensitive
+--------------------
+D:
+Characters array
+Vowels array
+
+A:
+1. Find a vowel starting from the back and remove it
+2. Repeat for each vowel or until the modified string length matches target length
+
+- if source length is smaller than the target length
+  -- return the source
+- create `words` array 
+- create `spaces` and set to `words` length - 1
+- create `vowels` array
+- iterate over `vowels` array
+  -- iterate over `words` array from the back
+    --- iterate over each word from the back
+      ---- if lowercased curr char matches curr vowel
+        ----- remove from `words` array
+        ----- if `words` string length -`spaces` matches target length
+          ------ return `words` joined into a string
+- return an empty string
+*/
+
+// ARRAY SOLUTION
+// function minimumShorten(str, target) {
+//   if (str.length < target) return str;
+
+//   let words = str.split(" ");
+//   let spaces = words.length - 1;
+//   let vowels = ['a', 'e', 'i', 'o', 'u'];
+
+//   for (let vowel of vowels) {
+
+//     for (let i = words.length - 1; i >= 0; i--) {
+      
+//       for (let k = words[i].length - 1; k >= 0; k--) {
+//         let char = words[i][k].toLowerCase();
+
+//         if (char === vowel) {
+//           words[i] = words[i].replace(words[i][k], '');
+          
+//           let newLength = words.join(' ').length - spaces;
+          
+//           if (newLength === target) return words.join(' ');
+//         }
+//       }
+//     }
+//   }
+
+//   return "";
+// }
+
+
+/*
+27min
+
+// STRING ONLY SOLUTION
+Implement the function/method, minimum shorten.
+The function shortens a sentence such that it will fit within the character limit set.
+It shortens by removing vowels in the sequence of a, e, i, o, and u.
+Start removing from the end of the sentence.
+If it can not be shortened to fit within character limit, return an empty string. Spaces don’t count for the limit.
+
+In: string (source); integer (target)
+Out: string 
+Rules:
+  - case insensitive
+  - remove vowel characters from the end
+  - spaces don't count
+  - return empty string if source can't be shortened
+------------
+A:
+1. Find and remove vowels in the order 'aeiou' from the back
+
+- If the target is greater than the source
+  -- return the source
+
+- create `spaces` and set to the length of the array split into words minus 1
+- create `vowels` and set to 'aeiou'
+- create `reversedString` and set to source split into words, reversed, and joined with spaces
+- iterate for each vowel
+  -- iterate over `reversedString` 
+    --- if a lowercased curr character is equal to the current vowel
+      ---- replace the current character with a space
+      ---- if the length of the `reversedString` minus spaces is equal to the target
+        ----- return string unreversed
+- return ""
+*/
+
+function minimumShorten(source, target) {
+  if (target > source.length) return source;
+
+  let spaces = source.split(" ").length - 1;
+  let vowels = 'aeiou';
+  let reversedString = source.split("").reverse().join('')
+
+  
+  // FULL ITERATION LOOP
+  // for (let vowel of vowels) {
+  //   for (let i = 0; i <= reversedString.length - 1; i++) {
+  //     let char = reversedString[i].toLowerCase();
+      
+  //     if (char === vowel) {
+  //       reversedString = reversedString.replace(char, '');
+
+  //       if (reversedString.length - spaces === target) return reversedString.split('').reverse().join('')
+  //     }
+  //   }
+  // }
+
+  // WHILE LOOP
+    for (let vowel of vowels) {
+      while(reversedString.includes(vowel)) {
+        reversedString = reversedString.replace(vowel, '');
+
+        if (reversedString.length - spaces === target) return reversedString.split('').reverse().join('');
+      }
+    }
+
+  return '';
+}
+
+// console.log(minimumShorten("This is a test sentence", 18)); // This is  test sentence
+// console.log(minimumShorten("Hello World", 8)); // Hllo Wrld
+// console.log(minimumShorten("Short", 10)); // Short
+// console.log(minimumShorten("A very long sentence with many vowels", 10)); // ""
+
+
+
+
+
+
+/*
+You are given an array of strings and an integer k.
+Your task is to return the first longest string consisting of k consecutive strings taken in the array.
+*/
+
+// Test Cases
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas"], 2) === "abigailtheta"); // true
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas", "theta", "abigail"], 2) === "abigailtheta"); // true
+// console.log(longestConsec(["ejjjjmmtthh", "zxxuueeg", "aanlljrrrxx", "dqqqaaabbb", "oocccffuucccjjjkkkjyyyeehh"], 1) === "oocccffuucccjjjkkkjyyyeehh"); // true
+// console.log(longestConsec([], 3) === ""); // true
+// console.log(longestConsec(["itvayloxrp","wkppqsztdkmvcuwvereiupccauycnjutlv","vweqilsfytihvrzlaodfixoyxvyuyvgpck"], 2) === "wkppqsztdkmvcuwvereiupccauycnjutlvvweqilsfytihvrzlaodfixoyxvyuyvgpck"); // true
+// console.log(longestConsec(["wlwsasphmxx","owiaxujylentrklctozmymu","wpgozvxxiu"], 2) === "wlwsasphmxxowiaxujylentrklctozmymu"); // true
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas"], -2) === ""); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 3) === "ixoyx3452zzzzzzzzzzzz"); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 15) === ""); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 0) === ""); // true
+
+
+/*
+PRIME PROBLEM
+*/
+
+/*
+REDO THIS
+
+/*
+Write a function that returns the maximum possible consecutive alternating odd and even (or even and odd) numbers. Minimum possible length is 2. If there’s none return [].
+
+Examples:
+1, 2, 3, 4, 5, 6
+
+2, 4, 6, 8
+
+1, 3, 5, 7
+
+1, 1, 3, 7, 8, 5
+-> [7, 8, 5]
+
+4, 6, 7, 12, 11, 9, 17
+-> [6, 7, 12, 11]
+
+
+
+In: array (integers)
+Out: array (intgers; odd-even-odd OR even-odd-even)
+Rules:
+  - alternatiing odd-even: odd-even-odd-even-odd-even
+  - defualt return: empty array 
+----------------
+D:
+Array
+
+A: 
+1. Find consecutive numbers that are even-odd or odd-even
+
+- create `longestOddsEvens` array
+- create `currOddsEvens` array and set to first el in arg
+- iterate over the source excluding the last element
+  -- if curr number and the previous number do not have the same divisibility
+    --- append current number to `currOddsEvens` Array
+    --- if `currOddsEvens` is longer than `longestOddsEvens` AND `currOddsEvens` length > 1
+      ---- reassign `longestOddsEvens` to `currOddsEvens`
+  -- else
+    --- reset `currOddsEvens` array to an empty array
+- return `longestOddsEvens`
+*/
+function longestAlternatingSubarray(arr) {
+  let longestOddsEvens = [];
+  let currOddsEvens = [arr[0]];
+
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] % 2 !== arr[i - 1] % 2) {
+      currOddsEvens.push(arr[i]); 
+      if (currOddsEvens.length > longestOddsEvens.length) longestOddsEvens = [...currOddsEvens];
+    } else currOddsEvens = [arr[i]];
+  }
+
+  return longestOddsEvens;
+}
+
+
+
+// console.log(longestAlternatingSubarray([1, 2, 3, 4, 5, 6])); // Expected: [1, 2, 3, 4, 5, 6]
+// console.log(longestAlternatingSubarray([2, 4, 6, 8])); // Expected: []
+// console.log(longestAlternatingSubarray([1, 3, 5, 7])); // Expected: []  
+// console.log(longestAlternatingSubarray([1, 1, 3, 7, 8, 5])); // Expected: [7, 8, 5]
+// console.log(longestAlternatingSubarray([4, 6, 7, 12, 11, 9, 17])); // Expected: [6, 7, 12, 11]
