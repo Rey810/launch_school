@@ -89,62 +89,62 @@ rightmostConsecutiveVowel(string)
 // */
 
 // SOLUTION 1 (complicated approach)
-function rightmostConsecutiveVowel(string) {
-  const VOWELS = ['a', 'e', 'i', 'o', 'u'];
+// function rightmostConsecutiveVowel(string) {
+//   const VOWELS = ['a', 'e', 'i', 'o', 'u'];
 
-  let wholeString = string;
-  let wordsArray = wholeString.split(" ");
-  let startOfSeqIndex = null;
+//   let wholeString = string;
+//   let wordsArray = wholeString.split(" ");
+//   let startOfSeqIndex = null;
 
-  for (let i = wordsArray.length - 1; i >= 0; i -= 1) {
-    // within the string
-    let word = wordsArray[i];
-    let vowelCount = 0;
+//   for (let i = wordsArray.length - 1; i >= 0; i -= 1) {
+//     // within the string
+//     let word = wordsArray[i];
+//     let vowelCount = 0;
 
-    for (let k = word.length - 1; k >= 0; k -= 1) {
-      // within the word
-      let char = wordsArray[i][k];
+//     for (let k = word.length - 1; k >= 0; k -= 1) {
+//       // within the word
+//       let char = wordsArray[i][k];
 
-      if (VOWELS.includes(char)) {
-        vowelCount += 1;
-        if (vowelCount === 2) {
-          startOfSeqIndex = findingIndexOfCharacter(string, word, k);
-          return startOfSeqIndex;
-        }
-      } else {
-        vowelCount = 0;
-      }
-    }
-  }
+//       if (VOWELS.includes(char)) {
+//         vowelCount += 1;
+//         if (vowelCount === 2) {
+//           startOfSeqIndex = findingIndexOfCharacter(string, word, k);
+//           return startOfSeqIndex;
+//         }
+//       } else {
+//         vowelCount = 0;
+//       }
+//     }
+//   }
 
-  return startOfSeqIndex;
-}
+//   return startOfSeqIndex;
+// }
 
-function findingIndexOfCharacter(string, word, charIndex) {
-  let wordIndex = string.lastIndexOf(word);
+// function findingIndexOfCharacter(string, word, charIndex) {
+//   let wordIndex = string.lastIndexOf(word);
 
-  return wordIndex + charIndex;
-}
+//   return wordIndex + charIndex;
+// }
 
 
 // SOLUTION 2 (simpler approach)
-function rightmostConsecutiveVowel_simple(string) {
-  const VOWELS = ['a', 'e', 'i', 'o', 'u'];
-  let indexOfVowelSeq = null;
-  let vowelsCount = 0;
+// function rightmostConsecutiveVowel_simple(string) {
+//   const VOWELS = ['a', 'e', 'i', 'o', 'u'];
+//   let indexOfVowelSeq = null;
+//   let vowelsCount = 0;
 
-  for (let index = string.length - 1; index >= 0; index -= 1) {
-    if (VOWELS.includes(string[index])) {
-      vowelsCount += 1;
-      if (vowelsCount === 2) {
-        return indexOfVowelSeq = index;
-      }
-    } else {
-      vowelsCount = 0;
-    }
-  }
-  return indexOfVowelSeq;
-}
+//   for (let index = string.length - 1; index >= 0; index -= 1) {
+//     if (VOWELS.includes(string[index])) {
+//       vowelsCount += 1;
+//       if (vowelsCount === 2) {
+//         return indexOfVowelSeq = index;
+//       }
+//     } else {
+//       vowelsCount = 0;
+//     }
+//   }
+//   return indexOfVowelSeq;
+// }
 
 
 // SOLUTION 3
@@ -186,36 +186,36 @@ Main function:
 // console.log(rightmostConsecutiveVowel_extraOutput("Queueing is fun but cooool")); // Output: [23, "cooool"]
 
 
-function rightmostConsecutiveVowel_extraOutput(string) {
-  const VOWELS = ['a', 'e', 'i', 'o', 'u'];
+// function rightmostConsecutiveVowel_extraOutput(string) {
+//   const VOWELS = ['a', 'e', 'i', 'o', 'u'];
 
-  let wholeString = string;
-  let wordsArray = wholeString.split(" ");
-  let outputArray = [];
+//   let wholeString = string;
+//   let wordsArray = wholeString.split(" ");
+//   let outputArray = [];
 
-  for (let i = wordsArray.length - 1; i >= 0; i -= 1) {
-    // within the string
-    let word = wordsArray[i];
-    let vowelCount = 0;
+//   for (let i = wordsArray.length - 1; i >= 0; i -= 1) {
+//     // within the string
+//     let word = wordsArray[i];
+//     let vowelCount = 0;
 
-    for (let k = word.length - 1; k >= 0; k -= 1) {
-      // within the word
-      let char = wordsArray[i][k];
+//     for (let k = word.length - 1; k >= 0; k -= 1) {
+//       // within the word
+//       let char = wordsArray[i][k];
 
-      if (VOWELS.includes(char)) {
-        vowelCount += 1;
-        if (vowelCount === 2) {
-          outputArray = [string.lastIndexOf(word) + k, word];
-          return outputArray;
-        }
-      } else {
-        vowelCount = 0;
-      }
-    }
-  }
+//       if (VOWELS.includes(char)) {
+//         vowelCount += 1;
+//         if (vowelCount === 2) {
+//           outputArray = [string.lastIndexOf(word) + k, word];
+//           return outputArray;
+//         }
+//       } else {
+//         vowelCount = 0;
+//       }
+//     }
+//   }
 
-  return outputArray;
-}
+//   return outputArray;
+// }
 
 
 
@@ -855,21 +855,21 @@ ITERATE over `str` starting from the end, stopping at the first word
 RETURN []
 */
 
-function rightmostConsecutiveVowel(str) {
-  let strArr = str.split(" ");
+// function rightmostConsecutiveVowel(str) {
+//   let strArr = str.split(" ");
 
-  for (let i = strArr.length - 1; i >= 0; i--) {
-    let currentWord = strArr[i]
+//   for (let i = strArr.length - 1; i >= 0; i--) {
+//     let currentWord = strArr[i]
 
-    for (let k = currentWord.length - 1; k >= 1; k--) {
-      if ('aeiou'.includes(currentWord[k]) && 'aeiou'.includes(currentWord[k - 1])) {
-        return [str.lastIndexOf(currentWord) + (k - 1), currentWord];
-      }
-    }
-  }
+//     for (let k = currentWord.length - 1; k >= 1; k--) {
+//       if ('aeiou'.includes(currentWord[k]) && 'aeiou'.includes(currentWord[k - 1])) {
+//         return [str.lastIndexOf(currentWord) + (k - 1), currentWord];
+//       }
+//     }
+//   }
   
-  return [];
-}
+//   return [];
+// }
 
 
 
@@ -4135,30 +4135,30 @@ function findWord(string, chars)
     --- return the word
 */
 
-function rightmostConsecutiveVowel(str) {
-  let startIndex;
-  let word;
-  let vowels = 'aeiouAEIOU';
+// function rightmostConsecutiveVowel(str) {
+//   let startIndex;
+//   let word;
+//   let vowels = 'aeiouAEIOU';
 
-  for (let i = str.length - 1; i >= 0; i--) {
-    if (vowels.includes(str[i]) && vowels.includes(str[i - 1])) {
-      startIndex = i - 1;
-      word = findWord(str, `${str[i - 1]}${str[i]}`);
-      return [startIndex, word];
-    }
-  }
+//   for (let i = str.length - 1; i >= 0; i--) {
+//     if (vowels.includes(str[i]) && vowels.includes(str[i - 1])) {
+//       startIndex = i - 1;
+//       word = findWord(str, `${str[i - 1]}${str[i]}`);
+//       return [startIndex, word];
+//     }
+//   }
 
-  return [];
+//   return [];
 
-}
+// }
 
-function findWord(str, chars) {
-  let words = str.split(" ").reverse();
+// function findWord(str, chars) {
+//   let words = str.split(" ").reverse();
 
-  for (let word of words) {
-    if (word.includes(chars)) return word;
-  }
-}
+//   for (let word of words) {
+//     if (word.includes(chars)) return word;
+//   }
+// }
 
 // console.log(rightmostConsecutiveVowel("The quick brown fox jumps over the laaazy dog")); // Output: [37, "laaazy"]
 // console.log(rightmostConsecutiveVowel("She sells sea shells on the sea shore")); // Output: [29, "sea"]
@@ -4512,12 +4512,9 @@ Your task is to return the first longest string consisting of k consecutive stri
 // console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 0) === ""); // true
 
 
-/*
-PRIME PROBLEM
-*/
 
-/*
-REDO THIS
+
+
 
 /*
 Write a function that returns the maximum possible consecutive alternating odd and even (or even and odd) numbers. Minimum possible length is 2. If there’s none return [].
@@ -4581,3 +4578,247 @@ function longestAlternatingSubarray(arr) {
 // console.log(longestAlternatingSubarray([1, 3, 5, 7])); // Expected: []  
 // console.log(longestAlternatingSubarray([1, 1, 3, 7, 8, 5])); // Expected: [7, 8, 5]
 // console.log(longestAlternatingSubarray([4, 6, 7, 12, 11, 9, 17])); // Expected: [6, 7, 12, 11]
+
+
+
+
+
+
+/*
+9min
+
+You are given an array of strings and an integer k.
+Your task is to return the first longest string consisting of k consecutive strings taken in the array.
+
+Examples:
+
+"zone", "abigail", "theta", "form", "libe", "zas"
+
+zone abigail
+-> 11
+
+abigail theta
+
+
+In: array (strings); integer ('k')
+Out: string (longest string)
+Rules:
+  - longset string: "k" count of consecutive strings in array
+  - default return: "" (k is bigger than the array length or less than 0)
+--------------
+D:
+Array
+
+A:
+1. Find longest 'k' consecutive string
+
+- create `longestString` and set to empty string
+- if 'k' is less than 1 OR 'k' is greater than the array length
+  -- return 
+- iterate over array
+  -- create `subStr` and set to elem at current index + element at current index + k
+  -- if `subStr` is greater than `longestString`
+    --- reset `longestString` to `subStr`
+- return `longestSubstring`
+-> 12
+*/
+
+function longestConsec(arr, k) {
+  let longestString = '';
+
+  if (k < 1 || k > arr.length) return longestString;
+
+  for (let i = 0; i <= arr.length - k; i++) {
+    let substr = arr.slice(i, i + k).join('');
+
+    if (substr.length > longestString.length) longestString = substr;
+  }
+
+  return longestString;
+}
+
+// Test Cases
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas"], 2) === "abigailtheta"); // true
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas", "theta", "abigail"], 2) === "abigailtheta"); // true
+// console.log(longestConsec(["ejjjjmmtthh", "zxxuueeg", "aanlljrrrxx", "dqqqaaabbb", "oocccffuucccjjjkkkjyyyeehh"], 1) === "oocccffuucccjjjkkkjyyyeehh"); // true
+// console.log(longestConsec([], 3) === ""); // true
+// console.log(longestConsec(["itvayloxrp","wkppqsztdkmvcuwvereiupccauycnjutlv","vweqilsfytihvrzlaodfixoyxvyuyvgpck"], 2) === "wkppqsztdkmvcuwvereiupccauycnjutlvvweqilsfytihvrzlaodfixoyxvyuyvgpck"); // true
+// console.log(longestConsec(["wlwsasphmxx","owiaxujylentrklctozmymu","wpgozvxxiu"], 2) === "wlwsasphmxxowiaxujylentrklctozmymu"); // true
+// console.log(longestConsec(["zone", "abigail", "theta", "form", "libe", "zas"], -2) === ""); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 3) === "ixoyx3452zzzzzzzzzzzz"); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 15) === ""); // true
+// console.log(longestConsec(["it","wkppv","ixoyx", "3452", "zzzzzzzzzzzz"], 0) === ""); // true
+
+
+
+
+
+
+
+
+/* Given a sentence, write a function that finds the starting index of the rightmost occurrence of any consecutive vowel sequence in the sentence and the word it belongs to. The function should be case-insensitive and should only consider vowel sequences within individual words (not spanning multiple words).
+
+If a consecutive vowel sequence is found, return an array where the first element is the starting index of the sequence and the second element is the word containing that sequence.
+
+If no consecutive vowels are found, return an empty array.
+*/
+
+
+// Test Cases
+// console.log(rightmostConsecutiveVowel("The quick brown fox jumps over the laaazy dog")); // Output: [37, "laaazy"]
+// console.log(rightmostConsecutiveVowel("She sells sea shells on the sea shore")); // Output: [29, "sea"]
+// console.log(rightmostConsecutiveVowel("I like eating aaapples and oranGEs")); // Output: [15, "aaapples"]
+// console.log(rightmostConsecutiveVowel("This sentence has no consecutive vowels")); // Output: []
+// console.log(rightmostConsecutiveVowel("Queueing is fun but cooool")); // Output: [23, "cooool"]
+
+
+
+// Given a sentence, write a function that finds the starting index of the rightmost occurrence of any consecutive vowel sequence in the sentence. The function should be case-insensitive and should only consider vowel sequences within individual words (not spanning multiple words).
+
+// If no consecutive vowels are found, return nil (for Ruby) or null (for JavaScript).
+
+/*
+"The quick brown fox jumps over the la-a-azy dog"
+-> 37 (starting index)
+
+In: string (words)
+Out: integer (index)
+Rules:
+  - consecutive vowel seq: 
+    -- 2 vowels in a row
+    -- rightmost 
+  - case insensitive
+-----------
+A:
+1. Find the first two vowels in a row from the rightmost
+2. Find the index position of the start of the 2 vowels in a row
+
+- create `vowels` and set to `aeiouAEIOU`
+- create `vowelsSeq and set to empty string
+- create `index` and set to null
+- iterate over string from the back
+  -- if curr character is a vowel and the next character is a vowel
+    --- assign `vowelSeq` to next character plus current character
+- iterate over the string
+  -- if a part of the string matches `vowelSeq`
+    --- reassign `index` to my current index
+- return `index`
+*/
+
+// function rightmostConsecutiveVowel(str) {
+//   let vowels = 'aeiouAEIOU';
+//   let vowelSeq = '';
+//   let index = null;
+
+//   for (let i = str.length - 1; i >= 0; i--) {
+//     if (vowels.includes(str[i]) && vowels.includes(str[i - 1])) {
+//       vowelSeq = str[i - 1] + str[i];
+//       return str.lastIndexOf(vowelSeq);
+//     }
+//   }
+
+//   return index;
+// }
+
+// function rightmostConsecutiveVowel(sentence) {
+//   const vowels = ['a', 'e', 'i', 'o', 'u'];
+//   let sentenceLowerCase = sentence.toLowerCase();
+//   let rightmostIndex = -1;
+
+//   for (let i = 0; i < sentenceLowerCase.length - 1; i++) {
+//     // Check if current and next characters are both vowels
+//     if (vowels.includes(sentenceLowerCase[i]) && vowels.includes(sentenceLowerCase[i + 1])) {
+//       rightmostIndex = i;
+//     }
+//   }
+
+//   return rightmostIndex !== -1 ? rightmostIndex : null;
+// }
+
+
+// Test Cases
+// console.log(rightmostConsecutiveVowel("The quick brown fox jumps over the laaazy dog")); // Output: 37
+// console.log(rightmostConsecutiveVowel("She sells sea shells on the sea shore")); // Output: 29
+// console.log(rightmostConsecutiveVowel("I like eating aaapples and oranGEs")); // Output: 15
+// console.log(rightmostConsecutiveVowel("This sentence has no consecutive vowels")); // Output: null
+// console.log(rightmostConsecutiveVowel("Queueing is fun but cooool")); // Output: 23
+
+/* Given a sentence, write a function that finds the starting index of the rightmost occurrence of any consecutive vowel sequence in the sentence and the word it belongs to. The function should be case-insensitive and should only consider vowel sequences within individual words (not spanning multiple words).
+
+If a consecutive vowel sequence is found, return an array where the first element is the starting index of the sequence and the second element is the word containing that sequence.
+
+If no consecutive vowels are found, return an empty array.
+
+Examples:
+The quick brown fox jumps over the laaazy dog
+-> [37, 'laaazy']
+
+This sentence has no consecutive vowels
+-> []
+
+I like eating aaapples and oranGEs
+-> [15, "aaapples"]
+
+In: string
+Out: array (integer; string)
+Rules:c;
+  - vowel seq: 
+    -- 2(+) vowel characters in a row
+    -- rightmost
+  - case sensitive
+------------------
+A:
+1. Find the index of the vowel seq
+2. Find the word that includes that vowel seq
+
+- create `array` array
+- iterate over string, stop before last character
+  -- if current character is a vowel AND next character is a vowel
+    --- create `seq` and set to current character + next character
+    --- create `word` and set to return of `findWord` (helper)
+    --- reset `array` to [current index, word]
+- return `array
+
+-------------------------
+(helper)
+findWord(str, seq)
+- create `words` and set to `str` split into words
+- iterate over the `words` from the back
+  -- if the current word includes `seq`
+    --- return word
+*/
+
+// function rightmostConsecutiveVowel(str) {
+//   let array = [];
+//   let vowels = `aeiouAEIOU`
+
+//   for (let i = 0; i < str.length - 1; i++) {
+//     if (vowels.includes(str[i]) && vowels.includes(str[i + 1])) {
+//       let seq = str[i] + str[i+1];
+//       let word = findWord(str, seq);
+//      array = [i, word]
+//     }
+//   }
+
+//   return array;
+// }
+
+// function findWord(str, seq) {
+//   let words = str.split(" ");
+//   let word = '';
+
+//   for (let i = 0; i < words.length; i++) {
+//     if (words[i].includes(seq)) word = words[i]
+//   }
+
+//   return word;
+
+// }
+
+
+// Test Cases
+// console.log(rightmostConsecutiveVowel("The quick brown fox jumps over the laaazy dog")); // Output: [37, "laaazy"]
+// console.log(rightmostConsecutiveVowel("She sells sea shells on the sea shore")); // Output: [29, "sea"]
+// console.log(rightmostConsecutiveVowel("I like eating aaapples and oranGEs")); // Output: [15, "aaapples"]
+// console.log(rightmostConsecutiveVowel("This sentence has no consecutive vowels")); // Output: []
+// console.log(rightmostConsecutiveVowel("Queueing is fun but cooool")); // Output: [23, "cooool"]
