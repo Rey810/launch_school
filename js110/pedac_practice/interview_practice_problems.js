@@ -3686,3 +3686,35 @@ function whatIsDifferent(arr) {
 // p(whatIsDifferent([3, 4, 4, 4]) === 3);
 // p(whatIsDifferent([4, 4, 4, 3]) === 3);
 
+
+
+
+/*
+Problem 6
+Create a function that takes a string argument and returns a hash in which the keys represent the lowercase letters in the string, and the values represent how often the corresponding letter occurs in the string.
+
+In: string (characters)
+Out: object (letter: count)
+Rules:
+  - case insensitive ('L' === 'l')
+  - ignore special characters
+-------------
+D:
+Object -> letter: count
+
+A:
+1. Find the count of each letter while ignoring special characters
+
+- create `obj` object
+- iterate over the string
+  -- change the current character into it's lowercase form
+  -- if the current character is alphabetic
+    --- if it's not existing in the `obj`
+      ---- create a new key-value pair for this letter
+    --- else
+      ---- increment this key's value in `obj`
+- return `obj`
+*/
+
+
+p(eq(countLetters('!!!'), {}));

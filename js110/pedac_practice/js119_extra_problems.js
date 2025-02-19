@@ -4822,3 +4822,469 @@ findWord(str, seq)
 // console.log(rightmostConsecutiveVowel("I like eating aaapples and oranGEs")); // Output: [15, "aaapples"]
 // console.log(rightmostConsecutiveVowel("This sentence has no consecutive vowels")); // Output: []
 // console.log(rightmostConsecutiveVowel("Queueing is fun but cooool")); // Output: [23, "cooool"]
+
+
+
+
+
+
+/*
+Given a grid of values represented by an array of arrays, e.g.:
+[1, 2, 3],
+[4, 5, 6],
+[7, 8, 9]
+
+Return the largest sum of a column of values in the grid.
+In this example, the largest sum is 18.
+
+
+Examples:
+[
+[1, 2, 3],
+[4, 5, 6],
+[7, 8, 9]
+]
+
+1, 4, 7
+-> 12
+
+
+In: array (subarray: integers)
+Out: integer 
+Rules:
+  - output
+    -- integer: largest sum of a columns values
+  - integers-only
+  - grid: same number of columns for each row
+------------
+D:
+Array -> subarray -> integer
+
+A: 
+1. Find the max column sum
+
+- create `maxSum` variable
+- iterate over arr, stop before the max column number (a subarray's length)
+  -- create `currentIndexSum` and set to 0
+    --- iterate over each subarray ("row"), stop before the max row number (arr length)
+      ---- increment `currentIndexSum` by the value at current row and column
+    --- if `currentIndexSum` is bigger than `maxSum`
+      ---- reassign `maxSum` to `currentIndexSum`
+- return `maxSum`
+
+[
+[1, 2, 3],
+[4, 5, 6],
+[7, 8, 9]
+]
+
+0, 0
+[1, 2, 3],
+1, 2, 3
+
+1, 0
+[4, 5, 6],
+4, 5, 6
+
+2, 0
+[7, 8, 9]
+7, 8, 9
+
+*/
+
+// function largestColumn(nestedArr) {
+//   let maxSum = 0;
+
+//   for (let column = 0; column < nestedArr[0].length; column++) {
+//     let currentColSum = 0;
+
+//     for (let row = 0; row < nestedArr.length; row++) {
+//       currentColSum += nestedArr[row][column];
+//     }
+
+//     if (currentColSum > maxSum) maxSum = currentColSum;
+//   }
+
+//   return maxSum;
+// }
+
+// // TEST CASES
+// let a = [[1, 2, 3],
+//     [4, 5, 6],
+//     [7, 8, 9]];
+
+// let b = [[1, 2, 3, 4],
+//     [5, 6, 7, 8]];
+    
+// let  c = [[1, 0, 0],
+//    [5, 8, 10],
+//    [3, 5, 1]];
+
+// let d = [
+//   [1, 2, 3],
+//   [4, 5, 6],
+//   [7, 8, 9]
+//   ];  
+
+// console.log(largest_column(d) === 18);
+// console.log(largest_column(a) === 18);
+// console.log(largest_column(b) === 12);
+// console.log(largest_column(c) === 13);
+
+
+
+
+
+
+/*
+Longest Vowel Substring:
+Write a function that finds the longest vowel substring in a given string. When searching for longest vowel substring consider upper and lower case letters to be the same.
+
+For example:
+"Siuuu" -> iuuu 
+
+cbbd -> ''
+racecaar -> 'aa'
+
+ahdioeeencvobsfd -> 'ioeee'
+abcdeAEuaecveaeuae -> 'eAEuae'
+
+In: string (mixed alphabetic characters)
+Out: string (vowels)
+Rules:
+  - vowel: 'aeiouAEIOU'
+  - case insensitive (eg. 'l' === 'L')
+--------------
+D:
+Substrings -> vowel-only substrings
+
+A:
+1. Get all vowel substrings
+2. Find longest vowel substring
+
+- create `longestSubstring` variable
+- create `currentSubstring` variable
+- create `vowels` variable
+- iterate over string
+  -- if current character is a vowel
+    --- append current character to `currentSubstring`
+    --- if `currentSubstring` length is greater than `longestSubstring`
+      ---- reassign `longestSubstring` to `currentSubstring`
+  -- else
+    -- reset `currentSubstring` to an empty string
+- return `longestSubstring`
+*/
+
+// function longestVowelSubstring(str) {
+//   let longestSubstring = '';
+//   let currentSubstring = '';
+//   const VOWELS = 'aeiouAEIOU';
+
+//   for (let i = 0; i < str.length; i++) {
+//     if (VOWELS.includes(str[i])) {
+//       currentSubstring += str[i];
+      
+//       if (currentSubstring.length > longestSubstring.length) longestSubstring = currentSubstring;
+//     } else {
+//       currentSubstring = '';
+//     }
+//   }
+
+//   return longestSubstring;
+
+// }
+
+/* DO A DIFFERENT WAY
+// Get all substrings
+// filter for that have vowels only
+// return the largest
+
+- create `substrings`
+- iterate over string
+  -- iterate over string for current index
+    --- create `substring` and assign to substring from outer index to inner index
+    --- add `substring` to substrings
+- create `filteredSubstrings` array
+- iterate over substrings
+  -- if a string only contains vowels
+    --- add to `filteredSubstrings`
+- create longestSubstring
+- iterate over `filteredSubstrings`
+  -- if current substring is greater than longestSubstring
+    --- reassign longestSubstring to current substring
+- return longestSubstring
+
+*/
+
+// function longestVowelSubstring(str) {
+//   let substrings = [];
+//   let vowels = 'aeiouAEIOU';
+//   let longestSubstring = '';
+
+//   for (let i = 0; i < str.length; i++) {
+//     for (let k = i + 1; k <= str.length; k++) {
+//       substrings.push(str.slice(i, k));
+//     }
+//   }
+  
+//   let filteredSubstrings = substrings.filter(substring => substring.split('').every(char => vowels.includes(char)));
+
+//   filteredSubstrings.forEach(substring => {
+//     if (substring.length > longestSubstring.length) longestSubstring = substring;
+//   })
+
+//   return longestSubstring;
+// }
+
+
+function longestVowelSubstring(str) {
+  let longestSubstring = '';
+  let currentSubstring = '';
+  const VOWELS = 'aeiouAEIOU';
+
+  for (let i = 0; i < str.length; i++) {
+    if (VOWELS.includes(str[i])) {
+      currentSubstring += str[i];
+      
+      if (currentSubstring.length > longestSubstring.length) longestSubstring = currentSubstring;
+    } else {
+      currentSubstring = '';
+    }
+  }
+
+  return longestSubstring;
+
+}
+
+// console.log(longestVowelSubstring("cbbd") === "");
+// console.log(longestVowelSubstring("a") === "a");
+// console.log(longestVowelSubstring("ac") === "a");
+// console.log(longestVowelSubstring("racecaar") === "aa");
+// console.log(longestVowelSubstring("abcdee") === "ee");
+
+// console.log(longestVowelSubstring("ahdioeeencvobsfd") === "ioeee");
+// console.log(longestVowelSubstring("abcdeAEuaecveaeuae") === "eAEuae");
+
+
+
+
+
+
+
+/*
+30min
+
+Array Rotation:
+Write a function that rotates an array by moving a specified number of elements from the beginning to the end. If the number is negative, move elements from the end to the beginning.
+
+NOTE:
+[1, 2, 3], 5
+1.  The input array is [1, 2, 3]
+2.  We're rotating by 5 positions
+When rotating an array, if the number of positions is greater than the length of the array, we can think of it as rotating by the remainder after dividing by the array length. In this case:
+5 % 3 = 2
+So, effectively, we're rotating by 2 positions.
+Starting with [1, 2, 3]:
+•   Rotate once: [3, 1, 2]
+•   Rotate twice: [2, 3, 1]
+Therefore, the correct output should be [2, 3, 1].
+
+
+
+Examples:
+
+[1, 2, 3, 4, 5] ---------- 2 (begin-> end)
+-> [3, 4, 5, 1, 2]
+
+[1, 2, 3, 4, 5] ---------- -1 (end-> begin)
+-> [5, 1, 2, 3, 4]
+
+---------------
+[1, 2, 3] ---------------- 5 (begin-> end)
+-> [2, 3, 1]
+
+length: 3
+rotation: 5
+5 % 3 = 2 * -1
+-2
+
+
+-2
+123
+312
+231
+--------------
+
+
+In: array (integers); integer (number of rotations)
+Out: array (rotated)
+Rules:
+  - rotation integer:
+    -- (+) -> move integers from begin to end
+    -- (-) -> move integeres from end to begin
+  - edge:
+    -- rotation integer > array length
+      --- rotation integer becomes (`rotationInteger` % `arrayLength`) * -1
+  - default return:
+    -- empty array or rotation integer is 0 -> return the original array
+--------------
+D:
+
+Array -> subarray (items to move)
+A: 
+1. Find the numbers specified by rotation integer ('int')
+2. Join those numbers to the end/start array
+
+- if array arg has a length of 0 OR rotation integer is 0
+  --- return array arg
+- create `copyArr` and set to copy of array argument
+- create `movingNums` array
+- if `int` > array length
+  -- reassign `int` to (`int` % array length) * -1
+- if 'int' > 0 
+  -- remove 'int' number of elements from the beginning of `copyArr`
+  -- append to `movingNums`
+  -- join `movingNums` onto the end of `copyArr`
+- otherwise if `int` < 0
+  -- remove 'int' number of elements from the end of `copyArr`
+  -- append to `movingNums`
+  -- join `movingNums` onto the end of `copyArr`
+- return `copyArr`
+*/
+
+function rotateArray(arr, int) {
+  if (!arr.length || !int) return arr;
+
+  let copyArr = [...arr];
+  let movingNums = [];
+
+  if (int > arr.length) {
+    int = (int % arr.length) * -1;
+  }
+
+  if (int > 0) {
+    movingNums.push(...copyArr.splice(0, int))
+    copyArr = copyArr.concat(movingNums);
+  } else {
+    copyArr = copyArr.splice(copyArr.length + int, -int).concat(copyArr);
+  }
+
+return copyArr;
+
+}
+
+// console.log(JSON.stringify(rotateArray([1, 2, 3, 4, 5], 2)) === JSON.stringify([3, 4, 5, 1, 2]));
+// console.log(JSON.stringify(rotateArray([1, 2, 3, 4, 5], -1)) === JSON.stringify([5, 1, 2, 3, 4]));
+// console.log(JSON.stringify(rotateArray([1, 2, 3], 5)) === JSON.stringify([2, 3, 1]));
+// console.log(JSON.stringify(rotateArray([], 3)) === JSON.stringify([]));
+// console.log(JSON.stringify(rotateArray([1], 0)) === JSON.stringify([1]));
+
+
+
+
+
+
+
+/*
+Given a grid of values represented by an array of arrays, e.g.:
+[1, 2, 3],
+[4, 5, 6],
+[7, 8, 9]
+
+Return the largest sum of a column of values in the grid.
+In this example, the largest sum is 18.
+
+
+Examples:
+[
+[1, 2, 3],
+[4, 5, 6],
+[7, 8, 9]
+]
+
+1, 4, 7
+-> 12
+
+
+In: array (subarray: integers)
+Out: integer 
+Rules:
+  - output
+    -- integer: largest sum of a columns values
+  - integers-only
+  - grid: same number of columns for each row
+------------
+D:
+Array -> subarray -> integer
+
+A: 
+1. Find the max column sum
+
+- create `maxSum` variable
+- iterate over arr, stop before the max column number (a subarray's length)
+  -- create `currentIndexSum` and set to 0
+    --- iterate over each subarray ("row"), stop before the max row number (arr length)
+      ---- increment `currentIndexSum` by the value at current row and column
+    --- if `currentIndexSum` is bigger than `maxSum`
+      ---- reassign `maxSum` to `currentIndexSum`
+- return `maxSum`
+
+[
+[1, 2, 3],
+[4, 5, 6],
+[7, 8, 9]
+]
+
+0, 0
+[1, 2, 3],
+1, 2, 3
+
+1, 0
+[4, 5, 6],
+4, 5, 6
+
+2, 0
+[7, 8, 9]
+7, 8, 9
+
+*/
+
+function largestColumn(nestedArr) {
+  let maxSum = 0;
+
+  for (let column = 0; column < nestedArr[0].length; column++) {
+    let currentColSum = 0;
+
+    for (let row = 0; row < nestedArr.length; row++) {
+      currentColSum += nestedArr[row][column];
+    }
+
+    if (currentColSum > maxSum) maxSum = currentColSum;
+  }
+
+  console.log(maxSum);
+  return maxSum;
+}
+
+// TEST CASES
+// let a = [[1, 2, 3],
+//     [4, 5, 6],
+//     [7, 8, 9]];
+
+// let b = [[1, 2, 3, 4],
+//     [5, 6, 7, 8]];
+    
+// let  c = [[1, 0, 0],
+//    [5, 8, 10],
+//    [3, 5, 1]];
+
+// let d = [
+//   [1, 2, 3],
+//   [4, 5, 6],
+//   [7, 8, 9]
+//   ];  
+
+// console.log(largest_column(d) === 18);
+// console.log(largest_column(a) === 18);
+// console.log(largest_column(b) === 12);
+// console.log(largest_column(c) === 13);
