@@ -55,12 +55,6 @@ class Row {
   }
 }
 
-class Marker {
-  constructor() {
-    // A marker is something that represents a player's "piece" on the board.
-  }
-}
-
 class Player {
   constructor(marker) {
     // maybe a "marker" to keep track of this player's symbol (i.e., 'X' or 'O')
