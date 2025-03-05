@@ -256,26 +256,31 @@ class TTTGame {
     });
   }
 
-  computerOffense() {
-    let rowToAttack = this.findTargetRow('computer', 'human');
+  findTargetSquare(targetRow) {
+    return targetRow.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
+  }
+
+  aiAction(offenseOrDefense) {
+    let action = offenseOrDefense;
+    let targetRow;
     let targetSquare;
 
-    if (rowToAttack) {
-      targetSquare = rowToAttack.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
+    if (action === 'offense') targetRow = this.findTargetRow('computer', 'human');
+    else if (action === 'defense') targetRow = this.findTargetRow('human', 'computer');
+
+    if (targetRow) {
+      targetSquare = this.findTargetSquare(targetRow);
     }
 
     return targetSquare;
   }
 
+  computerOffense() {
+    return this.aiAction('offense');
+  }
+
   computerDefense() {
-    let rowToDefend = this.findTargetRow('human', 'computer');
-    let targetSquare;
-
-    if (rowToDefend) {
-      targetSquare = rowToDefend.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
-    }
-
-    return targetSquare;
+    return this.aiAction('defense');
   }
 
   gameOver() {
