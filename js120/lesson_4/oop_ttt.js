@@ -162,11 +162,10 @@ class TTTGame {
     while (true) {
       this.humanMoves();
       if (this.gameOver()) break;
-      
-      this.computerMoves();
-      this.board.display();
 
+      this.computerMoves();
       if (this.gameOver()) break;
+
       this.board.displayWithClear();
     }
 
@@ -234,8 +233,7 @@ class TTTGame {
     let validChoices = this.board.unusedSquares();
     let choice;
 
-
-    if (!this.aiDefended()) {
+    if (!this.aiAction()) {
       do {
         choice = Math.floor((9 * Math.random()) + 1).toString();
       } while (!validChoices.includes(choice));
@@ -245,21 +243,30 @@ class TTTGame {
 
   }
 
-  aiDefended() {
-    let defended = false;
-
-    let rowAtRisk = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
-      return (this.board.countMarkersFor(this.human, row) === 2) && (this.board.countMarkersFor(this.computer, row) === 0);
+  findTargetRow(attacker, defender) {
+    return TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
+      return (this.board.countMarkersFor(this[attacker], row) === 2) && (this.board.countMarkersFor(this[defender], row) === 0);
     });
+  }
 
-    if (rowAtRisk) {
-      let squareAtRisk = rowAtRisk.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
+  aiAction() {
+    let rowToAttack = this.findTargetRow('computer', 'human');
+    let rowToDefend = this.findTargetRow('human', 'computer');
 
-      this.board.markSquareAt(squareAtRisk, this.computer.getMarker());
-      defended = true;
+    let targetSquare;
+
+    console.log({ rowToAttack, rowToDefend });
+
+    if (rowToAttack) {
+      targetSquare = rowToAttack.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
+    } else if (rowToDefend) {
+      targetSquare = rowToDefend.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
     }
 
-    return defended;
+    if (targetSquare) {
+      this.board.markSquareAt(targetSquare, this.computer.getMarker());
+      return true;
+    }
   }
 
   gameOver() {
