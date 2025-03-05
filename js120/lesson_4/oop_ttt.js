@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable quote-props */
 let readline = require("readline-sync");
 class Square {
@@ -161,12 +162,14 @@ class TTTGame {
     while (true) {
       this.humanMoves();
       if (this.gameOver()) break;
-
+      
       this.computerMoves();
+      this.board.display();
 
       if (this.gameOver()) break;
       this.board.displayWithClear();
     }
+
     this.board.displayWithClear();
 
     this.board.display();
@@ -231,11 +234,32 @@ class TTTGame {
     let validChoices = this.board.unusedSquares();
     let choice;
 
-    do {
-      choice = Math.floor((9 * Math.random()) + 1).toString();
-    } while (!validChoices.includes(choice));
 
-    this.board.markSquareAt(choice, this.computer.getMarker());
+    if (!this.aiDefended()) {
+      do {
+        choice = Math.floor((9 * Math.random()) + 1).toString();
+      } while (!validChoices.includes(choice));
+
+      this.board.markSquareAt(choice, this.computer.getMarker());
+    }
+
+  }
+
+  aiDefended() {
+    let defended = false;
+
+    let rowAtRisk = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
+      return (this.board.countMarkersFor(this.human, row) === 2) && (this.board.countMarkersFor(this.computer, row) === 0);
+    });
+
+    if (rowAtRisk) {
+      let squareAtRisk = rowAtRisk.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
+
+      this.board.markSquareAt(squareAtRisk, this.computer.getMarker());
+      defended = true;
+    }
+
+    return defended;
   }
 
   gameOver() {
