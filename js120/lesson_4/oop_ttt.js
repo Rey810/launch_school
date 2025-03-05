@@ -230,17 +230,24 @@ class TTTGame {
   }
 
   computerMoves() {
-    let validChoices = this.board.unusedSquares();
+    let choice = this.computerOffense() || this.computerDefense() || this.pickCenterSquare() || this.pickRandomSquare();
+
+    this.board.markSquareAt(choice, this.computer.getMarker());
+  }
+
+  pickCenterSquare() {
+    return this.board.squares["5"].marker === Square.UNUSED_SQUARE ? "5" : null;
+  }
+
+  pickRandomSquare() {
     let choice;
+    let validChoices = this.board.unusedSquares();
 
-    if (!this.aiAction()) {
-      do {
-        choice = Math.floor((9 * Math.random()) + 1).toString();
-      } while (!validChoices.includes(choice));
+    do {
+      choice = Math.floor((9 * Math.random()) + 1).toString();
+    } while (!validChoices.includes(choice));
 
-      this.board.markSquareAt(choice, this.computer.getMarker());
-    }
-
+    return choice;
   }
 
   findTargetRow(attacker, defender) {
@@ -249,24 +256,26 @@ class TTTGame {
     });
   }
 
-  aiAction() {
+  computerOffense() {
     let rowToAttack = this.findTargetRow('computer', 'human');
-    let rowToDefend = this.findTargetRow('human', 'computer');
-
     let targetSquare;
-
-    console.log({ rowToAttack, rowToDefend });
 
     if (rowToAttack) {
       targetSquare = rowToAttack.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
-    } else if (rowToDefend) {
+    }
+
+    return targetSquare;
+  }
+
+  computerDefense() {
+    let rowToDefend = this.findTargetRow('human', 'computer');
+    let targetSquare;
+
+    if (rowToDefend) {
       targetSquare = rowToDefend.find(key => this.board.squares[key].marker === Square.UNUSED_SQUARE);
     }
 
-    if (targetSquare) {
-      this.board.markSquareAt(targetSquare, this.computer.getMarker());
-      return true;
-    }
+    return targetSquare;
   }
 
   gameOver() {
