@@ -29,6 +29,10 @@ class Square {
 
 class Board {
   constructor() {
+    this.reset();
+  }
+
+  reset() {
     this.squares = {};
 
     for (let counter = 1; counter <= 9; counter++) {
@@ -131,7 +135,6 @@ class TTTGame {
 
 
   constructor() {
-    // Need a board and two players
     this.board = new Board();
     this.human = new Human();
     this.computer = new Computer();
@@ -139,7 +142,20 @@ class TTTGame {
 
   play() {
     this.displayWelcomeMessage();
+    this.playOnce();
 
+    while (this.playAgain()) {
+      console.clear();
+      console.log("Time for another round!");
+      console.log("");
+      this.playOnce();
+    }
+
+    this.displayGoodbyeMessage();
+  }
+
+  playOnce() {
+    this.board.reset();
     this.board.display();
 
     while (true) {
@@ -147,7 +163,7 @@ class TTTGame {
       if (this.gameOver()) break;
 
       this.computerMoves();
-      // this.board.display();
+
       if (this.gameOver()) break;
       this.board.displayWithClear();
     }
@@ -155,7 +171,17 @@ class TTTGame {
 
     this.board.display();
     this.displayResults();
-    this.displayGoodbyeMessage();
+  }
+
+  playAgain() {
+    console.log('');
+    let choice = readline.question("Would you like to play again? (y/n)\n");
+
+    while (!['y', 'n'].includes(choice)) {
+      choice = readline.question("Invalid response. Choose either 'y' (yes) or 'n' (no):\n");
+    }
+
+    return choice === 'y';
   }
 
   displayWelcomeMessage() {
@@ -165,7 +191,7 @@ class TTTGame {
   }
 
   displayGoodbyeMessage() {
-    console.log("Thanks for playing Tic Tac Toe! Goodbye!");
+    console.log("\nThanks for playing Tic Tac Toe! Goodbye!");
   }
 
   displayResults() {
@@ -189,7 +215,7 @@ class TTTGame {
 
     while (true) {
       let validChoices = this.board.unusedSquares();
-      const prompt = `Choose a square (${TTTGame.joinOr(validChoices)}): `;
+      const prompt = `Choose a square (${TTTGame.joinOr(validChoices)}):\n`;
       choice = readline.question(prompt);
 
       if (validChoices.includes(choice)) break;
