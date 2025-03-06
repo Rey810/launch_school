@@ -17,27 +17,23 @@ REQUIREMENTS:
 5. Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
 */
 
-class Card { 
-  constructor(suit, rank, points) {
-    // STUB
-    // What sort of state does a card need?
-    // Rank? Suit? Points?
-    this.suit = suit;
+class Card {
+  constructor(suite, rank) {
+    this.suite = suite;
     this.rank = rank;
-    this.points = points;
+    this.points = points(this.rank); // -> here or maybe only calculated later when checking card scores
   }
+
+  // points(rank) {
+  //   // STUB
+  //   // face value, 2 values for ace, high card values
+  //   // if the card is 1 - 10
+  // }
 }
 
 class Deck {
-  // static suits = ['spades', 'clubs', 'hearts', 'diamonds'];
-  // static rank = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
-
   constructor() {
-    this.deck = this.build();
-    // STUB
-    // What sort of state does a deck need?
-    // 52 cards?
-    // data strucutre to keep track of the cards
+    this.cards = this.build();
   }
 
   deal() {
@@ -46,33 +42,26 @@ class Deck {
   }
 
   build() {
-    let suits = ['spades', 'clubs', 'hearts', 'diamonds'];
+    let suites = ['spades', 'clubs', 'hearts', 'diamonds'];
     let ranks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
     let deck = [];
 
-    for (let suit of suits) {
+    for (let suite of suites) {
       for (let rank of ranks) {
-        deck.push([suit, rank]);
+        deck.push(new Card(suite, rank));
       }
     }
-    return deck.length;
+
+    return deck;
   }
 }
 
 class Participant {
-  constructor() {
-    // STUB
-    // What sort of state does the participant need?
-    // Score? Hand? Amount of money available?
-    // What else? What's redundant in Player and Dealer?
-  }
-}
+  static INITIAL_SCORE = 0;
 
-class Player extends Participant {
   constructor() {
-    // STUB
-    // What sort of state does a player need?
-    // Score? Hand? Amount of money available?
+    this.score = Participant.INITIAL_SCORE;
+    this.hand = [];
   }
 
   hit() {
@@ -89,32 +78,33 @@ class Player extends Participant {
 
   score() {
     // STUB
+    // given an array
+    // find the score of each card's rank in the array
+    // tally score
+    // return score
+    // if the current card rank is 1 - 9 
+      // add face value to score
+    // if the current card is a 10, JACK, QUEEN, or KING
+      // add  10 to score
+    // if the current card is ace AND current card + current score is >21
+      // add 1 to score
+    // else add 11 to socore
+  }
+
+}
+
+class Player extends Participant {
+  static INITIAL_MONEY = 5;
+
+  constructor() {
+    super();
+    this.money = Player.INITIAL_MONEY;
   }
 }
 
 class Dealer extends Participant {
-  // very similar to a Player; is it needed?
-
   constructor() {
-    // STUB
-    // What sort of state does a dealer need?
-    // Score? Hand? Deck of cards?
-  }
-
-  hit() {
-    // STUB
-  }
-
-  stay() {
-    // STUB
-  }
-
-  isBusted() {
-    // STUB
-  }
-
-  score() {
-    // STUB
+    super();
   }
 
   hide() {
@@ -125,17 +115,19 @@ class Dealer extends Participant {
     // STUB
   }
 
-  deal() {
-    // STUB
-    // does the dealer or the deck deal?
+  deal(deck, player) {
+    let randomIndex = Math.floor(Math.random(1 * deck.length));
+    let randomCard = deck.splice(randomIndex, 1)[0];
+
+    player.hand.push(randomCard);
   }
 }
 
 class TwentyOneGame {
   constructor() {
-    // STUB
-    // What sort of state does the game need?
-    // A deck? Two participants?
+    this.deck = new Deck();
+    this.player = new Player();
+    this.dealer = new Dealer();
   }
 
   start() {
@@ -150,11 +142,21 @@ class TwentyOneGame {
   }
 
   dealCards() {
-    // STUB
+    let cards = this.deck.cards;
+
+    this.dealer.deal(cards, this.player);
+    this.dealer.deal(cards, this.dealer);
+    this.dealer.deal(cards, this.player);
+    this.dealer.deal(cards, this.dealer);
   }
 
   showCards() {
-    // STUB
+    let oneDealerCard = `${this.dealer.hand[0].rank} of ${this.dealer.hand[1].suite}`;
+    let playerCards = [];
+    this.player.hand.forEach(card => playerCards.push(`${card.rank} of ${card.suite}`));
+
+    console.log(`Dealer card: ${oneDealerCard}`);
+    console.log(`Player cards: ${playerCards.join(' and ')}`);
   }
 
   playerTurn() {
@@ -166,7 +168,7 @@ class TwentyOneGame {
   }
 
   displayWelcomeMessage() {
-    // STUB
+    console.log("Welcome to 21!");
   }
 
   displayGoodbyeMessage() {
@@ -180,6 +182,3 @@ class TwentyOneGame {
 
 let game = new TwentyOneGame();
 game.start();
-
-let deck = new Deck();
-console.log(deck);
