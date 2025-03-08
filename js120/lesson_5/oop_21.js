@@ -17,11 +17,13 @@ REQUIREMENTS:
 5. Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
 */
 
+const readline  = require('readline-sync');
+
 class Card {
   constructor(suite, rank) {
     this.suite = suite;
     this.rank = rank;
-    this.points = points(this.rank); // -> here or maybe only calculated later when checking card scores
+    //this.points = points(this.rank); // -> here or maybe only calculated later when checking card scores
   }
 
   // points(rank) {
@@ -59,13 +61,15 @@ class Deck {
 class Participant {
   static INITIAL_SCORE = 0;
 
-  constructor() {
-    this.score = Participant.INITIAL_SCORE;
+  constructor(name) {
+    this.name = name;
     this.hand = [];
+    this.score = Participant.INITIAL_SCORE;
   }
 
-  hit() {
-    // STUB
+  addToHand(card) {
+    this.hand.push(card);
+    this.updateScore();
   }
 
   stay() {
@@ -73,22 +77,29 @@ class Participant {
   }
 
   isBusted() {
-    // STUB
+    return this.score > 21;
   }
 
-  score() {
-    // STUB
-    // given an array
-    // find the score of each card's rank in the array
-    // tally score
-    // return score
-    // if the current card rank is 1 - 9 
-      // add face value to score
-    // if the current card is a 10, JACK, QUEEN, or KING
-      // add  10 to score
-    // if the current card is ace AND current card + current score is >21
-      // add 1 to score
-    // else add 11 to socore
+  updateScore() {
+    let newScore = 0;
+
+    for (let card of this.hand) {
+      if (card.rank > 0 && card.rank <= 9) {
+        newScore += Number(card.rank);
+      } else if (['10', 'jack', 'queen', 'king'].includes(card.rank)) {
+        newScore += 10;
+      } else if (card.rank === 'ace') {
+        if (newScore + 11 > 21) newScore += 1;
+        else newScore += 11;
+      }
+    }
+
+    this.score = newScore;
+    console.log(this.score);
+  }
+
+  displayScore() {
+    console.log(`${this.name} Score: ${this.score}`);
   }
 
 }
@@ -97,14 +108,14 @@ class Player extends Participant {
   static INITIAL_MONEY = 5;
 
   constructor() {
-    super();
+    super('Player');
     this.money = Player.INITIAL_MONEY;
   }
 }
 
 class Dealer extends Participant {
   constructor() {
-    super();
+    super('Dealer');
   }
 
   hide() {
@@ -116,10 +127,10 @@ class Dealer extends Participant {
   }
 
   deal(deck, player) {
-    let randomIndex = Math.floor(Math.random(1 * deck.length));
+    let randomIndex = Math.floor(Math.random() * deck.length);
     let randomCard = deck.splice(randomIndex, 1)[0];
 
-    player.hand.push(randomCard);
+    player.addToHand(randomCard);
   }
 }
 
@@ -155,12 +166,30 @@ class TwentyOneGame {
     let playerCards = [];
     this.player.hand.forEach(card => playerCards.push(`${card.rank} of ${card.suite}`));
 
-    console.log(`Dealer card: ${oneDealerCard}`);
-    console.log(`Player cards: ${playerCards.join(' and ')}`);
+    console.log(`Dealer's Hand: ${oneDealerCard} (2nd card hidden)`);
+    console.log(`Player's Hand: ${playerCards.join(' and ')}`);
   }
 
   playerTurn() {
-    // STUB
+    this.player.displayScore();
+
+    // while player wants to hit and the player is not busted
+    // ask player to play
+    let choice;
+
+    while (choice !== 's' && !this.player.isBusted()) {
+      choice = readline.question('Hit or stay? (h/s):\n');
+      console.log(choice);
+
+      while (!['h', 's'].includes(choice.toLowerCase())) {
+        choice = readline.question('Invalid choice. Type "h" (hit) or "s" (stay):\n');
+      }
+
+      if (choice === 'h') this.dealer.deal(this.deck.cards, this.player);
+    }
+    // add card
+    // if stay
+    // end playerturn
   }
 
   dealerTurn() {
