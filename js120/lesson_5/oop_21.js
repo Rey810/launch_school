@@ -1,211 +1,389 @@
-/* nouns and verbs
-REQUIREMENTS:
-1. Each time the player has an opportunity to hit or stay:
-  - Display the computer's hand; one card should remain hidden.
-  - Display the player's hand and her point total.
-
-2. For the dealer's turn:
-  - The dealer doesn't play at all if the player busts.
-  - Display the dealer's hand, including the hidden card, and report his point total.
-  - Redisplay the dealer's hand and point total and each time he hits.
-  - Display the results when the dealer stays.
-
-3. After each game is over, ask the player if they want to play again. Start a new game if they say yes, else end the game.
-
-4. When the program starts, give the player 5 dollars with which to bet. Deduct 1 dollar each time she loses, and add 1 dollar each time she wins. The program should quit when she is broke (0 dollars) or rich (has a total of 10 dollars).
-
-5. Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
-*/
-
-const readline  = require('readline-sync');
+const readline = require("readline-sync");
+const shuffle = require("shuffle-array");
 
 class Card {
-  constructor(suite, rank) {
-    this.suite = suite;
+  static SUITS = ["Clubs", "Diamonds", "Hearts", "Spades"];
+  static RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "10",
+                  "Jack", "Queen", "King", "Ace"];
+
+  constructor(suit, rank) {
+    this.suit = suit;
     this.rank = rank;
-    //this.points = points(this.rank); // -> here or maybe only calculated later when checking card scores
+    this.hidden = false;
   }
 
-  // points(rank) {
-  //   // STUB
-  //   // face value, 2 values for ace, high card values
-  //   // if the card is 1 - 10
-  // }
+  toString() {
+    if (this.isHidden()) return "Hidden";
+    return `${this.getRank()} of ${this.getSuit()}`;
+  }
+
+  getRank() {
+    return this.rank;
+  }
+
+  getSuit() {
+    return this.suit;
+  }
+
+  isAce() {
+    return this.getRank() === "Ace";
+  }
+
+  isKing() {
+    return this.getRank() === "King";
+  }
+
+  isQueen() {
+    return this.getRank() === "Queen";
+  }
+
+  isJack() {
+    return this.getRank() === "Jack";
+  }
+
+  isFaceCard() {
+    return this.isKing() || this.isQueen() || this.isJack();
+  }
+
+  hide() {
+    this.hidden = true;
+  }
+
+  reveal() {
+    this.hidden = false;
+  }
+
+  isHidden() {
+    return this.hidden;
+  }
 }
 
 class Deck {
   constructor() {
-    this.cards = this.build();
+    this.cards = [];
+    Card.SUITS.forEach(suit => {
+      Card.RANKS.forEach(rank => {
+        this.cards.push(new Card(suit, rank));
+      });
+    });
+
+    this.shuffleCards();
   }
 
-  deal() {
-    // STUB
-    // does the dealer or the deck deal?
+  // it may be useful to shuffle the deck at any time
+  shuffleCards() {
+    shuffle(this.cards);
   }
 
-  build() {
-    let suites = ['spades', 'clubs', 'hearts', 'diamonds'];
-    let ranks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
-    let deck = [];
+  dealCardFaceUp() {
+    return this.cards.pop();
+  }
 
-    for (let suite of suites) {
-      for (let rank of ranks) {
-        deck.push(new Card(suite, rank));
-      }
-    }
-
-    return deck;
+  dealCardFaceDown() {
+    let card = this.dealCardFaceUp();
+    card.hide();
+    return card;
   }
 }
 
-class Participant {
-  static INITIAL_SCORE = 0;
+let Hand = {
+  addToHand(newCard) {
+    this.cards.push(newCard);
+  },
 
-  constructor(name) {
-    this.name = name;
-    this.hand = [];
-    this.score = Participant.INITIAL_SCORE;
-  }
+  resetHand() {
+    this.cards = [];
+  },
 
-  addToHand(card) {
-    this.hand.push(card);
-    this.updateScore();
-  }
+  showHand(caption) {
+    console.log(caption);
+    console.log("");
 
-  stay() {
-    // STUB
-  }
+    this.cards.forEach(card => console.log(`  ${card}`));
+    console.log("");
+  },
 
-  isBusted() {
-    return this.score > 21;
-  }
+  getCards() {
+    return this.cards;
+  },
 
-  updateScore() {
-    let newScore = 0;
+  revealAllCards() {
+    this.cards.forEach(card => card.reveal());
+  },
 
-    for (let card of this.hand) {
-      if (card.rank > 0 && card.rank <= 9) {
-        newScore += Number(card.rank);
-      } else if (['10', 'jack', 'queen', 'king'].includes(card.rank)) {
-        newScore += 10;
-      } else if (card.rank === 'ace') {
-        if (newScore + 11 > 21) newScore += 1;
-        else newScore += 11;
-      }
-    }
+  numberOfCards() {
+    return this.cards.length;
+  },
+};
 
-    this.score = newScore;
-    console.log(this.score);
-  }
-
-  displayScore() {
-    console.log(`${this.name} Score: ${this.score}`);
-  }
-
-}
-
-class Player extends Participant {
-  static INITIAL_MONEY = 5;
+class Player {
+  static INITIAL_PURSE = 5;
+  static WINNING_PURSE = 2 * Player.INITIAL_PURSE;
 
   constructor() {
-    super('Player');
-    this.money = Player.INITIAL_MONEY;
+    this.money = Player.INITIAL_PURSE;
+    this.resetHand();
+  }
+
+  winBet() {
+    this.money += 1;
+  }
+
+  loseBet() {
+    this.money -= 1;
+  }
+
+  isBroke() {
+    return this.money <= 0;
+  }
+
+  isRich() {
+    return this.money >= Player.WINNING_PURSE;
+  }
+
+  showPurse() {
+    console.log(`You have $${this.money}`);
+    console.log("");
   }
 }
 
-class Dealer extends Participant {
+class Dealer {
   constructor() {
-    super('Dealer');
-  }
-
-  hide() {
-    // STUB
-  }
-
-  reveal() {
-    // STUB
-  }
-
-  deal(deck, player) {
-    let randomIndex = Math.floor(Math.random() * deck.length);
-    let randomCard = deck.splice(randomIndex, 1)[0];
-
-    player.addToHand(randomCard);
+    this.resetHand();
   }
 }
+
+// Hand is a "mix-in"; we add its methods to the Player and Dealer classes.
+// This is an alternative to inheritance when inheritance isn't appropriate
+Object.assign(Player.prototype, Hand);
+Object.assign(Dealer.prototype, Hand);
 
 class TwentyOneGame {
+  static TARGET_SCORE = 21;
+  static DEALER_MUST_STAY_SCORE = this.TARGET_SCORE - 4;
+  static HIT = 'h';
+  static STAY = 's';
+
   constructor() {
-    this.deck = new Deck();
     this.player = new Player();
     this.dealer = new Dealer();
   }
 
   start() {
-    // SPIKE
     this.displayWelcomeMessage();
-    this.dealCards();
-    this.showCards();
-    this.playerTurn();
-    this.dealerTurn();
-    this.displayResult();
+
+    while (true) {
+      this.playOneGame();
+      if (this.player.isBroke() || this.player.isRich()) break;
+      if (!this.playAgain()) break;
+    }
+
+    if (this.player.isBroke()) {
+      console.log("You're broke!");
+    } else if (this.player.isRich()){
+      console.log("You're rich!");
+    }
+
     this.displayGoodbyeMessage();
   }
 
-  dealCards() {
-    let cards = this.deck.cards;
+  playOneGame() {
+    this.dealCards();
+    this.showCards();
+    this.player.showPurse();
+    this.playerTurn();
 
-    this.dealer.deal(cards, this.player);
-    this.dealer.deal(cards, this.dealer);
-    this.dealer.deal(cards, this.player);
-    this.dealer.deal(cards, this.dealer);
+    if (!this.isBusted(this.player)) {
+      this.dealerTurn();
+    }
+
+    console.clear();
+    this.showCards();
+    this.displayResult();
+
+    this.updatePurse();
+    this.player.showPurse();
   }
 
-  showCards() {
-    let oneDealerCard = `${this.dealer.hand[0].rank} of ${this.dealer.hand[1].suite}`;
-    let playerCards = [];
-    this.player.hand.forEach(card => playerCards.push(`${card.rank} of ${card.suite}`));
+  playAgain() {
+    let answer;
 
-    console.log(`Dealer's Hand: ${oneDealerCard} (2nd card hidden)`);
-    console.log(`Player's Hand: ${playerCards.join(' and ')}`);
+    while (true) {
+      answer = readline.question("Play again (y/n)? ").toLowerCase();
+
+      if (["y", "n"].includes(answer)) break;
+
+      console.log("Sorry, that's not a valid choice.");
+      console.log("");
+    }
+
+    console.clear();
+    return answer === "y";
+  }
+
+  hit(hand) {
+    hand.addToHand(this.deck.dealCardFaceUp());
+    if (this.isBusted(hand)) return;
+
+    console.clear();
+    this.showCards();
   }
 
   playerTurn() {
-    this.player.displayScore();
-
-    // while player wants to hit and the player is not busted
-    // ask player to play
-    let choice;
-
-    while (choice !== 's' && !this.player.isBusted()) {
-      choice = readline.question('Hit or stay? (h/s):\n');
-      console.log(choice);
-
-      while (!['h', 's'].includes(choice.toLowerCase())) {
-        choice = readline.question('Invalid choice. Type "h" (hit) or "s" (stay):\n');
-      }
-
-      if (choice === 'h') this.dealer.deal(this.deck.cards, this.player);
+    while (this.hitOrStay() === TwentyOneGame.HIT) {
+      this.hit(this.player);
+      if (this.isBusted(this.player)) break;
     }
-    // add card
-    // if stay
-    // end playerturn
+  }
+
+  dealerContinue() {
+    readline.question("Press Return to continue...");
   }
 
   dealerTurn() {
-    // STUB
+    this.dealer.revealAllCards();
+
+    console.clear();
+    this.showCards();
+
+    while (true) {
+      let score = this.computeScoreFor(this.dealer);
+      if (score >= TwentyOneGame.DEALER_MUST_STAY_SCORE) break;
+      this.dealerContinue();
+      this.hit(this.dealer);
+    }
+  }
+
+  dealCards() {
+    this.deck = new Deck();
+    this.player.resetHand();
+    this.dealer.resetHand();
+
+    this.player.addToHand(this.deck.dealCardFaceUp());
+    this.dealer.addToHand(this.deck.dealCardFaceUp());
+    this.player.addToHand(this.deck.dealCardFaceUp());
+    this.dealer.addToHand(this.deck.dealCardFaceDown());
+  }
+
+  showCards() {
+    this.dealer.showHand("Dealer's Cards");
+    this.showScoreFor(this.dealer);
+
+    this.player.showHand("Your Cards");
+    this.showScoreFor(this.player);
   }
 
   displayWelcomeMessage() {
+    console.clear();
     console.log("Welcome to 21!");
+    console.log("");
   }
 
   displayGoodbyeMessage() {
-    // STUB
+    console.log("Thanks for playing 21! Goodbye!");
+  }
+
+  whoWon() {
+    if (this.isBusted(this.player)) {
+      return this.dealer;
+    } else if (this.isBusted(this.dealer)) {
+      return this.player;
+    } else {
+      let playerScore = this.computeScoreFor(this.player);
+      let dealerScore = this.computeScoreFor(this.dealer);
+
+      if (playerScore > dealerScore) {
+        return this.player;
+      } else if (playerScore < dealerScore) {
+        return this.dealer;
+      } else {
+        return null; // tie game
+      }
+    }
   }
 
   displayResult() {
-    // STUB
+    if (this.isBusted(this.player)) {
+      console.log("You busted! Dealer wins.");
+    } else if (this.isBusted(this.dealer)) {
+      console.log("Dealer busted! You win.");
+    } else {
+      let playerScore = this.computeScoreFor(this.player);
+      let dealerScore = this.computeScoreFor(this.dealer);
+
+      if (playerScore > dealerScore) {
+        console.log("You win!");
+      } else if (playerScore < dealerScore) {
+        console.log("Dealer wins!");
+      } else {
+        console.log("Tie game.");
+      }
+    }
+
+    console.log("");
+  }
+
+  hitOrStay() {
+    let answer;
+
+    while (true) {
+      answer = readline.question("Hit or Stay (h/s)? ").toLowerCase();
+
+      if ([TwentyOneGame.HIT, TwentyOneGame.STAY].includes(answer)) break;
+
+      console.log("Sorry, that's not a valid choice.");
+      console.log("");
+    }
+
+    return answer;
+  }
+
+  computeScoreFor(hand) {
+    let cards = hand.getCards();
+    let score = cards.reduce((total, card) => total + this.valueOf(card), 0);
+
+    cards.filter(card => card.isAce() && !card.isHidden())
+         .forEach(() => {
+           if (score > TwentyOneGame.TARGET_SCORE) {
+             score -= 10;
+           }
+         });
+
+    return score;
+  }
+
+  isBusted(hand) {
+    return this.computeScoreFor(hand) > TwentyOneGame.TARGET_SCORE;
+  }
+
+  updatePurse() {
+    switch (this.whoWon()) {
+      case this.player:
+        this.player.winBet();
+        break;
+      case this.dealer:
+        this.player.loseBet();
+        break;
+      default:
+        break;
+    }
+  }
+
+  valueOf(card) {
+    if (card.isHidden()) {
+      return 0;
+    } else if (card.isAce()) {
+      return 11;
+    } else if (card.isFaceCard()) {
+      return 10;
+    } else {
+      return parseInt(card.getRank(), 10);
+    }
+  }
+
+  showScoreFor(hand) {
+    console.log(`  Points: ${this.computeScoreFor(hand)}`);
+    console.log("");
   }
 }
 
